@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { User } from '../model/user.model';
+import * as jwt from 'jsonwebtoken'; // Importez jsonwebtoken ici
 
 @Injectable({
   providedIn: 'root'
@@ -59,5 +60,36 @@ export class AuthService {
   getUserById(userId: string): Observable<User> {
     // Effectuez une requête HTTP vers votre API backend pour récupérer les données de l'utilisateur par son ID.
     return this.http.get<User>(`${this.apiUrl}/users/${userId}`);
+  }
+
+  getLoggedInUserId(): string | null {
+    const token = localStorage.getItem('jwtToken');
+  
+    if (token) {
+      // Vous devez décoder le token JWT pour obtenir les informations de l'utilisateur.
+      // La structure du token JWT dépend de votre application.
+      // Voici un exemple de décodage d'un token JWT avec la bibliothèque jsonwebtoken.
+      
+      // Assurez-vous d'importer jsonwebtoken en haut de votre fichier :
+      // import * as jwt from 'jsonwebtoken';
+  
+      // Remplacez 'YOUR_SECRET_KEY' par la clé secrète utilisée pour signer les tokens JWT.
+      const secretKey = 'YOUR_SECRET_KEY';
+  
+      try {
+        const decodedToken: any = jwt.verify(token, secretKey);
+  
+        // Si votre token JWT contient l'ID de l'utilisateur, vous pouvez le renvoyer.
+        // Par exemple, si l'ID de l'utilisateur est stocké dans le champ 'userId' du token :
+        if (decodedToken && decodedToken.userId) {
+          return decodedToken.userId;
+        }
+      } catch (error) {
+        console.error('Erreur lors du décodage du token JWT :', error);
+      }
+    }
+  
+    // Si le token est absent ou s'il ne contient pas l'ID de l'utilisateur, renvoyez null.
+    return null;
   }
 }

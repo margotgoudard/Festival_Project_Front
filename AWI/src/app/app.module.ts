@@ -9,6 +9,11 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ModificationProfileComponent } from './components/modification-profile/modification-profile.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { MockAuthService } from './mocks/auth.service.mock';
+import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MockUserService } from './mocks/user.service.mock';
 
 
 @NgModule({
@@ -24,9 +29,14 @@ import { MockAuthService } from './mocks/auth.service.mock';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
+    MatDialogModule
   ],
   providers: [
     MockAuthService,
+    AuthService,
+    UserService,
+    MockUserService
   ],
   bootstrap: [AppComponent]
 })

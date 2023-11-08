@@ -4,6 +4,8 @@ import { User } from 'src/app/model/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { ModificationProfileComponent } from '../modification-profile/modification-profile.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MockUserService } from 'src/app/mocks/user.service.mock';
+import { MockAuthService } from 'src/app/mocks/auth.service.mock';
 
 @Component({
   selector: 'app-profile',
@@ -22,35 +24,32 @@ export class ProfileComponent implements OnInit {
   tailleTShirt: string = '';
   isVegetarian: boolean = false;
 
-  user: User = new User(); // Initialisez l'utilisateur avec des données par défaut, ou laissez-le vide.
+  user: User | null = null;
 
-  constructor(private route: ActivatedRoute, private userService: UserService, private dialog: MatDialog) { }
+    constructor(private route: ActivatedRoute, private userService: MockUserService, private dialog: MatDialog, private authService: MockAuthService) { 
+    
+  }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
       // Récupérez l'ID de l'utilisateur depuis les paramètres de l'URL
-      const userId = params['id'];
+      const userId = this.authService.getLoggedInUserId();
       
       // Utilisez le service UserService pour récupérer les données de l'utilisateur par son ID
-      this.userService.getUserById(userId).subscribe(
-        (data: User) => {
-          // Mettez à jour les données de l'utilisateur dans le composant
-          this.user = data;
-          this.nom = data.nom;
-          this.prenom = data.prenom;
-          this.mail = data.mail;
-          this.associations = data.associations;
-          this.pseudo = data.pseudo;
-          this.tailleTShirt = data.tailleTShirt;
-          this.isVegetarian = data.isVegetarian;
-        },
+      if (userId) {
+        this.userService.getUserById(userId).subscribe(
+          (data: User) => {
+            this.user = data;
+          },
         (error) => {
           this.errorMessage = 'Erreur lors de la récupération des données de l\'utilisateur.';
           console.error(error);
         }
       );
-    });
+      }
+    }); 
   }
+
 
   navigateToModificationProfile(): void {
     const dialogRef = this.dialog.open(ModificationProfileComponent, {

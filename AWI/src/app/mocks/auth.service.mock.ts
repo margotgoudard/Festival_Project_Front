@@ -16,5 +16,17 @@ export class MockAuthService {
     }
   }
 
+  private loggedInUserId: number | null = null;
+
+  // Méthode pour définir l'ID de l'utilisateur connecté.
+  setLoggedInUserId(userId: number | null): void {
+    this.loggedInUserId = userId;
+  }
+
+  // Méthode pour obtenir l'ID de l'utilisateur connecté.
+    getLoggedInUserId(): number | null {
+    return this.loggedInUserId;
+  }
+
   // Ajoutez d'autres méthodes du service AuthService simulées au besoin.
 }
