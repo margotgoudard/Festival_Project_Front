@@ -1,21 +1,20 @@
 <div class="profile">
     <h2>Mon Profil</h2>
-    <form (ngSubmit)="updateProfile()" #profileForm="ngForm">
-      <div class="form-group">
-        <label for="pseudo">Pseudo</label>
-        <input type="text" id="pseudo" name="pseudo" [(ngModel)]="user.pseudo" required>
-      </div>
-      <div class="form-group">
-        <label for="association">Association</label>
-        <input type="text" id="association" name="association" [(ngModel)]="user.association" required>
-      </div>
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <input type="password" id="password" name="password" [(ngModel)]="user.password" required>
-      </div>
-      <button type="submit">Mettre à jour le profil</button>
-    </form>
+    <div class="form-group">
+      <label for="nom">Nom</label>
+      <p>{{ user.nom }}</p>
+    </div>
+    <div class="form-group">
+      <label for="prenom">Prénom</label>
+      <p>{{ user.prenom }}</p>
+    </div>
+    <div class="form-group">
+      <label for="mail">Mail</label>
+      <p>{{ user.mail }}</p>
+    </div>
+    <div class="form-group">
+      <label for="telephone">Téléphone</label>
+      <p>{{ user.phone }}</p>
+    </div>
+    <button (click)="navigateToModificationProfile()">Modifier le profil</button>
   </div>
-  
-  
-  
