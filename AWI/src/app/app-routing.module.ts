@@ -8,7 +8,9 @@ const routes: Routes = [
   {
     path: 'user-profile/:id', // You can define a route parameter like ':id' to pass the user's ID
     component: ProfileComponent,
-  },];
+  },
+  { path: 'profile', component: ProfileComponent }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

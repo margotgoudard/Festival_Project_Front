@@ -6,12 +6,15 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/profile/profile.component';
+import { ModificationProfileComponent } from './components/modification-profile/modification-profile.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    ProfileComponent
+    ProfileComponent,
+    ModificationProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/model/user.model';
 import { UserService } from 'src/app/services/user.service';
+import { ModificationProfileComponent } from '../modification-profile/modification-profile.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile',
@@ -13,7 +15,7 @@ export class ProfileComponent implements OnInit {
   successMessage: string = '';
   errorMessage: string = '';
 
-  constructor(private route: ActivatedRoute, private userService: UserService, private router: Router) {}
+  constructor(private route: ActivatedRoute, private userService: UserService, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -34,9 +36,15 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  navigateToModificationProfile() {
-    // Utilisez le routeur Angular pour naviguer vers le composant ModificationProfile
-    this.router.navigate(['/modification-profile']);
+  navigateToModificationProfile(): void {
+    const dialogRef = this.dialog.open(ModificationProfileComponent, {
+      width: '400px', // Définissez la largeur de la modale en fonction de vos besoins
+    });
+  
+    // Gérez les événements de fermeture de la modale si nécessaire
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('La modale a été fermée', result);
+    });
   }
 
 }

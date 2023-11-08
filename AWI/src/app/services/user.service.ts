@@ -13,4 +13,9 @@ export class UserService {
     // Effectuez une requête HTTP vers votre API backend pour récupérer les données de l'utilisateur par son ID.
     return this.http.get<User>(`${this.apiUrl}/users/${userId}`);
   }
+
+  updateUserProfile(userData: any): Observable<any> {
+    // Effectuez une requête HTTP vers votre API backend pour mettre à jour le profil de l'utilisateur.
+    return this.http.put(`${this.apiUrl}/user/update-profile`, userData);
+  }
 }
