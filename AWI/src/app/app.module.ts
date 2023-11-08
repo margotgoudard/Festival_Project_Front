@@ -14,6 +14,7 @@ import { UserService } from './services/user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MockUserService } from './mocks/user.service.mock';
+import { InscriptionComponent } from './components/inscription/inscription.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { MockUserService } from './mocks/user.service.mock';
     LoginComponent,
     ProfileComponent,
     ModificationProfileComponent,
-    PlanningComponent
+    PlanningComponent,
+    InscriptionComponent
   ],
   imports: [
     BrowserModule,

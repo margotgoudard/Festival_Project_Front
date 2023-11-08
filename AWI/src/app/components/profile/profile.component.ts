@@ -5,7 +5,6 @@ import { UserService } from 'src/app/services/user.service';
 import { ModificationProfileComponent } from '../modification-profile/modification-profile.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MockUserService } from 'src/app/mocks/user.service.mock';
-import { MockAuthService } from 'src/app/mocks/auth.service.mock';
 
 @Component({
   selector: 'app-profile',
@@ -24,32 +23,34 @@ export class ProfileComponent implements OnInit {
   tailleTShirt: string = '';
   isVegetarian: boolean = false;
 
-  user: User | null = null;
-
-    constructor(private route: ActivatedRoute, private userService: MockUserService, private dialog: MatDialog, private authService: MockAuthService) { 
+    constructor(private route: ActivatedRoute, private userService: MockUserService, private dialog: MatDialog, private router: Router) { 
     
   }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
       // Récupérez l'ID de l'utilisateur depuis les paramètres de l'URL
-      const userId = this.authService.getLoggedInUserId();
+      const userId = params['id'];
       
       // Utilisez le service UserService pour récupérer les données de l'utilisateur par son ID
-      if (userId) {
-        this.userService.getUserById(userId).subscribe(
-          (data: User) => {
-            this.user = data;
-          },
+      this.userService.getUserById(userId).subscribe(
+        (data: User) => {
+          // Mettez à jour les données de l'utilisateur dans le composant
+          this.nom = data.nom;
+          this.prenom = data.prenom;
+          this.mail = data.mail;
+          this.associations = data.associations;
+          this.pseudo = data.pseudo;
+          this.tailleTShirt = data.tailleTShirt;
+          this.isVegetarian = data.isVegetarian;
+        },
         (error) => {
           this.errorMessage = 'Erreur lors de la récupération des données de l\'utilisateur.';
           console.error(error);
         }
       );
-      }
-    }); 
+    });
   }
-
 
   navigateToModificationProfile(): void {
     const dialogRef = this.dialog.open(ModificationProfileComponent, {
@@ -60,6 +61,11 @@ export class ProfileComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('La modale a été fermée', result);
     });
+  }
+
+  redirectToPlanning(): void {
+    // Ici, vous pouvez utiliser le router pour naviguer vers la page du planning.
+    this.router.navigate(['/planning']); // Assurez-vous d'ajuster la route en fonction de votre configuration de routes.
   }
 
 }

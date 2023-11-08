@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
+import { InscriptionComponent } from '../inscription/inscription.component';
 
 
 // Modèles de données (jours, créneaux horaires, postes, etc.) - Comme précédemment
@@ -35,7 +37,7 @@ export class PlanningComponent implements OnInit {
 
   ngOnInit() {}
 
-  /*openInscriptionDialog(jour: string, creneau: Creneau, poste: Poste): void {
+  openInscriptionDialog(jour: string, creneau: Creneau, poste: Poste): void {
     const dialogRef = this.dialog.open(InscriptionComponent, {
       width: '400px', // Personnalisez la largeur de la boîte de dialogue selon vos besoins
       data: { jour, creneau, poste } // Passez des données nécessaires à la boîte de dialogue
@@ -46,5 +48,5 @@ export class PlanningComponent implements OnInit {
         // Traitez les données d'inscription ici (par exemple, enregistrer dans une liste d'inscriptions)
       }
     });
-  }*/
+  }
 }

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { PlanningComponent } from './components/planning/planning.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -9,7 +10,8 @@ const routes: Routes = [
     path: 'user-profile/:id', // You can define a route parameter like ':id' to pass the user's ID
     component: ProfileComponent,
   },
-  { path: 'profile', component: ProfileComponent }
+  { path: 'profile', component: ProfileComponent },
+  { path: 'planning', component: PlanningComponent }
 ];
 
 @NgModule({

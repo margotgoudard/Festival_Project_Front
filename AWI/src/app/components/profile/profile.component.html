@@ -1,24 +1,26 @@
 <div class="profil-benevole">
-    <h2>Profil Bénévole</h2>
-    <div class="informations-personnelles">
-      <p><strong>Nom :</strong> {{ nom }}</p>
-      <p><strong>Prénom :</strong> {{ prenom }}</p>
-      <p><strong>Mail :</strong> {{ mail }}</p>
-    </div>
-  
-    <div class="associations">
-      <p><strong>Association(s) :</strong></p>
-      <ul>
-        <li *ngFor="let association of associations">{{ association }}</li>
-      </ul>
-    </div>
-  
-    <div class="pseudo">
-      <p><strong>Pseudo unique :</strong> {{ pseudo }}</p>
-    </div>
-  
-    <div class="preferences">
-      <p><strong>Taille de T-shirt :</strong> {{ tailleTShirt }}</p>
-      <p><strong>Végétarien(ne) :</strong> {{ isVegetarian ? 'Oui' : 'Non' }}</p>
-    </div>
+  <h2>Profil Bénévole</h2>
+  <div class="informations-personnelles">
+    <p><strong>Nom :</strong> {{ nom }}</p>
+    <p><strong>Prénom :</strong> {{ prenom }}</p>
+    <p><strong>Mail :</strong> {{ mail }}</p>
   </div>
+
+  <div class="associations">
+    <p><strong>Association(s) :</strong></p>
+    <ul>
+      <li *ngFor="let association of associations">{{ association }}</li>
+    </ul>
+  </div>
+
+  <div class="pseudo">
+    <p><strong>Pseudo unique :</strong> {{ pseudo }}</p>
+  </div>
+
+  <div class="preferences">
+    <p><strong>Taille de T-shirt :</strong> {{ tailleTShirt }}</p>
+    <p><strong>Végétarien(ne) :</strong> {{ isVegetarian ? 'Oui' : 'Non' }}</p>
+  </div>
+
+  <button (click)="redirectToPlanning()">Accéder au planning</button>
+</div>
