@@ -7,6 +7,8 @@ import { LoginComponent } from './components/login/login.component';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ModificationProfileComponent } from './components/modification-profile/modification-profile.component';
+import { PlanningComponent } from './components/planning/planning.component';
+import { MockAuthService } from './mocks/auth.service.mock';
 
 
 @NgModule({
@@ -14,7 +16,8 @@ import { ModificationProfileComponent } from './components/modification-profile/
     AppComponent,
     LoginComponent,
     ProfileComponent,
-    ModificationProfileComponent
+    ModificationProfileComponent,
+    PlanningComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +25,9 @@ import { ModificationProfileComponent } from './components/modification-profile/
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    MockAuthService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

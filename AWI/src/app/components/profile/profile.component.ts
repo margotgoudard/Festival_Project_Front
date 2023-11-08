@@ -11,11 +11,20 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  user: User = new User(); // Initialisez l'utilisateur avec des données par défaut, ou laissez-le vide.
   successMessage: string = '';
   errorMessage: string = '';
 
-  constructor(private route: ActivatedRoute, private userService: UserService, private dialog: MatDialog) {}
+  nom: string = '';
+  prenom: string = '';
+  mail: string = '';
+  associations: string[] = [];
+  pseudo: string = '';
+  tailleTShirt: string = '';
+  isVegetarian: boolean = false;
+
+  user: User = new User(); // Initialisez l'utilisateur avec des données par défaut, ou laissez-le vide.
+
+  constructor(private route: ActivatedRoute, private userService: UserService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -24,9 +33,16 @@ export class ProfileComponent implements OnInit {
       
       // Utilisez le service UserService pour récupérer les données de l'utilisateur par son ID
       this.userService.getUserById(userId).subscribe(
-        (userData: User) => {
+        (data: User) => {
           // Mettez à jour les données de l'utilisateur dans le composant
-          this.user = userData;
+          this.user = data;
+          this.nom = data.nom;
+          this.prenom = data.prenom;
+          this.mail = data.mail;
+          this.associations = data.associations;
+          this.pseudo = data.pseudo;
+          this.tailleTShirt = data.tailleTShirt;
+          this.isVegetarian = data.isVegetarian;
         },
         (error) => {
           this.errorMessage = 'Erreur lors de la récupération des données de l\'utilisateur.';

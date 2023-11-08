@@ -1,0 +1,47 @@
+/* Style de la table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+  }
+  
+  /* Style des en-têtes de colonnes (jours) */
+  th {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  /* Style des en-têtes de lignes (heures) */
+  th[scope="row"] {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
+  
+  /* Style des cellules du tableau */
+  td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  /* Style des boutons d'inscription */
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  /* Style au survol des boutons */
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Style du conteneur du planning */
+  .planning-container {
+    margin: 20px;
+  }

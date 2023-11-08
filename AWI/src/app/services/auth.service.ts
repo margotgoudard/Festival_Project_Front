@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, tap, throwError } from 'rxjs';
+import { User } from '../model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -53,5 +54,10 @@ export class AuthService {
     // Vérifiez la présence du token JWT dans le stockage local.
     const token = localStorage.getItem('jwtToken');
     return !!token; // Renvoie true si le token JWT est présent, sinon false.
+  }
+
+  getUserById(userId: string): Observable<User> {
+    // Effectuez une requête HTTP vers votre API backend pour récupérer les données de l'utilisateur par son ID.
+    return this.http.get<User>(`${this.apiUrl}/users/${userId}`);
   }
 }
