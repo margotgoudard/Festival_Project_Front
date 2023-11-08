@@ -7,13 +7,13 @@ import { AuthService } from 'src/app/services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: String = '';
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, ) { // private authService: AuthService, private router: Router mettre dans le constructeur
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const { username, password } = this.loginForm.value;
 
-      this.authService.login(username, password).subscribe(
+      /*this.authService.login(username, password).subscribe(
           (response) => {
             // Connexion réussie, stockez le token JWT côté client (exemple hypothétique)
             const jwtToken = response.token;
@@ -35,8 +35,8 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('jwtToken', jwtToken);
         
             // Redirection vers la page d'accueil ou une autre action souhaitée
-            // Exemple de redirection vers la page d'accueil :
-            this.router.navigate(['/accueil']);
+            // Exemple de redirection vers la page du profil utilisateur :
+            this.router.navigate(['/profile']); 
         
             // Autres actions à exécuter après une connexion réussie
           },
@@ -53,6 +53,7 @@ export class LoginComponent implements OnInit {
             // Autres actions à exécuter en cas d'échec de connexion
           }
         );
-    }
+    }*/
   }
+} 
 }

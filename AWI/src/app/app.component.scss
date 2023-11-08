@@ -1,0 +1,66 @@
+/* styles.css (ou le nom de votre fichier CSS) */
+
+/* Réinitialisation des styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Styles globaux de la page */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Styles pour les composants spécifiques */
+  
+  /* Styles pour le composant ProfileComponent */
+  .profile {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  
+  .profile h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .profile form {
+    display: grid;
+    gap: 10px;
+  }
+  
+  .profile label {
+    font-weight: bold;
+  }
+  
+  .profile input[type="text"],
+  .profile input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .profile button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .profile button:hover {
+    background-color: #0056b3;
+  }
