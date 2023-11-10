@@ -15,7 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MockUserService } from './mocks/user.service.mock';
 import { InscriptionComponent } from './components/inscription/inscription.component';
-
+import { PosteDetailsComponent } from './components/poste-details/poste-details.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { InscriptionComponent } from './components/inscription/inscription.compo
     ProfileComponent,
     ModificationProfileComponent,
     PlanningComponent,
-    InscriptionComponent
+    InscriptionComponent,
+    PosteDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,8 @@ import { InscriptionComponent } from './components/inscription/inscription.compo
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatDialogModule
+    MatDialogModule,
+    MatIconModule,
   ],
   providers: [
     MockAuthService,

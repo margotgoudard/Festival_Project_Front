@@ -1,33 +1,44 @@
 <div class="planning-container">
-    <h2>Planning du week-end</h2>
-  
-    <table>
-      <thead>
+  <h2>Planning du week-end</h2>
+
+  <!-- Add a checkbox for multiple selection -->
+  <label>
+    <input type="checkbox" [(ngModel)]="multipleSelection"> Selection multiple
+    <button *ngIf="multipleSelection" (click)="inscrireATousLesPostes()" [disabled]="selectedButtons.length === 0">S'inscrire à tous</button>
+  </label>
+
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th [attr.colspan]="creneaux.length">Samedi</th>
+        <th [attr.colspan]="creneaux.length">Dimanche</th>
+      </tr>
+      <tr>
+        <th>Heures</th>
+        <ng-container *ngFor="let jour of weekend">
+          <th *ngFor="let creneau of creneaux">
+            {{ creneau.heureDebut }} - {{ creneau.heureFin }}
+          </th>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let poste of postes; let posteIndex = index">
         <tr>
-          <th></th>
-          <th [attr.colspan]="creneaux.length">Samedi</th>
-          <th [attr.colspan]="creneaux.length">Dimanche</th>
-        </tr>
-        <tr>
-          <th>Heures</th>
+          <td>{{ poste.nom }}</td>
           <ng-container *ngFor="let jour of weekend">
-            <th *ngFor="let creneau of creneaux">
-              {{ creneau.heureDebut }} - {{ creneau.heureFin }}
-            </th>
+            <td *ngFor="let creneau of creneaux">
+              <!-- Update the (click) event to pass additional parameters -->
+              <button (click)="onButtonClick(jour, creneau, poste.id, creneau.heureDebut)"
+                      [disabled]="posteDisponibles[poste.id][creneau.heureDebut] === 0"
+                      [class.selected-button]="isSelected(poste.id, creneau.heureDebut)">
+                {{ posteDisponibles[poste.id][creneau.heureDebut] }} places restantes
+              </button>
+            </td>
           </ng-container>
         </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let poste of postes">
-          <tr>
-            <td>{{ poste.nom }}</td>
-            <ng-container *ngFor="let jour of weekend">
-              <td *ngFor="let creneau of creneaux">
-                <button (click)="openInscriptionDialog(jour, creneau, poste)">S'inscrire</button>
-              </td>
-            </ng-container>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-  </div>
+      </ng-container>
+    </tbody>
+  </table>
+</div>

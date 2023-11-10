@@ -1,6 +1,16 @@
-<!--<h2>Inscription</h2>
+<!-- inscription.component.html -->
+<h2>Inscription</h2>
 <p>{{ data.jour }} - {{ data.creneau.heureDebut }} - {{ data.creneau.heureFin }}</p>
 <p>{{ data.poste.nom }}</p>
+<p>Référent du poste: {{ data.poste.referent }}</p> <!-- Assuming you have a referent property in the Poste interface -->
 
+<!-- Display the list of previous volunteers -->
+<p>Volontaires précédents :</p>
+<ul>
+  <li *ngFor="let volunteer of data.poste.volunteers">{{ volunteer.nom }} {{ volunteer.prenom }}</li>
+</ul>
+
+<button (click)="onDetailsClick()">Détails du poste</button>
+<!--<button (click)="onContactRClick()">Contact référent</button>-->
 <button (click)="onNoClick()">Annuler</button>
-<button (click)="onYesClick()">S'inscrire</button>-->
+<button (click)="onInscriptionClick()">S'inscrire</button>
