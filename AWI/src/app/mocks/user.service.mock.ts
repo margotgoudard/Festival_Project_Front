@@ -17,6 +17,7 @@ export class MockUserService {
     password : 'motdepasse',
     tailleTShirt: 'M',
     isVegetarian: true,
+    role: 'benevole',
   };
 
   getUserById(id: number): Observable<User> {

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MockAuthService } from 'src/app/mocks/auth.service.mock'; // Importez le service de mock
+import { RegistrationComponent } from '../registration/registration.component';
+import { RegistrationPopupService } from 'src/app/services/registration-popup.service';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +14,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: String = '';
 
-  constructor(private formBuilder: FormBuilder, private authService: MockAuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private authService: MockAuthService, private router: Router, private registrationPopupService: RegistrationPopupService) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -34,7 +36,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('jwtToken', jwtToken);
   
           // Redirection vers la page du profil utilisateur (simulée)
-          this.router.navigate(['/profile']);
+          this.router.navigate(['/planning-individual']);
   
           // Autres actions à exécuter après une connexion réussie
         },
@@ -53,4 +55,9 @@ export class LoginComponent implements OnInit {
       );
     }
   }
+
+  openRegistrationPopup() {
+    this.registrationPopupService.openRegistrationPopup();
+  }
+
 }

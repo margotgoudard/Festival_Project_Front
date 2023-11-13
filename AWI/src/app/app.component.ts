@@ -8,7 +8,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor() {
+  constructor(private router: Router) {
     
+  }
+
+  ngOnInit() {
+    this.router.navigate(['/login']);
+  }
+
+  isLoginPage(): boolean {
+    // Check if the current route is the login page
+    return this.router.url.includes('/login');
   }
 }

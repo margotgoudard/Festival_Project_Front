@@ -18,4 +18,8 @@ export class UserService {
     // Effectuez une requête HTTP vers votre API backend pour mettre à jour le profil de l'utilisateur.
     return this.http.put(`${this.apiUrl}/user/update-profile`, userData);
   }
+
+  getUserRegistrations(userId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/users/${userId}/registrations`);
+  }
 }

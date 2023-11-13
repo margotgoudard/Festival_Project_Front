@@ -8,6 +8,7 @@ export class User {
       public mail: string = '',
       public password: string = '',
       public tailleTShirt: string = '',
-      public isVegetarian: boolean = false
+      public isVegetarian: boolean = false,
+      public role: string='',
     ) {}
   }

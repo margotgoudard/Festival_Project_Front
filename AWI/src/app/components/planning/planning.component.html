@@ -1,6 +1,4 @@
 <div class="planning-container">
-  <h2>Planning du week-end</h2>
-
   <!-- Add a checkbox for multiple selection -->
   <label>
     <input type="checkbox" [(ngModel)]="multipleSelection"> Selection multiple
@@ -30,7 +28,7 @@
           <ng-container *ngFor="let jour of weekend">
             <td *ngFor="let creneau of creneaux">
               <!-- Update the (click) event to pass additional parameters -->
-              <button (click)="onButtonClick(jour, creneau, poste.id, creneau.heureDebut)"
+              <button (click)="onButtonClick(jour, creneau, poste.id, creneau.heureDebut, poste)"
                       [disabled]="posteDisponibles[poste.id][creneau.heureDebut] === 0"
                       [class.selected-button]="isSelected(poste.id, creneau.heureDebut)">
                 {{ posteDisponibles[poste.id][creneau.heureDebut] }} places restantes

@@ -17,6 +17,14 @@ import { MockUserService } from './mocks/user.service.mock';
 import { InscriptionComponent } from './components/inscription/inscription.component';
 import { PosteDetailsComponent } from './components/poste-details/poste-details.component';
 import { MatIconModule } from '@angular/material/icon';
+import { AnimationJeuPlanningComponent } from './components/planning/animation-jeu-planning/animation-jeu-planning.component';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
+import { PlanningIndividualComponent } from './components/planning/planning-individual/planning-individual.component';
+import { PlanningInscriptionComponent } from './components/planning/planning-inscription/planning-inscription.component';
+
 
 @NgModule({
   declarations: [
@@ -26,7 +34,12 @@ import { MatIconModule } from '@angular/material/icon';
     ModificationProfileComponent,
     PlanningComponent,
     InscriptionComponent,
-    PosteDetailsComponent
+    PosteDetailsComponent,
+    AnimationJeuPlanningComponent,
+    RegistrationComponent,
+    NavigationComponent,
+    PlanningIndividualComponent,
+    PlanningInscriptionComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +49,8 @@ import { MatIconModule } from '@angular/material/icon';
     HttpClientModule,
     MatDialogModule,
     MatIconModule,
+    MatCheckboxModule,
+    MatTableModule,
   ],
   providers: [
     MockAuthService,

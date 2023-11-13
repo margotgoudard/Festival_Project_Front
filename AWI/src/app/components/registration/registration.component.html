@@ -1,0 +1,56 @@
+<!-- registration.component.html -->
+<div class="registration-container">
+    <h2>Inscription</h2>
+    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" formControlName="prenom" required>
+            <div *ngIf="isFieldInvalid('prenom')">Le prénom est requis.</div>
+        </div>
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" formControlName="nom" required>
+            <div *ngIf="isFieldInvalid('nom')">Le nom est requis.</div>
+        </div>
+        <div class="form-group">
+            <label for="pseudo">Pseudo</label>
+            <input type="text" id="pseudo" formControlName="pseudo">
+            <!-- Add similar divs for other fields with appropriate error messages -->
+        </div>
+        <div class="form-group">
+            <label for="associations">Associations</label>
+            <input type="text" id="associations" formControlName="associations">
+            <!-- Add similar divs for other fields with appropriate error messages -->
+        </div>
+        <div class="form-group">
+            <label for="mail">Mail</label>
+            <input type="email" id="mail" formControlName="mail" required>
+            <div *ngIf="isFieldInvalid('mail')">Veuillez entrer une adresse e-mail valide.</div>
+        </div>
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" formControlName="password" required>
+            <div *ngIf="isFieldInvalid('password')">Le mot de passe est requis.</div>
+        </div>
+        <div class="form-group">
+            <label for="tailleTShirt">Taille T-Shirt</label>
+            <select id="tailleTShirt" formControlName="tailleTShirt" required>
+                <option value="" disabled selected>Sélectionner une taille</option>
+                <option value="XS">XS</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+                <!-- Add more options as needed -->
+            </select>
+            <div *ngIf="isFieldInvalid('tailleTShirt')">Veuillez sélectionner une taille.</div>
+        </div>
+        <div class="form-group">
+            <label for="isVegetarian">Végétarien</label>
+            <input type="checkbox" id="isVegetarian" formControlName="isVegetarian">
+            <!-- Add similar divs for other fields with appropriate error messages -->
+        </div>
+        <button type="submit">S'inscrire</button>
+    </form>
+</div>

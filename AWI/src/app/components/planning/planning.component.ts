@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { InscriptionComponent } from '../inscription/inscription.component';
 import { InscriptionService } from 'src/app/services/inscription.service';
-
-
-// Modèles de données (jours, créneaux horaires, postes, etc.) - Comme précédemment
+import { AnimationJeuPlanningComponent } from './animation-jeu-planning/animation-jeu-planning.component';
+import { HttpClient } from '@angular/common/http';
+import { Espace } from 'src/app/interfaces/espace.interface';
 
 @Component({
   selector: 'app-planning',
@@ -16,31 +16,27 @@ import { InscriptionService } from 'src/app/services/inscription.service';
 })
 export class PlanningComponent implements OnInit {
   weekend: string[] = ['Samedi', 'Dimanche'];
+  private posteselect?: Poste = undefined;
+  @Input() postes: Poste[] | Espace[] = [];
+  @Input() creneaux: Creneau[] = [];
+  espaces: Espace[] = [];
+
+  posteDisponibles: { [postId: number]: { [creneau: string]: string | number } } = {};
 
 
-  postes: Poste[] = [
-    { id: 1, nom: 'AnimationJeu', description: 'Animation de jeux', placedisponible: 5 },
-    { id: 2, nom: 'Accueil', description: 'Accueil des participants', placedisponible: 5 },
-    { id: 3, nom: 'VenteRestauration', description: 'Vente de restauration', placedisponible: 5 },
-    { id: 4, nom: 'Cuisine', description: 'Préparation de repas', placedisponible: 5 },
-    { id: 5, nom: 'Tombola', description: 'Gestion de la tombola', placedisponible: 5 },
-    { id: 6, nom: 'ForumAssociation', description: 'Stand du forum des associations', placedisponible: 5 },
-  ];
 
-  creneaux: Creneau[] = [
-    { heureDebut: '9h', heureFin: '11h' },
-    { heureDebut: '11h', heureFin: '14h' },
-    { heureDebut: '14h', heureFin: '17h' },
-    { heureDebut: '17h', heureFin: '20h' },
-  ];
-  planningData: any[][] = [];
-  posteDisponibles: { [postId: number]: { [creneau: string]: number } } = {};
-  
-  constructor(private dialog: MatDialog, private inscriptionService: InscriptionService) {
-    this.initializePosteDisponibles();
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+    private httpClient: HttpClient 
+  ) {}
+
+  ngOnInit() {
+    // Fetch postes and creneaux from the backend when the component is initialized
+    this.fetchPostes();
+    this.fetchCreneaux();
+    this.fetchEspaces();
   }
-
-  ngOnInit() {}
 
   initializePosteDisponibles() {
     this.postes.forEach(poste => {
@@ -50,6 +46,43 @@ export class PlanningComponent implements OnInit {
       });
     });
   }
+
+  fetchPostes() {
+    // Make a GET request to your backend API to fetch postes
+    this.httpClient.get<Poste[]>('your-backend-api-url/postes').subscribe(
+      (data: Poste[]) => {
+        this.postes = data;
+        this.initializePosteDisponibles();
+      },
+      (error) => {
+        console.error('Error fetching postes:', error);
+      }
+    );
+  }
+
+  fetchCreneaux() {
+    // Make a GET request to your backend API to fetch creneaux
+    this.httpClient.get<Creneau[]>('your-backend-api-url/creneaux').subscribe(
+      (data: Creneau[]) => {
+        this.creneaux = data;
+      },
+      (error) => {
+        console.error('Error fetching creneaux:', error);
+      }
+    );
+  }
+
+  fetchEspaces() {
+    this.httpClient.get<Espace[]>('your-backend-api-url/espaces').subscribe(
+      (data: Espace[]) => {
+        this.espaces = data;
+      },
+      (error) => {
+        console.error('Error fetching espaces:', error);
+      }
+    );
+  }
+
 
   // Inside PlanningComponent class
 multipleSelection = false;
@@ -63,7 +96,10 @@ toggleMultipleSelection(): void {
   this.selectedButtons = [];
 }
 
-onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: string): void {
+onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: string, poste: Poste): void {
+  console.log(`creneau=${JSON.stringify(creneau)}`)
+  console.log(`poste=${JSON.stringify(poste)}`)
+  this.posteselect = poste
   if (this.multipleSelection) {
     // Multiple selection mode is active, add the button to the selected list
     const isSelected = this.isSelected(posteId, heureDebut);
@@ -77,7 +113,12 @@ onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: strin
 
     // Log the selected buttons to the console
     console.log('Selected Buttons:', this.selectedButtons);
-  } else {
+  } 
+  if (poste.espaces && poste.espaces.length > 1) {
+      // Ouvrir le composant AnimationJeuPlanningComponent avec les espaces spécifiques
+      this.router.navigate(['/animation-jeu-planning']);
+    } 
+    else {
     // Your existing logic for handling button click
     const posteSelectionne = this.postes.find(p => p.id === posteId);
     if (posteSelectionne) {

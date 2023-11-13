@@ -34,11 +34,9 @@ export class AuthService {
     );
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
-    // Effectuez une requête HTTP vers votre API backend pour enregistrer un nouvel utilisateur.
-    // Par exemple, utilisez http.post() pour envoyer les données d'inscription au backend.
-    const userData = { username, email, password };
-    return this.http.post(`${this.apiUrl}/register`, userData);
+  register(user: User): Observable<any> {
+    // Adjust the method to accept a User object
+    return this.http.post(`${this.apiUrl}/register`, user);
   }
 
   logout(): void {
