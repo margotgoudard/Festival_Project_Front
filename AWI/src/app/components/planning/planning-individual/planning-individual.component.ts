@@ -9,6 +9,10 @@ import { HttpClient } from '@angular/common/http';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { Poste } from 'src/app/interfaces/poste.interface';
+import { MockAuthService } from 'src/app/mocks/auth.service.mock';
+import { MockUserService } from 'src/app/mocks/user.service.mock';
+import { PosteCreneauService } from 'src/app/services/poste-creneau.service';
+import { MockPosteCreneauService } from 'src/app/mocks/poste-creneau.service.mock';
 
 @Component({
   selector: 'app-planning-individual',
@@ -23,10 +27,11 @@ export class PlanningIndividualComponent extends PlanningComponent implements On
     dialog: MatDialog,
     router: Router,
     httpClient: HttpClient, // Add this line to include httpClient
-    authService: AuthService,
-    private userService: UserService,
+    authService: MockAuthService,
+    planningService: MockPosteCreneauService,
+    private userService: MockUserService,
   ) {
-    super(dialog, router, httpClient, authService); // Ensure to call the parent's constructor
+    super(dialog, router, httpClient, authService, planningService); // Ensure to call the parent's constructor
   }
 
   override ngOnInit() {

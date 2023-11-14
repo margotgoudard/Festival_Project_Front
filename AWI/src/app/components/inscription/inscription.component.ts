@@ -20,7 +20,7 @@ export class InscriptionComponent {
   
   constructor(
     public dialogRef: MatDialogRef<InscriptionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, private inscriptionService: InscriptionService, private dialog: MatDialog
+    @Inject(MAT_DIALOG_DATA) public data: any, private inscriptionService: MockInscriptionService, private dialog: MatDialog
   ) {}
 
   ngOnInit() {

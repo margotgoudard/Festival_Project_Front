@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
+import { MockPosteCreneauService } from 'src/app/mocks/poste-creneau.service.mock';
 import { PosteCreneauService } from 'src/app/services/poste-creneau.service';
 
 @Component({
@@ -18,7 +19,7 @@ export class ModifyDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ModifyDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private posteCreneauService: PosteCreneauService // Inject your service
+    private posteCreneauService: MockPosteCreneauService // Inject your service
   ) {
     this.creneaux = data.creneaux;
     this.postes = data.postes;

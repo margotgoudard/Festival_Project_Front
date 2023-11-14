@@ -11,6 +11,9 @@ import { Espace } from 'src/app/interfaces/espace.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { ModifyDialogComponent } from '../modify-dialog/modify-dialog.component';
 import { PlanningItem } from 'src/app/interfaces/planning-item.interface';
+import { MockAuthService } from 'src/app/mocks/auth.service.mock';
+import { PosteCreneauService } from 'src/app/services/poste-creneau.service';
+import { MockPosteCreneauService } from 'src/app/mocks/poste-creneau.service.mock';
 
 @Component({
   selector: 'app-planning',
@@ -19,8 +22,8 @@ import { PlanningItem } from 'src/app/interfaces/planning-item.interface';
 })
 export class PlanningComponent implements OnInit {
   weekend: string[] = ['Samedi', 'Dimanche'];
-  private itemselect?: PlanningItem = undefined;
-  @Input() items: PlanningItem[] = [];
+  private itemselect?: Espace | Poste = undefined;
+  @Input() items: Poste[] | Espace[] = [];
   @Input() creneaux: Creneau[] = [];
 
 
@@ -34,13 +37,12 @@ export class PlanningComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private httpClient: HttpClient,
-    private authService: AuthService
+    private authService: MockAuthService,
+    public planningService: MockPosteCreneauService
   ) {}
 
   ngOnInit() {
-    // Fetch postes and creneaux from the backend when the component is initialized
-    this.fetchCreneaux();
-    this.fetchItems();
+    this.fetchData();
   }
 
   initializeItemDisponibles() {
@@ -52,10 +54,9 @@ export class PlanningComponent implements OnInit {
     });
   }
 
-  fetchItems() {
-    // Make a GET request to your backend API to fetch items
-    this.httpClient.get<PlanningItem[]>('your-backend-api-url/items').subscribe(
-      (data: PlanningItem[]) => {
+  fetchData() {
+    this.planningService.getItems().subscribe(
+      (data: Espace[] | Poste[]) => {
         this.items = data;
         this.initializeItemDisponibles();
       },
@@ -63,11 +64,8 @@ export class PlanningComponent implements OnInit {
         console.error('Error fetching items:', error);
       }
     );
-  }
 
-  fetchCreneaux() {
-    // Make a GET request to your backend API to fetch creneaux
-    this.httpClient.get<Creneau[]>('your-backend-api-url/creneaux').subscribe(
+    this.planningService.getCreneaux().subscribe(
       (data: Creneau[]) => {
         this.creneaux = data;
       },

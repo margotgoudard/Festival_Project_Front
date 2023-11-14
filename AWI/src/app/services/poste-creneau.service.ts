@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Creneau } from '../interfaces/creaneau.interface';
 import { Poste } from '../interfaces/poste.interface';
+import { Espace } from '../interfaces/espace.interface';
+import { PlanningItem } from '../interfaces/planning-item.interface';
 
 
 @Injectable({
@@ -17,6 +19,10 @@ export class PosteCreneauService {
 
   getPlanningInscription(): Observable<any> {
     return this.http.get(`${this.baseUrl}/planningInscription`);
+  }
+
+  getItems(): Observable<PlanningItem[]> {
+    return this.http.get<PlanningItem[]>(`${this.baseUrl}/items`);
   }
 
   // Function to add a new creneau
@@ -53,5 +59,17 @@ export class PosteCreneauService {
   updateCreneau(creneau: Creneau): Observable<Creneau> {
     const url = `${this.baseUrl}/creneaux/${creneau.heureDebut}`;
     return this.http.put<Creneau>(url, creneau);
+  }
+
+  getPostes(): Observable<Poste[]> {
+    return this.http.get<Poste[]>(`${this.baseUrl}/postes`);
+  }
+
+  getEspacess(): Observable<Espace[]> {
+    return this.http.get<Espace[]>(`${this.baseUrl}/espaces`);
+  }
+
+  getCreneaux(): Observable<Creneau[]> {
+    return this.http.get<Creneau[]>(`${this.baseUrl}/creneaux`);
   }
 }
