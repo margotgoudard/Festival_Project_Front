@@ -10,5 +10,5 @@ export const MockUser: User = {
   password: 'password123',
   tailleTShirt: 'M',
   isVegetarian: true,
-  role: '',
+  role: 'admin',
 };

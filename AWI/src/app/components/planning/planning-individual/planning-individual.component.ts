@@ -7,6 +7,8 @@ import { InscriptionService } from 'src/app/services/inscription.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
+import { AuthService } from 'src/app/services/auth.service';
+import { Poste } from 'src/app/interfaces/poste.interface';
 
 @Component({
   selector: 'app-planning-individual',
@@ -15,14 +17,16 @@ import { UserRegistration } from 'src/app/interfaces/user-registration.interface
 })
 export class PlanningIndividualComponent extends PlanningComponent implements OnInit {
   userRegistrations: UserRegistration[] = [];
+  postes: Poste[] = []; // Add this line to include the 'postes' property
 
   constructor(
     dialog: MatDialog,
     router: Router,
     httpClient: HttpClient, // Add this line to include httpClient
+    authService: AuthService,
     private userService: UserService,
   ) {
-    super(dialog, router, httpClient); // Ensure to call the parent's constructor
+    super(dialog, router, httpClient, authService); // Ensure to call the parent's constructor
   }
 
   override ngOnInit() {

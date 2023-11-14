@@ -24,6 +24,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { PlanningIndividualComponent } from './components/planning/planning-individual/planning-individual.component';
 import { PlanningInscriptionComponent } from './components/planning/planning-inscription/planning-inscription.component';
+import { ModifyDialogComponent } from './components/modify-dialog/modify-dialog.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { PlanningInscriptionComponent } from './components/planning/planning-ins
     NavigationComponent,
     PlanningIndividualComponent,
     PlanningInscriptionComponent,
+    ModifyDialogComponent,
   ],
   imports: [
     BrowserModule,

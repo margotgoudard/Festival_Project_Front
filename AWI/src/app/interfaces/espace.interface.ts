@@ -1,6 +1,5 @@
-import { Poste } from "./poste.interface";
+import { PlanningItem } from "./planning-item.interface";
 
-export interface Espace extends Poste {
-    id: number;
-    nom: string;
+export interface Espace extends PlanningItem {
+    
   }

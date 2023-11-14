@@ -4,6 +4,7 @@
     <input type="checkbox" [(ngModel)]="multipleSelection"> Selection multiple
     <button *ngIf="multipleSelection" (click)="inscrireATousLesPostes()" [disabled]="selectedButtons.length === 0">S'inscrire à tous</button>
   </label>
+  <button *ngIf="userRole === 'admin'" (click)="openModificationDialog()">Modifier Créneaux et Postes</button>
 
   <table>
     <thead>
@@ -22,16 +23,16 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let poste of postes; let posteIndex = index">
+      <ng-container *ngFor="let item of items; let itemIndex = index">
         <tr>
-          <td>{{ poste.nom }}</td>
+          <td>{{ item.nom }}</td>
           <ng-container *ngFor="let jour of weekend">
             <td *ngFor="let creneau of creneaux">
               <!-- Update the (click) event to pass additional parameters -->
-              <button (click)="onButtonClick(jour, creneau, poste.id, creneau.heureDebut, poste)"
-                      [disabled]="posteDisponibles[poste.id][creneau.heureDebut] === 0"
-                      [class.selected-button]="isSelected(poste.id, creneau.heureDebut)">
-                {{ posteDisponibles[poste.id][creneau.heureDebut] }} places restantes
+              <button (click)="onButtonClick(jour, creneau, item.id, creneau.heureDebut, item)"
+                      [disabled]="itemDisponibles[item.id][creneau.heureDebut] === 0"
+                      [class.selected-button]="isSelected(item.id, creneau.heureDebut)">
+                {{ itemDisponibles[item.id][creneau.heureDebut] }} places restantes
               </button>
             </td>
           </ng-container>

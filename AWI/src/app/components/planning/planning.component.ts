@@ -8,6 +8,9 @@ import { InscriptionService } from 'src/app/services/inscription.service';
 import { AnimationJeuPlanningComponent } from './animation-jeu-planning/animation-jeu-planning.component';
 import { HttpClient } from '@angular/common/http';
 import { Espace } from 'src/app/interfaces/espace.interface';
+import { AuthService } from 'src/app/services/auth.service';
+import { ModifyDialogComponent } from '../modify-dialog/modify-dialog.component';
+import { PlanningItem } from 'src/app/interfaces/planning-item.interface';
 
 @Component({
   selector: 'app-planning',
@@ -16,46 +19,48 @@ import { Espace } from 'src/app/interfaces/espace.interface';
 })
 export class PlanningComponent implements OnInit {
   weekend: string[] = ['Samedi', 'Dimanche'];
-  private posteselect?: Poste = undefined;
-  @Input() postes: Poste[] | Espace[] = [];
+  private itemselect?: PlanningItem = undefined;
+  @Input() items: PlanningItem[] = [];
   @Input() creneaux: Creneau[] = [];
-  espaces: Espace[] = [];
 
-  posteDisponibles: { [postId: number]: { [creneau: string]: string | number } } = {};
+
+  userRole: string = '';
+
+  itemDisponibles: { [itemId: number]: { [creneau: string]: string | number } } = {};
 
 
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private httpClient: HttpClient 
+    private httpClient: HttpClient,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
     // Fetch postes and creneaux from the backend when the component is initialized
-    this.fetchPostes();
     this.fetchCreneaux();
-    this.fetchEspaces();
+    this.fetchItems();
   }
 
-  initializePosteDisponibles() {
-    this.postes.forEach(poste => {
-      this.posteDisponibles[poste.id] = {};
+  initializeItemDisponibles() {
+    this.items.forEach(item => {
+      this.itemDisponibles[item.id] = {};
       this.creneaux.forEach(creneau => {
-        this.posteDisponibles[poste.id][creneau.heureDebut] = poste.placedisponible;
+        this.itemDisponibles[item.id][creneau.heureDebut] = item.placedisponible;
       });
     });
   }
 
-  fetchPostes() {
-    // Make a GET request to your backend API to fetch postes
-    this.httpClient.get<Poste[]>('your-backend-api-url/postes').subscribe(
-      (data: Poste[]) => {
-        this.postes = data;
-        this.initializePosteDisponibles();
+  fetchItems() {
+    // Make a GET request to your backend API to fetch items
+    this.httpClient.get<PlanningItem[]>('your-backend-api-url/items').subscribe(
+      (data: PlanningItem[]) => {
+        this.items = data;
+        this.initializeItemDisponibles();
       },
       (error) => {
-        console.error('Error fetching postes:', error);
+        console.error('Error fetching items:', error);
       }
     );
   }
@@ -68,17 +73,6 @@ export class PlanningComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching creneaux:', error);
-      }
-    );
-  }
-
-  fetchEspaces() {
-    this.httpClient.get<Espace[]>('your-backend-api-url/espaces').subscribe(
-      (data: Espace[]) => {
-        this.espaces = data;
-      },
-      (error) => {
-        console.error('Error fetching espaces:', error);
       }
     );
   }
@@ -96,10 +90,10 @@ toggleMultipleSelection(): void {
   this.selectedButtons = [];
 }
 
-onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: string, poste: Poste): void {
+onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: string, item: PlanningItem): void {
   console.log(`creneau=${JSON.stringify(creneau)}`)
-  console.log(`poste=${JSON.stringify(poste)}`)
-  this.posteselect = poste
+  console.log(`item=${JSON.stringify(item)}`)
+  this.itemselect = item
   if (this.multipleSelection) {
     // Multiple selection mode is active, add the button to the selected list
     const isSelected = this.isSelected(posteId, heureDebut);
@@ -114,30 +108,33 @@ onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: strin
     // Log the selected buttons to the console
     console.log('Selected Buttons:', this.selectedButtons);
   } 
-  if (poste.espaces && poste.espaces.length > 1) {
+  if ( 'espaces' in item) {
+  const poste = item as Poste;
+    if(poste.espaces && poste.espaces.length > 1) {
       // Ouvrir le composant AnimationJeuPlanningComponent avec les espaces spécifiques
       this.router.navigate(['/animation-jeu-planning']);
     } 
     else {
     // Your existing logic for handling button click
-    const posteSelectionne = this.postes.find(p => p.id === posteId);
-    if (posteSelectionne) {
+    const itemSelectionne = this.items.find(p => p.id === posteId);
+    if (itemSelectionne) {
       const creneauSelectionne = creneau;
       const jourSelectionne = jour;
 
       const dialogRef = this.dialog.open(InscriptionComponent, {
         width: '400px',
-        data: { jour: jourSelectionne, creneau: creneauSelectionne, poste: posteSelectionne }
+        data: { jour: jourSelectionne, creneau: creneauSelectionne, item: itemSelectionne }
       });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result && result.success) {
           // Update available slots and re-render the button
-          posteSelectionne.placedisponible--;
+          itemSelectionne.placedisponible--;
         }
       });
     }
   }
+}
 }
 
 isSelected(posteId: number, heureDebut: string): boolean {
@@ -153,6 +150,34 @@ inscrireATousLesPostes() {
   }
   // Logique pour inscrire à tous les postes sélectionnés
   console.log("Inscription à tous les postes :", this.selectedButtons);
+}
+
+setUserRole() {
+  // Subscribe to the observable to get the user information
+  this.authService.getCurrentUser().subscribe(
+    (user) => {
+      // Handle the user information here
+      this.userRole = user ? user.role : '';
+    },
+    (error) => {
+      console.error('Error fetching user information:', error);
+    }
+  );
+}
+
+openModificationDialog() {
+  const dialogRef = this.dialog.open(ModifyDialogComponent, {
+    width: '600px', // Adjust the width as needed
+    data: {
+      creneaux: this.creneaux, // Pass your current creneaux and postes data to the dialog
+      postes: this.items
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    // Handle the result from the modification dialog if needed
+    console.log('Modification dialog closed with result:', result);
+  });
 }
 
 }

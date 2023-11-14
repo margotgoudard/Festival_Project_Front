@@ -8,6 +8,7 @@ import { User } from '../model/user.model';
 })
 export class AuthService {
   private apiUrl = 'URL_DE_VOTRE_API'; // Remplacez par l'URL de votre API.
+  private currentUser: { id: number, username: string, role: string } | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -42,6 +43,7 @@ export class AuthService {
   logout(): void {
     // Supprimez le token JWT du stockage local.
     localStorage.removeItem('jwtToken');
+    this.currentUser = null;
   }
 
   getJwtToken(): string | null {
@@ -57,6 +59,16 @@ export class AuthService {
   getUserById(userId: string): Observable<User> {
     // Effectuez une requête HTTP vers votre API backend pour récupérer les données de l'utilisateur par son ID.
     return this.http.get<User>(`${this.apiUrl}/users/${userId}`);
+  }
+
+  getCurrentUser(): Observable<{ id: number, username: string, role: string } | null> {
+    // Check if there's a stored user, otherwise make a request to fetch the user
+    if (this.currentUser) {
+      return new Observable(observer => observer.next(this.currentUser));
+    } else {
+      // Make a request to your backend to get the current user
+      return this.http.get<{ id: number, username: string, role: string }>('your-backend-api-url/current-user');
+    }
   }
 
 }

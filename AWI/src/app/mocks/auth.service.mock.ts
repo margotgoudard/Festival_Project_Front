@@ -4,13 +4,19 @@ import { Observable, of } from 'rxjs';
 @Injectable()
 export class MockAuthService {
   login(username: string, password: string): Observable<any> {
-    // Ici, vous pouvez simuler une réponse réussie ou une erreur en fonction des informations d'identification.
-    // Par exemple, si les informations d'identification sont correctes :
-    if (username === 'utilisateur' && password === 'motdepasse') {
-      return of({ token: 'votre-jwt-token-simule' });
+    // Here, you can simulate a successful response or an error based on the credentials.
+    // For example, if the credentials are correct:
+    if (username === 'utilisateur' && password === 'password') {
+      const simulatedResponse = {
+        token: 'your-simulated-jwt-token',
+        user: {
+          role: 'admin', // Set the role here (e.g., 'user' or 'admin')
+        },
+      };
+      return of(simulatedResponse);
     } else {
-      // Si les informations d'identification sont incorrectes, simulez une erreur.
-      return new Observable(observer => {
+      // If the credentials are incorrect, simulate an error.
+      return new Observable((observer) => {
         observer.error({ status: 401 });
       });
     }
