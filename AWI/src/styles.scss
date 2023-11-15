@@ -236,3 +236,25 @@ label button {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.mat-elevation-z8 {
+    /* Utilisez la hauteur que vous préférez pour centrer verticalement */
+        margin-top: 50px; /* Ajoutez l'espace souhaité entre le haut de la page et la table */
+        margin-left: 20px; /* ajustez la valeur selon votre préférence */
+        margin-right: 20px; /* ajustez la valeur selon votre préférence */
+        overflow-x: auto;
+        overflow-y: auto;
+        padding-bottom: 50px;
+      }
+    
+      .mat-elevation-z8 td {
+        cursor: pointer; /* Ajoutez cette ligne pour activer le clic sur les cellules */
+      }
+    
+    
+td.mat-cell {
+    white-space: nowrap;
+    display: inline-block;
+}
+      

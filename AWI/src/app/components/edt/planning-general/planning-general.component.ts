@@ -89,7 +89,7 @@ export class PlanningGeneralComponent implements OnInit {
     if (user && user.idUtilisateur) {
       const userId = user.idUtilisateur;
       this.userService.setUserId(userId); // Set the userId in the service
-      this.router.navigate(['planning-individuel/:id']);
+      this.router.navigate(['planning-individuel', userId]);
     } else {
       console.error('Données utilisateur incorrectes :', user);
     }
