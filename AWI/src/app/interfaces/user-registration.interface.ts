@@ -1,6 +1,14 @@
+import { User } from "../model/user.model";
+import { Creneau } from "./creaneau.interface";
+import { Espace } from "./espace.interface";
+import { Poste } from "./poste.interface";
+import { Zone } from "./zone.interface";
+
 export interface UserRegistration {
-    posteId: number;
-    heureDebut: string;
-    jour: string;
+    user: User;
+    poste: Poste;
+    zone: Zone;
+    espace: Espace;
+    creneau: Creneau;
     // Add other properties if needed
   }

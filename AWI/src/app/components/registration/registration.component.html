@@ -1,4 +1,5 @@
 <!-- registration.component.html -->
+<div class="registration-popup-container">
 <div class="registration-container">
     <h2>Inscription</h2>
     <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
@@ -48,9 +49,15 @@
         </div>
         <div class="form-group">
             <label for="isVegetarian">Végétarien</label>
-            <input type="checkbox" id="isVegetarian" formControlName="isVegetarian">
-            <!-- Add similar divs for other fields with appropriate error messages -->
+            <select id="isVegetarian" formControlName="isVegetarian" required>
+                <option value="" disabled selected>Sélectionner une réponse</option>
+                <option value="XS">Oui</option>
+                <option value="S">Non</option>
+                <!-- Add more options as needed -->
+            </select>
+            <div *ngIf="isFieldInvalid('isVegetarian')">Veuillez sélectionner une .</div>
         </div>
         <button type="submit">S'inscrire</button>
     </form>
+</div>
 </div>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user.model';
+import { UserRegistration } from '../interfaces/user-registration.interface';
 
 @Injectable()
 export class UserService {
@@ -21,5 +22,15 @@ export class UserService {
 
   getUserRegistrations(userId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/users/${userId}/registrations`);
+  }
+
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/users`);
+  }
+
+  getUsersRegistration(): Observable<UserRegistration[]> {
+    const url = `${this.apiUrl}/usersRegistration`; // Adjust the endpoint based on your backend API
+
+    return this.http.get<UserRegistration[]>(url);
   }
 }

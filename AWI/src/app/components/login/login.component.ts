@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
   
           // Redirect based on user role
           if (userRole === 'admin') {
-            this.router.navigate(['/planning-inscription']);
+            this.router.navigate(['/planning-general']);
           } else {
             this.router.navigate(['/planning-individual']);
           }

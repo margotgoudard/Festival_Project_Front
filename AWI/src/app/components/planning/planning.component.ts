@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
@@ -12,22 +12,26 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ModifyDialogComponent } from '../modify-dialog/modify-dialog.component';
 import { PlanningItem } from 'src/app/interfaces/planning-item.interface';
 import { MockAuthService } from 'src/app/mocks/auth.service.mock';
-import { PosteCreneauService } from 'src/app/services/poste-creneau.service';
-import { MockPosteCreneauService } from 'src/app/mocks/poste-creneau.service.mock';
+import { PlanningService } from 'src/app/services/poste-creneau.service';
+import { MockPlanningService } from 'src/app/mocks/poste-creneau.service.mock';
+import { Jour } from 'src/app/enumeration/jour.enum';
+import { Subscription } from 'rxjs';
+import { Zone } from 'src/app/interfaces/zone.interface';
 
 @Component({
   selector: 'app-planning',
   templateUrl: './planning.component.html',
   styleUrls: ['./planning.component.scss']
 })
-export class PlanningComponent implements OnInit {
+export class PlanningComponent implements OnInit, OnDestroy{
   weekend: string[] = ['Samedi', 'Dimanche'];
   private itemselect?: Espace | Poste = undefined;
-  @Input() items: Poste[] | Espace[] = [];
+  @Input() items: Poste[] | Zone[] |Espace[] = [];
   @Input() creneaux: Creneau[] = [];
-
-
+  joursEnum = Jour;
+  
   userRole: string = '';
+  private creneauxSubscription: Subscription | undefined;
 
   itemDisponibles: { [itemId: number]: { [creneau: string]: string | number } } = {};
 
@@ -38,11 +42,19 @@ export class PlanningComponent implements OnInit {
     private router: Router,
     private httpClient: HttpClient,
     private authService: MockAuthService,
-    public planningService: MockPosteCreneauService
+    public planningService: MockPlanningService
   ) {}
 
   ngOnInit() {
+    this.setUserRole();
     this.fetchData();
+  }
+
+  ngOnDestroy() {
+    // Assurez-vous de désabonner la souscription pour éviter les fuites de mémoire
+    if (this.creneauxSubscription) {
+      this.creneauxSubscription.unsubscribe();
+    }
   }
 
   initializeItemDisponibles() {
@@ -65,8 +77,10 @@ export class PlanningComponent implements OnInit {
       }
     );
 
+    
     this.planningService.getCreneaux().subscribe(
       (data: Creneau[]) => {
+        console.log('PlanningComponent - Creneaux:', data);
         this.creneaux = data;
       },
       (error) => {
@@ -106,9 +120,9 @@ onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: strin
     // Log the selected buttons to the console
     console.log('Selected Buttons:', this.selectedButtons);
   } 
-  if ( 'espaces' in item) {
+  if ( 'zones' in item) {
   const poste = item as Poste;
-    if(poste.espaces && poste.espaces.length > 1) {
+    if(poste.zones && poste.zones.length > 1) {
       // Ouvrir le composant AnimationJeuPlanningComponent avec les espaces spécifiques
       this.router.navigate(['/animation-jeu-planning']);
     } 
@@ -176,6 +190,11 @@ openModificationDialog() {
     // Handle the result from the modification dialog if needed
     console.log('Modification dialog closed with result:', result);
   });
+}
+
+getWeekendDays(): string[] {
+  return Object.values(this.joursEnum)
+    .filter(jour => jour === Jour.Samedi || jour === Jour.Dimanche) as string[];
 }
 
 }

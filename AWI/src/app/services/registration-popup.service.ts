@@ -14,6 +14,7 @@ export class RegistrationPopupService {
   openRegistrationPopup() {
     const dialogRef = this.dialog.open(RegistrationComponent, {
       width: '400px', // Set the width as needed
+      panelClass: 'registration-popup-container',
     });
 
     // Handle the result when the registration popup is closed

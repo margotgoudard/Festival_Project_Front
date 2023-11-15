@@ -22,10 +22,17 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
-import { PlanningIndividualComponent } from './components/planning/planning-individual/planning-individual.component';
+import { PlanningIndividualComponent } from './components/edt/planning-individual/planning-individual.component';
 import { PlanningInscriptionComponent } from './components/planning/planning-inscription/planning-inscription.component';
 import { ModifyDialogComponent } from './components/modify-dialog/modify-dialog.component';
-
+import { PosteDialogComponent } from './components/poste-dialog/poste-dialog.component';
+import { CreneauDialogComponent } from './components/creneau-dialog/creneau-dialog.component';
+import { PlanningGeneralComponent } from './components/edt/planning-general/planning-general.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input'; // Add this import as well, assuming you use MatInputModule later in your components
+import { MatSelectModule } from '@angular/material/select'; // Add this import for MatSelectModule if used
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -42,6 +49,9 @@ import { ModifyDialogComponent } from './components/modify-dialog/modify-dialog.
     PlanningIndividualComponent,
     PlanningInscriptionComponent,
     ModifyDialogComponent,
+    PosteDialogComponent,
+    CreneauDialogComponent,
+    PlanningGeneralComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +63,11 @@ import { ModifyDialogComponent } from './components/modify-dialog/modify-dialog.
     MatIconModule,
     MatCheckboxModule,
     MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    BrowserAnimationsModule,
+    MatSortModule
   ],
   providers: [
     MockAuthService,

@@ -1,6 +1,5 @@
 // planning-individual.component.ts
 import { Component, OnInit } from '@angular/core';
-import { PlanningComponent } from '../planning.component';
 import { UserService } from 'src/app/services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { InscriptionService } from 'src/app/services/inscription.service';
@@ -11,31 +10,23 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { MockAuthService } from 'src/app/mocks/auth.service.mock';
 import { MockUserService } from 'src/app/mocks/user.service.mock';
-import { PosteCreneauService } from 'src/app/services/poste-creneau.service';
-import { MockPosteCreneauService } from 'src/app/mocks/poste-creneau.service.mock';
+import { PlanningService } from 'src/app/services/poste-creneau.service';
+import { MockPlanningService } from 'src/app/mocks/poste-creneau.service.mock';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-planning-individual',
   templateUrl: './planning-individual.component.html',
   styleUrls: ['./planning-individual.component.scss'],
 })
-export class PlanningIndividualComponent extends PlanningComponent implements OnInit {
+export class PlanningIndividualComponent implements OnInit {
   userRegistrations: UserRegistration[] = [];
   postes: Poste[] = []; // Add this line to include the 'postes' property
 
-  constructor(
-    dialog: MatDialog,
-    router: Router,
-    httpClient: HttpClient, // Add this line to include httpClient
-    authService: MockAuthService,
-    planningService: MockPosteCreneauService,
-    private userService: MockUserService,
-  ) {
-    super(dialog, router, httpClient, authService, planningService); // Ensure to call the parent's constructor
-  }
+  constructor(private userService: MockUserService) {}
 
-  override ngOnInit() {
-    super.ngOnInit(); // Call the parent's ngOnInit method
+  ngOnInit() {
+  
     const userId = 'userId';
     this.fetchUserRegistrations(userId);
   }
@@ -56,8 +47,12 @@ export class PlanningIndividualComponent extends PlanningComponent implements On
     // Assuming userRegistrations is an array of objects with postId, jour, and heureDebut properties
    return this.userRegistrations.some(
       (registration) =>
-        registration.posteId === postId && registration.jour === jour && registration.heureDebut === heureDebut
+        registration.poste.id === postId
     );
   }
+
+  dataSource = new MatTableDataSource<any>([]);
+
+  displayedColumns: string[] = ['nomUtilisateur', 'prenom', 'email', 'poste', 'zone', 'espace', 'jour', 'creneau'];
 
 }

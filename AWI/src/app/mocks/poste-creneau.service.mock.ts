@@ -1,28 +1,41 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of, switchMap } from 'rxjs';
 import { Creneau } from '../interfaces/creaneau.interface';
 import { Poste } from '../interfaces/poste.interface';
 import { PlanningItem } from '../interfaces/planning-item.interface';
 import { Espace } from '../interfaces/espace.interface';
+import { PosteDialogComponent } from '../components/poste-dialog/poste-dialog.component';
+import { CreneauDialogComponent } from '../components/creneau-dialog/creneau-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Jour } from '../enumeration/jour.enum';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MockPosteCreneauService {
+export class MockPlanningService {
   // Mock data for testing purposes
   private mockPlanningInscription = { /* mock planningInscription data */ };
-  private mockCreneaux: Creneau[] = [{heureDebut: '10h', heureFin: '11h' ,jour : 'Samedi'}];
+  private mockCreneaux: Creneau[] = [{heureDebut: '10h', heureFin: '11h' ,jour : Jour.Samedi}, {heureDebut: '11h', heureFin: '12h' ,jour : Jour.Dimanche}];
   private mockPostes: Poste[] = [
     {
         id: 1,
         nom: 'poste1',
         description: 'description du poste1',
         placedisponible: 5,
-        espaces: [{
+        zones: [{
             id: 1,
-            nom: 'espace1',
-            description: 'description espace1',
-            placedisponible: 5
+            nom: 'zone1',
+            description: 'description zone1',
+            placedisponible: 5,
+            espaces: [
+              {
+                  id: 1,
+                  nom: 'espace1',
+                  description: 'description du espace1',
+                  placedisponible: 5,
+              }
+            ]
+            
         }]
     }
 ];
@@ -39,6 +52,10 @@ private mockEspaces: Espace[] = [
 
 private mockData: (Poste | Espace)[] = [];
 
+constructor(private dialog: MatDialog) {
+  // Initialize your service
+}
+
 getItems(): Observable<(Espace | Poste)[]> {
   // Determine the type based on the structure of the first item in mockPostes
 
@@ -53,6 +70,7 @@ getItems(): Observable<(Espace | Poste)[]> {
 
 // New method to fetch creneaux
 getCreneaux(): Observable<Creneau[]> {
+  console.log('MockPlanningService - Creneaux:', this.mockCreneaux);
   return of(this.mockCreneaux);
 }
 
@@ -66,9 +84,23 @@ getPostes(): Observable<Poste[]> {
   }
 
   addCreneau(creneau: Creneau): Observable<Creneau> {
-    // Simulate a successful addition of a creneau
-    this.mockCreneaux.push(creneau);
-    return of(creneau);
+    // Open a dialog to get new information for the creneau
+    const dialogRef = this.dialog.open(CreneauDialogComponent, {
+      width: '400px',
+      data: { creneau: { ...creneau } } // Pass the current creneau data to the dialog
+    });
+  
+    return dialogRef.afterClosed().pipe(
+      switchMap(newCreneau => {
+        if (newCreneau) {
+          // Simulate a successful addition of the creneau
+          this.mockCreneaux.push(newCreneau);
+          return of(newCreneau);
+        } else {
+          return EMPTY; // Return an empty observable if the user cancels the operation
+        }
+      })
+    );
   }
 
   removeCreneau(creneau: Creneau): Observable<void> {
@@ -81,9 +113,23 @@ getPostes(): Observable<Poste[]> {
   }
 
   addPoste(poste: Poste): Observable<Poste> {
-    // Simulate a successful addition of a poste
-    this.mockPostes.push(poste);
-    return of(poste);
+    // Open a dialog to get new information for the poste
+    const dialogRef = this.dialog.open(PosteDialogComponent, {
+      width: '400px',
+      data: { poste: { ...poste } } // Pass the current poste data to the dialog
+    });
+  
+    return dialogRef.afterClosed().pipe(
+      switchMap(newPoste => {
+        if (newPoste) {
+          // Simulate a successful addition of the poste
+          this.mockPostes.push(newPoste);
+          return of(newPoste);
+        } else {
+          return EMPTY; // Return an empty observable if the user cancels the operation
+        }
+      })
+    );
   }
 
   removePoste(poste: Poste): Observable<void> {

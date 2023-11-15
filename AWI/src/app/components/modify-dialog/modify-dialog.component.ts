@@ -1,9 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Jour } from 'src/app/enumeration/jour.enum';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
-import { MockPosteCreneauService } from 'src/app/mocks/poste-creneau.service.mock';
-import { PosteCreneauService } from 'src/app/services/poste-creneau.service';
+import { MockPlanningService } from 'src/app/mocks/poste-creneau.service.mock';
+import { PlanningService } from 'src/app/services/poste-creneau.service';
 
 @Component({
   selector: 'app-modify-dialog',
@@ -19,7 +20,8 @@ export class ModifyDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ModifyDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private posteCreneauService: MockPosteCreneauService // Inject your service
+    private PlanningService: MockPlanningService, // Inject your service
+    private cdr: ChangeDetectorRef
   ) {
     this.creneaux = data.creneaux;
     this.postes = data.postes;
@@ -38,10 +40,10 @@ export class ModifyDialogComponent {
         nom: this.selectedPoste.nom || '',
         description: this.selectedPoste.description || '',
         placedisponible: this.selectedPoste.placedisponible || 0,
-        espaces: this.selectedPoste.espaces || []
+        zones: this.selectedPoste.zones || []
       };
   
-      this.posteCreneauService.updatePoste(updatedPoste).subscribe(
+      this.PlanningService.updatePoste(updatedPoste).subscribe(
         () => {
           // Update the local postes array after a successful update
           const index = this.postes.findIndex(p => p.id === this.selectedPoste?.id);
@@ -70,10 +72,10 @@ export class ModifyDialogComponent {
       const updatedCreneau: Creneau = {
         heureDebut: this.selectedCreneau.heureDebut || '', // Provide a default value if undefined
         heureFin: this.selectedCreneau.heureFin || '',     // Provide a default value if undefined
-        jour: this.selectedCreneau.jour || ''              // Provide a default value if undefined
+        jour: this.selectedCreneau.jour             // Provide a default value if undefined
       };
   
-      this.posteCreneauService.updateCreneau(updatedCreneau).subscribe(
+      this.PlanningService.updateCreneau(updatedCreneau).subscribe(
         () => {
           // Update the local creneaux array after a successful update
           const index = this.creneaux.findIndex(c => c.heureDebut === this.selectedCreneau?.heureDebut);
@@ -91,29 +93,31 @@ export class ModifyDialogComponent {
     }
   }
   // Function to handle adding a new creneau
-onAddCreneau(): void {
-  // Placeholder logic to add a new creneau
-  const newCreneau: Creneau = {
-    heureDebut: '', // Replace with the actual default value
-    heureFin: '',   // Replace with the actual default value
-    jour: ''       // Replace with the actual default value
-  };
-
-  this.posteCreneauService.addCreneau(newCreneau).subscribe(
-    (addedCreneau) => {
-      // Update the local creneaux array after a successful addition
-      this.creneaux.push(addedCreneau);
-    },
-    (error) => {
-      console.error('Error adding creneau:', error);
-    }
-  );
-}
+  onAddCreneau(): void {
+    const newCreneau: Creneau = {
+      heureDebut: '', // Replace with the actual default value
+      heureFin: '',   // Replace with the actual default value
+      jour: Jour.Samedi       // Replace with the actual default value
+    };
+  
+    this.PlanningService.addCreneau(newCreneau).subscribe(
+      (addedCreneau) => {
+        // Update the local creneaux array after a successful addition
+        this.creneaux.push(addedCreneau);
+  
+        // Manually trigger change detection
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        console.error('Error adding creneau:', error);
+      }
+    );
+  }
 
 // Function to handle removing a creneau
 onRemoveCreneau(creneau: Creneau): void {
   // Placeholder logic to remove the selected creneau
-  this.posteCreneauService.removeCreneau(creneau).subscribe(
+  this.PlanningService.removeCreneau(creneau).subscribe(
     () => {
       // Update the local creneaux array after a successful removal
       this.creneaux = this.creneaux.filter(c => c !== creneau);
@@ -132,10 +136,10 @@ onAddPoste(): void {
     nom: '',                          // Replace with the actual default value
     description: '',   // Replace with the actual default value
     placedisponible: 0,                       // Replace with the actual default value
-    espaces: []                                // Replace with the actual default value
+    zones: []                                // Replace with the actual default value
   };
 
-  this.posteCreneauService.addPoste(newPoste).subscribe(
+  this.PlanningService.addPoste(newPoste).subscribe(
     (addedPoste) => {
       // Update the local postes array after a successful addition
       this.postes.push(addedPoste);
@@ -149,7 +153,7 @@ onAddPoste(): void {
 // Function to handle removing a poste
 onRemovePoste(poste: Poste): void {
   // Placeholder logic to remove the selected poste
-  this.posteCreneauService.removePoste(poste).subscribe(
+  this.PlanningService.removePoste(poste).subscribe(
     () => {
       // Update the local postes array after a successful removal
       this.postes = this.postes.filter(p => p !== poste);

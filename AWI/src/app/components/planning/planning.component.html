@@ -3,41 +3,43 @@
   <label>
     <input type="checkbox" [(ngModel)]="multipleSelection"> Selection multiple
     <button *ngIf="multipleSelection" (click)="inscrireATousLesPostes()" [disabled]="selectedButtons.length === 0">S'inscrire à tous</button>
-  </label>
-  <button *ngIf="userRole === 'admin'" (click)="openModificationDialog()">Modifier Créneaux et Postes</button>
+    <button *ngIf="userRole === 'admin'" (click)="openModificationDialog()">Modifier Créneaux et Postes</button>
+</label>
 
   <table>
     <thead>
       <tr>
         <th></th>
-        <th [attr.colspan]="creneaux.length">Samedi</th>
-        <th [attr.colspan]="creneaux.length">Dimanche</th>
+        <th *ngFor="let jour of getWeekendDays()">
+          {{ jour }}
+        </th>
       </tr>
       <tr>
         <th>Heures</th>
-        <ng-container *ngFor="let jour of weekend">
+        <ng-container *ngFor="let jour of getWeekendDays()">
           <th *ngFor="let creneau of creneaux">
-            {{ creneau.heureDebut }} - {{ creneau.heureFin }}
+            {{ creneau.heureDebut }} - {{ creneau.heureFin }} 
           </th>
         </ng-container>
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let item of items; let itemIndex = index">
-        <tr>
-          <td>{{ item.nom }}</td>
-          <ng-container *ngFor="let jour of weekend">
-            <td *ngFor="let creneau of creneaux">
-              <!-- Update the (click) event to pass additional parameters -->
-              <button (click)="onButtonClick(jour, creneau, item.id, creneau.heureDebut, item)"
-                      [disabled]="itemDisponibles[item.id][creneau.heureDebut] === 0"
-                      [class.selected-button]="isSelected(item.id, creneau.heureDebut)">
-                {{ itemDisponibles[item.id][creneau.heureDebut] }} places restantes
-              </button>
-            </td>
-          </ng-container>
-        </tr>
-      </ng-container>
-    </tbody>
+      <tbody>
+        <ng-container *ngFor="let item of items; let itemIndex = index">
+          <tr>
+            <td>{{ item.nom }}</td>
+            <ng-container *ngFor="let jour of weekend">
+              <td *ngFor="let creneau of creneaux">
+                <!-- Update the (click) event to pass additional parameters -->
+                <button (click)="onButtonClick(jour, creneau, item.id, creneau.heureDebut, item)"
+                        [disabled]="itemDisponibles[item.id][creneau.heureDebut] === 0"
+                        [class.selected-button]="isSelected(item.id, creneau.heureDebut)">
+                  {{ itemDisponibles[item.id][creneau.heureDebut] }} places restantes
+                </button>
+              </td>
+            </ng-container>
+          </tr>
+        </ng-container>
+      </tbody>
   </table>
 </div>

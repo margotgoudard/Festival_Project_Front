@@ -1,44 +1,26 @@
 <!-- Modify this template based on your requirements -->
 <div>
     <h2>Modify Creneaux and Postes</h2>
-    <div *ngIf="selectedPoste">
-        <h3>Edit Poste</h3>
-        <form>
-          <!-- Add form fields for editing poste properties -->
-          <label>Nom: <input [(ngModel)]="selectedPoste.nom" /></label>
-          <label>Description: <input [(ngModel)]="selectedPoste.description" /></label>
-          <label>Places Disponibles: <input [(ngModel)]="selectedPoste.placedisponible" /></label>
-          <button (click)="onSavePosteChanges()">Save Changes</button>
-        </form>
-      </div>
     
-      <div *ngIf="selectedCreneau">
-        <h3>Edit Creneau</h3>
-        <form>
-          <!-- Add form fields for editing creneau properties -->
-          <label>Heure de Début: <input [(ngModel)]="selectedCreneau.heureDebut" /></label>
-          <label>Heure de Fin: <input [(ngModel)]="selectedCreneau.heureFin" /></label>
-          <label>Jour: <input [(ngModel)]="selectedCreneau.jour" /></label>
-          <button (click)="onSaveCreneauChanges()">Save Changes</button>
-        </form>
+      <div>
+        <h3>Creneaux</h3>
+        <button (click)="onAddCreneau()">Add Creneau</button>
+        <ul>
+          <li *ngFor="let creneau of creneaux">
+            {{ creneau.heureDebut }} - {{ creneau.heureFin }} ({{ creneau.jour }})
+            <button (click)="onRemoveCreneau(creneau)">Remove</button>
+          </li>
+        </ul>
       </div>
-    <div>
-      <h3>Creneaux</h3>
-      <button (click)="onAddCreneau()">Add Creneau</button>
-      <ul>
-        <li *ngFor="let creneau of creneaux">
-          {{ creneau }} <button (click)="onRemoveCreneau(creneau)">Remove</button>
-        </li>
-      </ul>
-    </div>
-    <div>
-      <h3>Postes</h3>
-      <button (click)="onAddPoste()">Add Poste</button>
-      <ul>
-        <li *ngFor="let poste of postes">
-          {{ poste }} <button (click)="onRemovePoste(poste)">Remove</button>
-        </li>
-      </ul>
-    </div>
+      <div>
+        <h3>Postes</h3>
+        <button (click)="onAddPoste()">Add Poste</button>
+        <ul>
+          <li *ngFor="let poste of postes">
+            {{ poste.nom }} - {{ poste.description }} ({{ poste.placedisponible }} places disponibles)
+            <button (click)="onRemovePoste(poste)">Remove</button>
+          </li>
+        </ul>
+      </div>
     <button (click)="onClose()">Close</button>
   </div>

@@ -1,0 +1,17 @@
+<h2>Edit Creneau</h2>
+<form>
+  <!-- Add form fields for editing creneau properties -->
+  <label>Heure de Début: <input [(ngModel)]="data.creneau.heureDebut" [ngModelOptions]="{standalone: true}" /></label>
+  <label>Heure de Fin: <input [(ngModel)]="data.creneau.heureFin" [ngModelOptions]="{standalone: true}" /></label>
+  
+  <!-- Replace input with a select dropdown for the day -->
+  <label>Jour:
+    <select [(ngModel)]="data.creneau.jour" [ngModelOptions]="{standalone: true}">
+      <!-- Replace the options with your enum values -->
+      <option *ngFor="let jour of jours" [value]="jour">{{ jour }}</option>
+    </select>
+  </label>
+
+  <button mat-button (click)="onSaveClick()">Save Changes</button>
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+</form>
