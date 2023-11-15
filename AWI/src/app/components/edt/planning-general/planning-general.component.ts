@@ -3,7 +3,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { MockUserService } from 'src/app/mocks/user.service.mock';
+import { User } from 'src/app/model/user.model';
 import { UserService } from 'src/app/services/user.service';
 
 
@@ -19,7 +22,7 @@ export class PlanningGeneralComponent implements OnInit {
 
   displayedColumns: string[] = ['nomUtilisateur', 'prenom', 'email', 'poste', 'zone', 'espace', 'jour', 'creneau'];
 
-  constructor(private userService: MockUserService) {}
+  constructor(private userService: MockUserService, private router: Router) {}
 
   ngOnInit() {
     this.loadUsers();
@@ -29,18 +32,25 @@ export class PlanningGeneralComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
+  
+
   loadUsers() {
     this.userService.getUsersRegistration().subscribe(
       (userRegistrations) => {
         // Map UserRegistration objects to a format suitable for display
         const mappedUsers = userRegistrations.map(registration => ({
+          idUtilisateur: registration.user.id,
           nomUtilisateur: registration.user.nom,
           prenom: registration.user.prenom,
           email: registration.user.mail,
+          idPoste: registration.poste.id,
           poste: registration.poste.nom, // Assuming 'poste' has a 'nom' property
+          idZone: registration.zone.id,
           zone: registration.zone.nom, // Assuming 'poste' has a 'zone' property with 'nom'
+          idEspace: registration.espace.id,
           espace: registration.espace.nom, // Assuming 'poste' has 'espaces' array and 'nom' property
           jour: registration.creneau.jour,
+          idCreneau: registration.creneau,
           creneau: registration.creneau.heureDebut + ' - ' + registration.creneau.heureFin
         }));
   
@@ -71,6 +81,17 @@ export class PlanningGeneralComponent implements OnInit {
       });
     } else {
       console.error('dataSource or sort is null');
+    }
+  }
+
+  afficherPlanningIndividuel(user: any) {
+    // Check if user is defined and if the user.idUtilisateur is defined
+    if (user && user.idUtilisateur) {
+      const userId = user.idUtilisateur;
+      this.userService.setUserId(userId); // Set the userId in the service
+      this.router.navigate(['planning-individuel/:id']);
+    } else {
+      console.error('Données utilisateur incorrectes :', user);
     }
   }
 }

@@ -10,5 +10,4 @@ export interface UserRegistration {
     zone: Zone;
     espace: Espace;
     creneau: Creneau;
-    // Add other properties if needed
   }

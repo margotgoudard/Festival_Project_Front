@@ -1,36 +1,44 @@
+// user.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user.model';
 import { UserRegistration } from '../interfaces/user-registration.interface';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class UserService {
-  private apiUrl = 'URL_de_votre_API'; // Remplacez par l'URL de votre API
+  private apiUrl = 'your_backend_api_url'; // Replace with your actual backend API URL
+  private userId: number | null = null;
 
   constructor(private http: HttpClient) {}
 
-  getUserById(userId: string): Observable<User> {
-    // Effectuez une requête HTTP vers votre API backend pour récupérer les données de l'utilisateur par son ID.
-    return this.http.get<User>(`${this.apiUrl}/users/${userId}`);
+  getUserById(id: number): Observable<User> {
+    const url = `${this.apiUrl}/users/${id}`;
+    return this.http.get<User>(url);
   }
 
-  updateUserProfile(userData: any): Observable<any> {
-    // Effectuez une requête HTTP vers votre API backend pour mettre à jour le profil de l'utilisateur.
-    return this.http.put(`${this.apiUrl}/user/update-profile`, userData);
+  updateUserProfile(user: User): Observable<any> {
+    const url = `${this.apiUrl}/users/${user.id}`;
+    return this.http.put(url, user);
   }
 
-  getUserRegistrations(userId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/users/${userId}/registrations`);
-  }
-
-  getUsers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/users`);
+  getUserRegistrations(userId: number): Observable<UserRegistration[]> {
+    const url = `${this.apiUrl}/user-registrations?userId=${userId}`;
+    return this.http.get<UserRegistration[]>(url);
   }
 
   getUsersRegistration(): Observable<UserRegistration[]> {
-    const url = `${this.apiUrl}/usersRegistration`; // Adjust the endpoint based on your backend API
-
+    const url = `${this.apiUrl}/user-registrations`;
     return this.http.get<UserRegistration[]>(url);
+  }
+
+  setUserId(userId: number | null) {
+    this.userId = userId;
+  }
+
+  getUserId(): number | null {
+    return this.userId;
   }
 }

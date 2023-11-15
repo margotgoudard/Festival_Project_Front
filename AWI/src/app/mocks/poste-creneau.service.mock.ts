@@ -15,7 +15,7 @@ import { Jour } from '../enumeration/jour.enum';
 export class MockPlanningService {
   // Mock data for testing purposes
   private mockPlanningInscription = { /* mock planningInscription data */ };
-  private mockCreneaux: Creneau[] = [{heureDebut: '10h', heureFin: '11h' ,jour : Jour.Samedi}, {heureDebut: '11h', heureFin: '12h' ,jour : Jour.Dimanche}];
+  private mockCreneaux: Creneau[] = [{id: 1, heureDebut: '10h', heureFin: '11h' ,jour : Jour.Samedi}, {id: 2,heureDebut: '11h', heureFin: '12h' ,jour : Jour.Dimanche}];
   private mockPostes: Poste[] = [
     {
         id: 1,

@@ -1,54 +1,59 @@
-
 <!-- Structure du composant Angular -->
+<div>
+  <h2>Planning Individuel de {{ userName }}</h2>
+  <!-- Use userName instead of user.nom to display the user's name -->
+</div>
+
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <!-- Nom de l'utilisateur Column -->
     <ng-container matColumnDef="nomUtilisateur">
       <th mat-header-cell *matHeaderCellDef>Nom Utilisateur</th>
-      <td mat-cell *matCellDef="let user">{{ user.nomUtilisateur }}</td>
+      <!-- Access the properties of user object for each cell -->
+      <td mat-cell *matCellDef="let user">{{ user.user.nom }}</td>
     </ng-container>
 
     <!-- Prénom Column -->
     <ng-container matColumnDef="prenom">
       <th mat-header-cell *matHeaderCellDef>Prénom</th>
-      <td mat-cell *matCellDef="let user">{{ user.prenom }}</td>
+      <td mat-cell *matCellDef="let user">{{ user.user.prenom }}</td>
     </ng-container>
 
     <!-- E-mail Column -->
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef>E-mail</th>
-      <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+      <td mat-cell *matCellDef="let user">{{ user.user.mail }}</td>
     </ng-container>
 
     <!-- Poste Column -->
     <ng-container matColumnDef="poste">
       <th mat-header-cell *matHeaderCellDef>Poste</th>
-      <td mat-cell *matCellDef="let user">{{ user.poste }}</td>
+      <td mat-cell *matCellDef="let user">{{ user.poste.nom }}</td>
     </ng-container>
 
     <!-- Zone Column -->
     <ng-container matColumnDef="zone">
       <th mat-header-cell *matHeaderCellDef>Zone</th>
-      <td mat-cell *matCellDef="let user">{{ user.zone }}</td>
+      <td mat-cell *matCellDef="let user">{{ user.zone.nom }}</td>
     </ng-container>
 
     <!-- Espace Column -->
     <ng-container matColumnDef="espace">
       <th mat-header-cell *matHeaderCellDef>Espace</th>
-      <td mat-cell *matCellDef="let user">{{ user.espace }}</td>
+      <td mat-cell *matCellDef="let user">{{ user.espace.nom }}</td>
     </ng-container>
 
     <!-- Jour Column -->
     <ng-container matColumnDef="jour">
       <th mat-header-cell *matHeaderCellDef>Jour</th>
-      <td mat-cell *matCellDef="let user">{{ user.jour }}</td>
+      <td mat-cell *matCellDef="let user">{{ user.creneau.jour }}</td>
     </ng-container>
 
     <!-- Créneau Column -->
     <ng-container matColumnDef="creneau">
       <th mat-header-cell *matHeaderCellDef>Créneau</th>
-      <td mat-cell *matCellDef="let user">{{ user.creneau }}</td>
+      <td mat-cell *matCellDef="let user">{{ user.creneau.heureDebut }}</td>
     </ng-container>
 
     <!-- Définition des colonnes -->
