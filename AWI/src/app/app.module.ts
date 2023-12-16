@@ -33,6 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input'; // Add this import as well, assuming you use MatInputModule later in your components
 import { MatSelectModule } from '@angular/material/select'; // Add this import for MatSelectModule if used
 import { MatSortModule } from '@angular/material/sort';
+import { PlanningInscriptionZoneComponent } from './components/planning/planning-inscription-zone/planning-inscription-zone.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { MatSortModule } from '@angular/material/sort';
     ModifyDialogComponent,
     PosteDialogComponent,
     CreneauDialogComponent,
-    PlanningGeneralComponent
+    PlanningGeneralComponent,
+    PlanningInscriptionZoneComponent
   ],
   imports: [
     BrowserModule,

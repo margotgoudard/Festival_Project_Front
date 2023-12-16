@@ -7,7 +7,7 @@ import { User } from '../model/user.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'URL_DE_VOTRE_API'; // Remplacez par l'URL de votre API.
+  private apiUrl = 'http://localhost:3000'; // Remplacez par l'URL de votre API.
   private currentUser: { id: number, username: string, role: string } | null = null;
 
   constructor(private http: HttpClient) {}

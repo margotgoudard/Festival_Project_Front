@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MockAuthService } from 'src/app/mocks/auth.service.mock'; // Importez le service de mock
 import { RegistrationComponent } from '../registration/registration.component';
 import { RegistrationPopupService } from 'src/app/services/registration-popup.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -15,7 +14,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: String = '';
 
-  constructor(private formBuilder: FormBuilder, private authService: MockAuthService, private router: Router, private registrationPopupService: RegistrationPopupService) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private registrationPopupService: RegistrationPopupService) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]

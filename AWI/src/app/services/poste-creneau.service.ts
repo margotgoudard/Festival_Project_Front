@@ -10,6 +10,7 @@ import { PlanningItem } from '../interfaces/planning-item.interface';
 import { PosteDialogComponent } from '../components/poste-dialog/poste-dialog.component';
 import { CreneauDialogComponent } from '../components/creneau-dialog/creneau-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Zone } from '../interfaces/zone.interface';
 
 
 @Injectable({
@@ -43,6 +44,10 @@ export class PlanningService {
 
   getPostes(): Observable<Poste[]> {
     return this.http.get<Poste[]>(`${this.baseUrl}/postes`);
+  }
+
+  getZones(): Observable<Zone[]> {
+    return this.http.get<Zone[]>(`${this.baseUrl}/zones`);
   }
 
   getEspaces(): Observable<Espace[]> {

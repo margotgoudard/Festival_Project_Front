@@ -15,7 +15,7 @@ import { Poste } from 'src/app/interfaces/poste.interface';
   styleUrls: ['./planning-inscription.component.scss']
 })
 export class PlanningInscriptionComponent extends PlanningComponent {
-  postes: Poste[] = []; // Replace 'any[]' with the actual type of your postes
+  postes: Poste[] = []; 
 
   constructor(
     dialog: MatDialog,

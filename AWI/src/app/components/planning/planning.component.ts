@@ -26,9 +26,11 @@ import { Zone } from 'src/app/interfaces/zone.interface';
 export class PlanningComponent implements OnInit, OnDestroy{
   weekend: string[] = ['Samedi', 'Dimanche'];
   private itemselect?: Espace | Poste = undefined;
-  @Input() items: Poste[] | Zone[] |Espace[] = [];
+  @Input() items: Poste[] | Zone[] | Espace[] = [];
   @Input() creneaux: Creneau[] = [];
   joursEnum = Jour;
+  jours: Jour[] = [Jour.Samedi, Jour.Dimanche];
+  
   
   userRole: string = '';
   private creneauxSubscription: Subscription | undefined;
@@ -48,6 +50,7 @@ export class PlanningComponent implements OnInit, OnDestroy{
   ngOnInit() {
     this.setUserRole();
     this.fetchData();
+    this.organizeCreneauxParJour();
   }
 
   ngOnDestroy() {
@@ -68,7 +71,7 @@ export class PlanningComponent implements OnInit, OnDestroy{
 
   fetchData() {
     this.planningService.getItems().subscribe(
-      (data: Espace[] | Poste[]) => {
+      (data: Espace[] | Poste[] | Zone[]) => {
         this.items = data;
         this.initializeItemDisponibles();
       },
@@ -196,5 +199,35 @@ getWeekendDays(): string[] {
   return Object.values(this.joursEnum)
     .filter(jour => jour === Jour.Samedi || jour === Jour.Dimanche) as string[];
 }
+
+getDisplayedColumns(): string[] {
+  // Implémentez la logique pour obtenir les colonnes que vous souhaitez afficher
+  // Retournez-les sous forme de tableau de chaînes (par exemple, ['nom', 'Lundi', 'Mardi', ...])
+  return ['nom', ...this.getWeekendDays().map(jour => jour), ...this.creneaux.map(creneau => creneau.heureDebut + '-' + creneau.heureFin)];
+}
+
+getCreneauxColumnDefs() {
+  // Logique pour obtenir les noms de colonnes pour les créneaux
+  // Par exemple, si vous avez une propriété creneaux dans votre composant, vous pouvez faire quelque chose comme ceci :
+  return this.creneaux.map(creneau => creneau.heureDebut + '-' + creneau.heureFin);
+}
+
+// Inside your component class
+creneauxParJour: { [jour: string]: Creneau[] } = {};
+
+// Assume this method is called during data fetching or initialization
+organizeCreneauxParJour(): void {
+  this.creneauxParJour = {};
+
+  // Organize creneaux by jour
+  this.creneaux.forEach(creneau => {
+    const jour = creneau.jour;
+    if (!this.creneauxParJour[jour]) {
+      this.creneauxParJour[jour] = [];
+    }
+    this.creneauxParJour[jour].push(creneau);
+  });
+}
+
 
 }

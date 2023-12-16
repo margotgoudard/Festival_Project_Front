@@ -8,13 +8,14 @@ import { PosteDialogComponent } from '../components/poste-dialog/poste-dialog.co
 import { CreneauDialogComponent } from '../components/creneau-dialog/creneau-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Jour } from '../enumeration/jour.enum';
+import { Zone } from '../interfaces/zone.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MockPlanningService {
   // Mock data for testing purposes
-  private mockPlanningInscription = { /* mock planningInscription data */ };
+  private mockPlanningInscription: { [jour in Jour]?: Creneau[] } = {};
   private mockCreneaux: Creneau[] = [{id: 1, heureDebut: '10h', heureFin: '11h' ,jour : Jour.Samedi}, {id: 2,heureDebut: '11h', heureFin: '12h' ,jour : Jour.Dimanche}];
   private mockPostes: Poste[] = [
     {
@@ -50,23 +51,26 @@ private mockEspaces: Espace[] = [
 ];
 
 
-private mockData: (Poste | Espace)[] = [];
+private mockData: (Poste | Espace | Zone)[] = [];
 
 constructor(private dialog: MatDialog) {
   // Initialize your service
 }
 
-getItems(): Observable<(Espace | Poste)[]> {
+getItems(): Observable<(Espace | Poste | Zone)[]> {
   // Determine the type based on the structure of the first item in mockPostes
 
-  if (this.mockPostes.length > 0 && 'espaces' in this.mockPostes[0]) {
+  if (this.mockPostes.length > 0 && 'zones' in this.mockPostes[0]) {
     // If the first item in mockPostes has properties specific to Poste, return mockPostes
     return of(this.mockPostes);
   } else {
-    // If the first item in mockEspaces has properties specific to Espace, return mockEspaces
-    return of(this.mockEspaces);
+      if (this.mockPostes.length > 0 && 'espaces' in this.mockPostes[0]) {
+      // If the first item in mockEspaces has properties specific to Espace, return mockEspaces
+        return of(this.mockPostes[0].zones);
+      }
+      else { return of (this.mockPostes[0].zones[0].espaces)};
+    }
   }
-}
 
 // New method to fetch creneaux
 getCreneaux(): Observable<Creneau[]> {
@@ -78,31 +82,63 @@ getCreneaux(): Observable<Creneau[]> {
 getPostes(): Observable<Poste[]> {
   return of(this.mockPostes);
 }
-  getPlanningInscription(): Observable<any> {
-    // Return mock planningInscription data
-    return of(this.mockPlanningInscription);
+   // Dans la méthode getPlanningInscription de MockPlanningService
+   getPlanningInscription(jour: Jour): Observable<Creneau[]> {
+    // Filtrer les créneaux en fonction de la journée demandée
+    const creneauxForDay = this.mockPlanningInscription[jour] || [];
+    return of(creneauxForDay);
   }
 
   addCreneau(creneau: Creneau): Observable<Creneau> {
+    // Check if the creneau already exists
+    const existingCreneau = this.mockCreneaux.find(c => c.jour === creneau.jour && c.heureDebut === creneau.heureDebut && c.heureFin === creneau.heureFin);
+  
+    if (existingCreneau) {
+      // If the creneau already exists, return it
+      return of(existingCreneau);
+    }
+  
+    // Generate a unique ID for the new creneau
+    const uniqueId = this.generateUniqueId();
+  
+    // Assign the unique ID to the creneau
+    const newCreneau: Creneau = { ...creneau, id: uniqueId };
+  
     // Open a dialog to get new information for the creneau
     const dialogRef = this.dialog.open(CreneauDialogComponent, {
       width: '400px',
-      data: { creneau: { ...creneau } } // Pass the current creneau data to the dialog
+      data: { creneau: { ...newCreneau } } // Pass the current creneau data to the dialog
     });
+
+    // Ajouter le créneau à la journée appropriée dans mockPlanningInscription
+    if (creneau.jour in this.mockPlanningInscription) {
+      // Assurez-vous que this.mockPlanningInscription[creneau.jour] est défini avant d'y accéder
+      this.mockPlanningInscription[creneau.jour] = this.mockPlanningInscription[creneau.jour] || [];
+      this.mockPlanningInscription[creneau.jour]?.push(creneau);
+    } else {
+      this.mockPlanningInscription[creneau.jour] = [creneau];
+    }
   
     return dialogRef.afterClosed().pipe(
-      switchMap(newCreneau => {
-        if (newCreneau) {
-          // Simulate a successful addition of the creneau
-          this.mockCreneaux.push(newCreneau);
-          return of(newCreneau);
+      switchMap((result: Creneau) => {
+        if (result) {
+          // Simulate a successful addition of the creneau with the unique ID
+          this.mockCreneaux.push(result);
+          return of(result);
         } else {
           return EMPTY; // Return an empty observable if the user cancels the operation
         }
       })
     );
   }
-
+  
+  generateUniqueId(): number {
+    // Find the maximum ID in the existing creneaux
+    const maxId = Math.max(...this.mockCreneaux.map(creneau => creneau.id), 0);
+  
+    // Generate a new unique ID by incrementing the maximum ID
+    return maxId + 1;
+  }
   removeCreneau(creneau: Creneau): Observable<void> {
     // Simulate a successful removal of a creneau
     const index = this.mockCreneaux.findIndex(c => c.heureDebut === creneau.heureDebut);
@@ -158,4 +194,5 @@ getPostes(): Observable<Poste[]> {
     }
     return of(creneau);
   }
+
 }

@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Jour } from 'src/app/enumeration/jour.enum';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
@@ -21,7 +22,8 @@ export class ModifyDialogComponent {
     public dialogRef: MatDialogRef<ModifyDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private PlanningService: MockPlanningService, // Inject your service
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {
     this.creneaux = data.creneaux;
     this.postes = data.postes;
@@ -53,6 +55,8 @@ export class ModifyDialogComponent {
   
           // Reset selectedPoste to null after saving changes
           this.selectedPoste = null;
+           // Close the dialog with the updated data
+           this.dialogRef.close(updatedPoste);
         },
         error => {
           console.error('Error updating poste:', error);
@@ -86,6 +90,7 @@ export class ModifyDialogComponent {
   
           // Reset selectedCreneau to null after saving changes
           this.selectedCreneau = null;
+          this.dialogRef.close(updatedCreneau);
         },
         error => {
           console.error('Error updating creneau:', error);
@@ -109,26 +114,32 @@ export class ModifyDialogComponent {
   
         // Manually trigger change detection
         this.cdr.detectChanges();
+  
+        // Reload the current route
+        this.router.navigate([this.router.url]);
       },
       (error) => {
         console.error('Error adding creneau:', error);
       }
     );
   }
-
-// Function to handle removing a creneau
-onRemoveCreneau(creneau: Creneau): void {
-  // Placeholder logic to remove the selected creneau
-  this.PlanningService.removeCreneau(creneau).subscribe(
-    () => {
-      // Update the local creneaux array after a successful removal
-      this.creneaux = this.creneaux.filter(c => c !== creneau);
-    },
-    (error) => {
-      console.error('Error removing creneau:', error);
-    }
-  );
-}
+  
+  // Function to handle removing a creneau
+  onRemoveCreneau(creneau: Creneau): void {
+    // Placeholder logic to remove the selected creneau
+    this.PlanningService.removeCreneau(creneau).subscribe(
+      () => {
+        // Update the local creneaux array after a successful removal
+        this.creneaux = this.creneaux.filter(c => c !== creneau);
+  
+        // Reload the current route
+        this.router.navigate([this.router.url]);
+      },
+      (error) => {
+        console.error('Error removing creneau:', error);
+      }
+    );
+  }
 
 // Function to handle adding a new poste
 onAddPoste(): void {

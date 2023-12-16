@@ -1,8 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { PlanningComponent } from '../planning.component';
 import { Espace } from 'src/app/interfaces/espace.interface';
 import { HttpClient } from '@angular/common/http';
+import { PlanningItem } from 'src/app/interfaces/planning-item.interface';
 
 @Component({
   selector: 'app-animation-jeu-planning',
@@ -10,31 +12,39 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./animation-jeu-planning.component.scss']
 })
 export class AnimationJeuPlanningComponent {
-  espaces : Espace[] = []; // Replace 'any[]' with the actual type of your postes
-  creneaux: Creneau [] = [];
+  @Input() espaces: Espace[] = [];
+  @Input() creneaux: Creneau[] = [];
+
+  // Convert espaces array to MatTableDataSource<PlanningItem>
+  espacesDataSource!: MatTableDataSource<PlanningItem>;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    // Call a function to fetch postes when the component initializes
     this.fetchPostes();
     this.fetchCreneaux();
   }
 
   fetchPostes() {
-    // Replace 'your-backend-api-url/postes' with the actual API endpoint for fetching postes
-    this.http.get<any[]>('your-backend-api-url/postes').subscribe(
+    // Replace 'your-backend-api-url/espaces' with the actual API endpoint for fetching espaces
+    this.http.get<Espace[]>('your-backend-api-url/espaces').subscribe(
       (data) => {
         this.espaces = data;
+        this.initializeEspacesDataSource();
       },
       (error) => {
-        console.error('Error fetching postes:', error);
+        console.error('Error fetching espaces:', error);
       }
     );
   }
 
+  initializeEspacesDataSource() {
+    // Convert the array of espaces to MatTableDataSource<PlanningItem>
+    this.espacesDataSource = new MatTableDataSource<PlanningItem>(this.espaces);
+  }
+
   fetchCreneaux() {
-    this.http.get<any[]>('your-backend-api-url/creneaux').subscribe(
+    this.http.get<Creneau[]>('your-backend-api-url/creneaux').subscribe(
       (data) => {
         this.creneaux = data;
       },
@@ -43,7 +53,6 @@ export class AnimationJeuPlanningComponent {
       }
     );
   }
-
 
   // Other component logic...
 }
