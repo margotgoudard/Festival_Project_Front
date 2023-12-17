@@ -9,7 +9,7 @@ import { UserRegistration } from '../interfaces/user-registration.interface';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'your_backend_api_url'; // Replace with your actual backend API URL
+  private apiUrl = 'http://localhost:3000'; // Replace with your actual backend API URL
   private userId: number | null = null;
 
   constructor(private http: HttpClient) {}

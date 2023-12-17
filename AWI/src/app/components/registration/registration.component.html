@@ -1,63 +1,76 @@
 <!-- registration.component.html -->
 <div class="registration-popup-container">
-<div class="registration-container">
-    <h2>Inscription</h2>
-    <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <div class="registration-container">
+      <h2>Inscription</h2>
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
-            <label for="prenom">Prénom</label>
-            <input type="text" id="prenom" formControlName="prenom" required>
-            <div *ngIf="isFieldInvalid('prenom')">Le prénom est requis.</div>
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" formControlName="prenom" required>
+          <div *ngIf="isFieldInvalid('prenom')">Le prénom est requis.</div>
         </div>
         <div class="form-group">
-            <label for="nom">Nom</label>
-            <input type="text" id="nom" formControlName="nom" required>
-            <div *ngIf="isFieldInvalid('nom')">Le nom est requis.</div>
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" formControlName="nom" required>
+          <div *ngIf="isFieldInvalid('nom')">Le nom est requis.</div>
         </div>
         <div class="form-group">
-            <label for="pseudo">Pseudo</label>
-            <input type="text" id="pseudo" formControlName="pseudo">
-            <!-- Add similar divs for other fields with appropriate error messages -->
+          <label for="pseudo">Pseudo</label>
+          <input type="text" id="pseudo" formControlName="pseudo" required>
+          <div *ngIf="isFieldInvalid('pseudo')">Le pseudo est requis.</div>
         </div>
         <div class="form-group">
-            <label for="associations">Associations</label>
-            <input type="text" id="associations" formControlName="associations">
-            <!-- Add similar divs for other fields with appropriate error messages -->
+          <label for="associations">Associations</label>
+          <input type="text" id="associations" formControlName="associations" required>
+          <div *ngIf="isFieldInvalid('associations')">Les associations sont requises.</div>
         </div>
         <div class="form-group">
-            <label for="mail">Mail</label>
-            <input type="email" id="mail" formControlName="mail" required>
-            <div *ngIf="isFieldInvalid('mail')">Veuillez entrer une adresse e-mail valide.</div>
+          <label for="email">Email</label>
+          <input type="email" id="email" formControlName="email" required>
+          <div *ngIf="isFieldInvalid('email')">Veuillez entrer une adresse e-mail valide.</div>
         </div>
         <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" formControlName="password" required>
-            <div *ngIf="isFieldInvalid('password')">Le mot de passe est requis.</div>
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" formControlName="password" required>
+          <div *ngIf="isFieldInvalid('password')">Le mot de passe est requis.</div>
         </div>
         <div class="form-group">
-            <label for="tailleTShirt">Taille T-Shirt</label>
-            <select id="tailleTShirt" formControlName="tailleTShirt" required>
-                <option value="" disabled selected>Sélectionner une taille</option>
-                <option value="XS">XS</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-                <!-- Add more options as needed -->
+          <label for="numTel">Numéro de téléphone</label>
+          <input type="text" id="numTel" formControlName="numTel" required>
+          <div *ngIf="isFieldInvalid('numTel')">Veuillez entrer un numéro de téléphone valide.</div>
+        </div>
+        <div class="form-group">
+            <label for="chercheLogement">Cherche Logement</label>
+            <select id="chercheLogement" formControlName="chercheLogement" required>
+              <option value="" disabled selected>Sélectionner</option>
+              <option value="true">Oui</option>
+              <option value="false">Non</option>
             </select>
-            <div *ngIf="isFieldInvalid('tailleTShirt')">Veuillez sélectionner une taille.</div>
+            <div *ngIf="isFieldInvalid('chercheLogement')">Veuillez sélectionner une option.</div>
         </div>
         <div class="form-group">
-            <label for="isVegetarian">Végétarien</label>
-            <select id="isVegetarian" formControlName="isVegetarian" required>
-                <option value="" disabled selected>Sélectionner une réponse</option>
-                <option value="XS">Oui</option>
-                <option value="S">Non</option>
-                <!-- Add more options as needed -->
+            <label for="taille">Taille</label>
+            <select id="taille" formControlName="taille" required>
+              <option value="" disabled selected>Sélectionner une taille</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
             </select>
-            <div *ngIf="isFieldInvalid('isVegetarian')">Veuillez sélectionner une .</div>
+            <div *ngIf="isFieldInvalid('taille')">Veuillez sélectionner une taille.</div>
+        </div>
+        <div class="form-group">
+          <label for="vegetarian">Végétarien</label>
+          <select id="vegetarian" formControlName="vegetarian">
+            <option value="" disabled selected>Sélectionner</option>
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="photoDeProfil">Photo de Profil</label>
+          <input type="text" id="photoDeProfil" formControlName="photoDeProfil">
         </div>
         <button type="submit">S'inscrire</button>
-    </form>
-</div>
-</div>
+      </form>
+    </div>
+  </div>
+  

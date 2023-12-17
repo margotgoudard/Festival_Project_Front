@@ -5,7 +5,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
-import { MockUserService } from 'src/app/mocks/user.service.mock';
 import { User } from 'src/app/model/user.model';
 import { UserService } from 'src/app/services/user.service';
 
@@ -22,7 +21,7 @@ export class PlanningGeneralComponent implements OnInit {
 
   displayedColumns: string[] = ['nomUtilisateur', 'prenom', 'email', 'poste', 'zone', 'espace', 'jour', 'creneau'];
 
-  constructor(private userService: MockUserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
     this.loadUsers();
@@ -42,7 +41,7 @@ export class PlanningGeneralComponent implements OnInit {
           idUtilisateur: registration.user.id,
           nomUtilisateur: registration.user.nom,
           prenom: registration.user.prenom,
-          email: registration.user.mail,
+          email: registration.user.email,
           idPoste: registration.poste.id,
           poste: registration.poste.nom, // Assuming 'poste' has a 'nom' property
           idZone: registration.zone.id,

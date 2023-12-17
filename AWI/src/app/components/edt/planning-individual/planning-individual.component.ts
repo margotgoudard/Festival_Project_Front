@@ -9,7 +9,6 @@ import { UserRegistration } from 'src/app/interfaces/user-registration.interface
 import { AuthService } from 'src/app/services/auth.service';
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { MockAuthService } from 'src/app/mocks/auth.service.mock';
-import { MockUserService } from 'src/app/mocks/user.service.mock';
 import { PlanningService } from 'src/app/services/poste-creneau.service';
 import { MockPlanningService } from 'src/app/mocks/poste-creneau.service.mock';
 import { MatTableDataSource } from '@angular/material/table';
@@ -30,7 +29,7 @@ export class PlanningIndividualComponent implements OnInit {
 
   displayedColumns: string[] = ['nomUtilisateur', 'prenom', 'email', 'poste', 'zone', 'espace', 'jour', 'creneau'];
 
-  constructor(private userService: MockUserService, private route: ActivatedRoute) {}
+  constructor(private userService: UserService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.userId = this.userService.getUserId();

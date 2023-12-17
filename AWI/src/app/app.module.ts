@@ -13,7 +13,6 @@ import { AuthService } from './services/auth.service';
 import { UserService } from './services/user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MockUserService } from './mocks/user.service.mock';
 import { InscriptionComponent } from './components/inscription/inscription.component';
 import { PosteDetailsComponent } from './components/poste-details/poste-details.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -75,7 +74,6 @@ import { PlanningInscriptionZoneComponent } from './components/planning/planning
     MockAuthService,
     AuthService,
     UserService,
-    MockUserService
   ],
   bootstrap: [AppComponent]
 })

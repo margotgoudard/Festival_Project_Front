@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private registrationPopupService: RegistrationPopupService) {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
+      pseudo: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
@@ -25,26 +25,15 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      const { username, password } = this.loginForm.value;
+      const { pseudo, password } = this.loginForm.value;
   
-      this.authService.login(username, password).subscribe(
+      this.authService.login(pseudo, password).subscribe(
         (response) => {
-          // Connexion réussie, utilisez le token JWT simulé ici.
-          const jwtToken = response.token;
+          console.log(response);
 
-          // Extract user role from the JWT token payload
-          const userRole = response.user.role;
-  
           // Store JWT token in local storage (if available in the response)
           if (response.token) {
             localStorage.setItem('jwtToken', response.token);
-          }
-  
-          // Redirect based on user role
-          if (userRole === 'admin') {
-            this.router.navigate(['/planning-general']);
-          } else {
-            this.router.navigate(['/planning-individual']);
           }
   
           // Autres actions à exécuter après une connexion réussie

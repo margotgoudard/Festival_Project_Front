@@ -4,7 +4,6 @@ import { User } from 'src/app/model/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { ModificationProfileComponent } from '../modification-profile/modification-profile.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MockUserService } from 'src/app/mocks/user.service.mock';
 
 @Component({
   selector: 'app-profile',
@@ -17,13 +16,13 @@ export class ProfileComponent implements OnInit {
 
   nom: string = '';
   prenom: string = '';
-  mail: string = '';
+  email: string = '';
   associations: string[] = [];
   pseudo: string = '';
-  tailleTShirt: string = '';
-  isVegetarian: boolean = false;
+  taille: string = '';
+  vegetarian: boolean = false;
 
-    constructor(private route: ActivatedRoute, private userService: MockUserService, private dialog: MatDialog, private router: Router) { 
+    constructor(private route: ActivatedRoute, private userService: UserService, private dialog: MatDialog, private router: Router) { 
     
   }
 
@@ -38,11 +37,11 @@ export class ProfileComponent implements OnInit {
           // Mettez à jour les données de l'utilisateur dans le composant
           this.nom = data.nom;
           this.prenom = data.prenom;
-          this.mail = data.mail;
+          this.email = data.email;
           this.associations = data.associations;
           this.pseudo = data.pseudo;
-          this.tailleTShirt = data.tailleTShirt;
-          this.isVegetarian = data.isVegetarian;
+          this.taille = data.taille;
+          this.vegetarian = data.vegetarian;
         },
         (error) => {
           this.errorMessage = 'Erreur lors de la récupération des données de l\'utilisateur.';

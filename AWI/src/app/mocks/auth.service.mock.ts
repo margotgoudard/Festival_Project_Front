@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { MockUser } from './user.mock';
 
 @Injectable()
 export class MockAuthService {
 
-  private mockUser = MockUser;
   login(username: string, password: string): Observable<any> {
     // Here, you can simulate a successful response or an error based on the credentials.
     // For example, if the credentials are correct:
@@ -43,6 +41,9 @@ export class MockAuthService {
 
     // Return the mock user
     return of(this.mockUser);
+  }
+  mockUser(mockUser: any): Observable<any> {
+    throw new Error('Method not implemented.');
   }
   // Ajoutez d'autres méthodes du service AuthService simulées au besoin.
 }

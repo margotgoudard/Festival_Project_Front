@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MockUserService } from 'src/app/mocks/user.service.mock';
 import { UserService } from 'src/app/services/user.service';
 
 
@@ -12,7 +11,7 @@ import { UserService } from 'src/app/services/user.service';
 export class ModificationProfileComponent {
   user: any = {}; // Déclarez un objet pour stocker les données de l'utilisateur
 
-  constructor(private userService: MockUserService, private dialogRef: MatDialogRef<ModificationProfileComponent>) { }
+  constructor(private userService: UserService, private dialogRef: MatDialogRef<ModificationProfileComponent>) { }
 
   onSubmit() {
     // Appelez le service pour mettre à jour les informations du profil dans la base de données

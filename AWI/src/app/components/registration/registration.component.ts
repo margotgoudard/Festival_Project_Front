@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { User } from 'src/app/model/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-registration',
@@ -14,16 +15,19 @@ export class RegistrationComponent implements OnInit {
   registrationForm: FormGroup;
   submitted: boolean = false;
 
-  constructor(private dialogRef: MatDialogRef<RegistrationComponent>, private formBuilder: FormBuilder) {
+  constructor(private authService: AuthService ,private dialogRef: MatDialogRef<RegistrationComponent>, private formBuilder: FormBuilder) {
     this.registrationForm = this.formBuilder.group({
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
-      pseudo: [''], // Add other registration form fields with default validations
-      associations: [''],
-      mail: ['', [Validators.required, Validators.email]],
+      pseudo: ['', Validators.required],
+      associations: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      tailleTShirt: [''],
-      isVegetarian: [false],
+      numTel: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]], // Valider le numéro de téléphone
+      chercheLogement: [false], // Ajouter le champ manquant
+      taille: ['', Validators.required],
+      vegetarian: [false],
+      photoDeProfil: [''],
     });
   }
 
@@ -37,18 +41,24 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submitted = true;
-
     if (this.registrationForm.valid) {
-      const userData: User = {
-        role: 'benevole', // Set the default role to 'benevole'
-        ...this.registrationForm.value,
-      };
-
-      // Close the dialog and pass the user data as the result
-      this.dialogRef.close(userData);
+      // If the form is valid, you can send the data to your backend service
+      const formData = this.registrationForm.value;
+      
+      // Assuming you have a method in your API service to handle registration
+      this.authService.register(formData).subscribe(
+        (response) => {
+          // Handle successful registration response
+          console.log('Registration successful:', response);
+        },
+        (error) => {
+          // Handle registration error
+          console.error('Registration error:', error);
+        }
+      );
+    } else {
+      // Mark form fields as touched to display validation errors
+      this.registrationForm.markAllAsTouched();
     }
   }
-
-  // ...
 }
