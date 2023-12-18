@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { User } from './model/user.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,7 +16,6 @@ export class AppComponent {
   }
 
   isLoginPage(): boolean {
-    // Check if the current route is the login page
     return this.router.url.includes('/login');
   }
 }

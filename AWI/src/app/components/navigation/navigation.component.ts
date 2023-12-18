@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MockAuthService } from 'src/app/mocks/auth.service.mock';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -11,11 +11,11 @@ export class NavigationComponent implements OnInit {
 
   user$!: Observable<any>;
 
-    constructor( private authService : MockAuthService) {}
+    constructor( private authService : AuthService) {}
 
     ngOnInit() {
         // Initialisez votre utilisateur ici, par exemple à partir d'un service d'authentification
-        this.user$ =  this.authService.getCurrentUser();/* Récupérez l'utilisateur actuel */;
+        //this.user$ =  this.authService.getCurrentUser();/* Récupérez l'utilisateur actuel */;
     }
 
 }

@@ -1,16 +1,9 @@
 // planning-individual.component.ts
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { MatDialog } from '@angular/material/dialog';
-import { InscriptionService } from 'src/app/services/inscription.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
-import { AuthService } from 'src/app/services/auth.service';
 import { Poste } from 'src/app/interfaces/poste.interface';
-import { MockAuthService } from 'src/app/mocks/auth.service.mock';
-import { PlanningService } from 'src/app/services/poste-creneau.service';
-import { MockPlanningService } from 'src/app/mocks/poste-creneau.service.mock';
 import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/app/model/user.model';
 

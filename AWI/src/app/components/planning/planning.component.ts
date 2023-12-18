@@ -11,12 +11,9 @@ import { Espace } from 'src/app/interfaces/espace.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { ModifyDialogComponent } from '../modify-dialog/modify-dialog.component';
 import { PlanningItem } from 'src/app/interfaces/planning-item.interface';
-import { MockAuthService } from 'src/app/mocks/auth.service.mock';
 import { PlanningService } from 'src/app/services/poste-creneau.service';
-import { MockPlanningService } from 'src/app/mocks/poste-creneau.service.mock';
 import { Jour } from 'src/app/enumeration/jour.enum';
 import { Subscription } from 'rxjs';
-import { Zone } from 'src/app/interfaces/zone.interface';
 
 @Component({
   selector: 'app-planning',
@@ -26,7 +23,7 @@ import { Zone } from 'src/app/interfaces/zone.interface';
 export class PlanningComponent implements OnInit, OnDestroy{
   weekend: string[] = ['Samedi', 'Dimanche'];
   private itemselect?: Espace | Poste = undefined;
-  @Input() items: Poste[] | Zone[] | Espace[] = [];
+  @Input() items: Poste[] | Espace[] = [];
   @Input() creneaux: Creneau[] = [];
   joursEnum = Jour;
   jours: Jour[] = [Jour.Samedi, Jour.Dimanche];
@@ -43,12 +40,12 @@ export class PlanningComponent implements OnInit, OnDestroy{
     private dialog: MatDialog,
     private router: Router,
     private httpClient: HttpClient,
-    private authService: MockAuthService,
-    public planningService: MockPlanningService
+    private authService: AuthService,
+    public planningService: PlanningService
   ) {}
 
   ngOnInit() {
-    this.setUserRole();
+    //this.setUserRole();
     this.fetchData();
     this.organizeCreneauxParJour();
   }
@@ -71,7 +68,7 @@ export class PlanningComponent implements OnInit, OnDestroy{
 
   fetchData() {
     this.planningService.getItems().subscribe(
-      (data: Espace[] | Poste[] | Zone[]) => {
+      (data: Espace[] | Poste[]) => {
         this.items = data;
         this.initializeItemDisponibles();
       },
@@ -167,7 +164,7 @@ inscrireATousLesPostes() {
   console.log("Inscription à tous les postes :", this.selectedButtons);
 }
 
-setUserRole() {
+/*setUserRole() {
   // Subscribe to the observable to get the user information
   this.authService.getCurrentUser().subscribe(
     (user) => {
@@ -178,7 +175,7 @@ setUserRole() {
       console.error('Error fetching user information:', error);
     }
   );
-}
+}*/
 
 openModificationDialog() {
   const dialogRef = this.dialog.open(ModifyDialogComponent, {

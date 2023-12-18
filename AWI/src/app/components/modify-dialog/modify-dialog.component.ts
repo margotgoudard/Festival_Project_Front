@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Jour } from 'src/app/enumeration/jour.enum';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
-import { MockPlanningService } from 'src/app/mocks/poste-creneau.service.mock';
 import { PlanningService } from 'src/app/services/poste-creneau.service';
 
 @Component({
@@ -21,7 +20,7 @@ export class ModifyDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ModifyDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private PlanningService: MockPlanningService, // Inject your service
+    private PlanningService: PlanningService, // Inject your service
     private cdr: ChangeDetectorRef,
     private router: Router,
   ) {

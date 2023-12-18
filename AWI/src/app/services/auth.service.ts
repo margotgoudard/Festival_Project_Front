@@ -88,7 +88,6 @@ export class AuthService {
     );
   }
 
-  
 
   getJwtToken(): string | null {
     return localStorage.getItem('jwtToken');

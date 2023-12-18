@@ -8,7 +8,6 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ModificationProfileComponent } from './components/modification-profile/modification-profile.component';
 import { PlanningComponent } from './components/planning/planning.component';
-import { MockAuthService } from './mocks/auth.service.mock';
 import { AuthService } from './services/auth.service';
 import { UserService } from './services/user.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -29,10 +28,11 @@ import { CreneauDialogComponent } from './components/creneau-dialog/creneau-dial
 import { PlanningGeneralComponent } from './components/edt/planning-general/planning-general.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input'; // Add this import as well, assuming you use MatInputModule later in your components
-import { MatSelectModule } from '@angular/material/select'; // Add this import for MatSelectModule if used
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select'; 
 import { MatSortModule } from '@angular/material/sort';
-import { PlanningInscriptionZoneComponent } from './components/planning/planning-inscription-zone/planning-inscription-zone.component';
+import { PlanningService } from './services/poste-creneau.service';
+import { RegistrationPopupService } from './services/registration-popup.service';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,6 @@ import { PlanningInscriptionZoneComponent } from './components/planning/planning
     PosteDialogComponent,
     CreneauDialogComponent,
     PlanningGeneralComponent,
-    PlanningInscriptionZoneComponent
   ],
   imports: [
     BrowserModule,
@@ -71,9 +70,10 @@ import { PlanningInscriptionZoneComponent } from './components/planning/planning
     MatSortModule
   ],
   providers: [
-    MockAuthService,
     AuthService,
     UserService,
+    PlanningService,
+    RegistrationPopupService,
   ],
   bootstrap: [AppComponent]
 })
