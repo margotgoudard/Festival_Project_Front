@@ -31,9 +31,10 @@ export class LoginComponent implements OnInit {
         (response) => {
           console.log(response);
 
-          // Store JWT token in local storage (if available in the response)
           if (response.token) {
             localStorage.setItem('jwtToken', response.token);
+            this.authService.setLoggedInUserPseudo(pseudo);
+            this.router.navigate(['/planning-individual']);
           }
   
           // Autres actions à exécuter après une connexion réussie

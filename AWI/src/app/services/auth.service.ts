@@ -9,16 +9,36 @@ import { Role } from '../model/role.model';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:3000'; // Remplacez par l'URL de votre API.
-  currentUser: User | null = null; // Declare currentUser property
+  private currentUserPseudo: string = ''; // Declare currentUser property
 
   constructor(private http: HttpClient) {}
 
   login(pseudo: string, password: string): Observable<User> {
     // Envoyez les informations de connexion au serveur pour validation
     const loginData = { pseudo, password };
-  
-    return this.http.post<any>(`${this.apiUrl}/login`, loginData);
+    return this.http.post<any>(`${this.apiUrl}/login`, loginData).pipe(
+      tap((response: any) => {
+        if (response.token) {
+          localStorage.setItem('jwtToken', response.token);
+          this.setLoggedInUserPseudo(pseudo);
+        }
+      }),
+      catchError((error) => {
+        // Gérer les erreurs d'authentification ici
+        throw error;
+      })
+    );
   }
+
+  getLoggedInUserPseudo(): string | null {
+    return this.currentUserPseudo;
+  }
+
+  setLoggedInUserPseudo(pseudo: string): void {
+    this.currentUserPseudo = pseudo;
+  }
+
+  /*
   
   private getUserDetails(pseudo: string): Observable<User> {
     // Récupérez les détails du bénévole en fonction du pseudo
@@ -63,14 +83,7 @@ export class AuthService {
     );
   }
 
-  getUserById(userId: number): Observable<User> {
-    // Effectuez une requête HTTP vers votre API backend pour récupérer les données de l'utilisateur par son ID.
-    return this.http.get<User>(`${this.apiUrl}/users/${userId}`);
-  }
-  
-  setCurrentUser(userDetails: User): void {
-    this.currentUser = userDetails;
-  }
+  */
 
   register(userData: User): Observable<any> {
     console.log(userData)

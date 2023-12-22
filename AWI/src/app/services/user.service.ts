@@ -9,8 +9,8 @@ import { UserRegistration } from '../interfaces/user-registration.interface';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000'; // Replace with your actual backend API URL
-  private userId: number | null = null;
+  private apiUrl = 'http://localhost:3000'; 
+  private userPseudo : string ='';
 
   constructor(private http: HttpClient) {}
 
@@ -19,13 +19,17 @@ export class UserService {
     return this.http.get<User>(url);
   }
 
+  setUserPseudo(pseudo: string): void {
+    this.userPseudo = pseudo;
+  }  
+
   updateUserProfile(user: User): Observable<any> {
     const url = `${this.apiUrl}/users/${user.id}`;
     return this.http.put(url, user);
   }
 
-  getUserRegistrations(userId: number): Observable<UserRegistration[]> {
-    const url = `${this.apiUrl}/user-registrations?userId=${userId}`;
+  getUserRegistrations(pseudo: string): Observable<UserRegistration[]> {
+    const url = `${this.apiUrl}/user-registrations?pseudo=${pseudo}`;
     return this.http.get<UserRegistration[]>(url);
   }
 
@@ -34,11 +38,13 @@ export class UserService {
     return this.http.get<UserRegistration[]>(url);
   }
 
-  setUserId(userId: number | null) {
-    this.userId = userId;
+  getUserByPseudo(pseudo: string): Observable<User> {
+    const url = `${this.apiUrl}/users?pseudo=${pseudo}`;
+    return this.http.get<User>(url);
   }
 
-  getUserId(): number | null {
-    return this.userId;
+  getUserPseudo(userId: number): Observable<string> {
+    const url = `${this.apiUrl}/users/${userId}/pseudo`;
+    return this.http.get<string>(url);
   }
 }

@@ -19,6 +19,8 @@ export class PlanningGeneralComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   currentSortAttribute: string = 'nomUtilisateur';
 
+
+
   displayedColumns: string[] = ['nomUtilisateur', 'prenom', 'email', 'poste', 'zone', 'espace', 'jour', 'creneau'];
 
   constructor(private userService: UserService, private router: Router) {}
@@ -31,7 +33,6 @@ export class PlanningGeneralComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  
 
   loadUsers() {
     this.userService.getUsersRegistration().subscribe(
@@ -83,10 +84,10 @@ export class PlanningGeneralComponent implements OnInit {
 
   afficherPlanningIndividuel(user: any) {
     // Check if user is defined and if the user.idUtilisateur is defined
-    if (user && user.idUtilisateur) {
-      const userId = user.idUtilisateur;
-      this.userService.setUserId(userId); // Set the userId in the service
-      this.router.navigate(['planning-individuel', userId]);
+    if (user && user.pseudo) {
+      const userPseudo = user.pseudo;
+      this.userService.setUserPseudo(userPseudo); // Set the userId in the service
+      this.router.navigate(['planning-individuel', userPseudo]);
     } else {
       console.error('Données utilisateur incorrectes :', user);
     }

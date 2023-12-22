@@ -6,40 +6,40 @@ import { UserRegistration } from 'src/app/interfaces/user-registration.interface
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/app/model/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
-  selector: 'app-planning-individual',
+  selector: 'planning-individual',
   templateUrl: './planning-individual.component.html',
   styleUrls: ['./planning-individual.component.scss'],
 })
 export class PlanningIndividualComponent implements OnInit {
   userRegistrations: UserRegistration[] = [];
-  postes: Poste[] = []; // Add this line to include the 'postes' property
-  userId: number | null = 0;
+  postes: Poste[] = []; 
+
   userName: string = '';
   user: User | undefined; 
   dataSource = new MatTableDataSource<any>([]);
 
-  displayedColumns: string[] = ['nomUtilisateur', 'prenom', 'email', 'poste', 'zone', 'espace', 'jour', 'creneau'];
+  displayedColumns: string[] = ['poste', 'espace', 'jour', 'creneau'];
 
-  constructor(private userService: UserService, private route: ActivatedRoute) {}
+  constructor(private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.userId = this.userService.getUserId();
-    if (this.userId !== null) {
-      this.fetchUserRegistrations(this.userId);
-      this.fetchUser(this.userId);
-    }
+     const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
+      this.fetchUserRegistrations(pseudo);
+      this.fetchUser(pseudo);
+
   }
 
-  fetchUser(userId: number) {
-    this.userService.getUserById(userId).subscribe(
+  fetchUser(pseudo: string) {
+    this.userService.getUserByPseudo(pseudo).subscribe(
       (userData) => {
         this.user = userData;
         this.userName = `${this.user?.nom} ${this.user?.prenom}`;
         console.log('Fetched user data:', this.user);
         // Once user data is fetched, trigger fetching user registrations
-        this.fetchUserRegistrations(userId);
+        this.fetchUserRegistrations(pseudo);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -47,8 +47,8 @@ export class PlanningIndividualComponent implements OnInit {
     );
   }
   
-  fetchUserRegistrations(userId: number) {
-    this.userService.getUserRegistrations(userId).subscribe(
+  fetchUserRegistrations(pseudo : string) {
+    this.userService.getUserRegistrations(pseudo).subscribe(
       (data) => {
         this.userRegistrations = data;
         console.log('Fetched user registrations:', this.userRegistrations);

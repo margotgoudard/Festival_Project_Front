@@ -19,10 +19,10 @@ const routes: Routes = [
   { path: 'planning', component: PlanningComponent },
   { path: 'inscription', component: InscriptionComponent },
   { path: 'animation-jeu-planning', component: AnimationJeuPlanningComponent},
-  { path: 'planning-individuel', component: PlanningIndividualComponent },
+  { path: 'planning-individual', component: PlanningIndividualComponent },
   { path: 'planning-inscription', component: PlanningInscriptionComponent },
   { path: 'planning-general', component:PlanningGeneralComponent},
-  { path: 'planning-individuel/:id', component: PlanningIndividualComponent },
+  { path: 'planning-individual/:id', component: PlanningIndividualComponent },
 
 ];
 
