@@ -41,7 +41,7 @@ export class ModifyDialogComponent {
         nom: this.selectedPoste.nom || '',
         description: this.selectedPoste.description || '',
         placedisponible: this.selectedPoste.placedisponible || 0,
-        zones: this.selectedPoste.zones || []
+        espaces: this.selectedPoste.espaces|| []
       };
   
       this.PlanningService.updatePoste(updatedPoste).subscribe(
@@ -147,8 +147,8 @@ onAddPoste(): void {
     id: this.postes.length + 1,                // Replace with the actual logic to generate a unique ID
     nom: '',                          // Replace with the actual default value
     description: '',   // Replace with the actual default value
-    placedisponible: 0,                       // Replace with the actual default value
-    zones: []                                // Replace with the actual default value
+    placedisponible: 0,  
+    espaces : []                     // Replace with the actual default value                             // Replace with the actual default value
   };
 
   this.PlanningService.addPoste(newPoste).subscribe(

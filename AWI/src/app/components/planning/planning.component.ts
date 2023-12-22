@@ -120,9 +120,10 @@ onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: strin
     // Log the selected buttons to the console
     console.log('Selected Buttons:', this.selectedButtons);
   } 
-  if ( 'zones' in item) {
+  if ( 'espaces' in item) {
   const poste = item as Poste;
-    if(poste.zones && poste.zones.length > 1) {
+    // s'il y a des espaces on ouvre planning animation jeu
+    if(poste.espaces && poste.espaces.length > 1) {
       // Ouvrir le composant AnimationJeuPlanningComponent avec les espaces spécifiques
       this.router.navigate(['/animation-jeu-planning']);
     } 

@@ -46,6 +46,7 @@ export class RegistrationComponent implements OnInit {
       const formData = this.registrationForm.value;
       
       // Assuming you have a method in your API service to handle registration
+      console.log(formData)
       this.authService.register(formData).subscribe(
         (response) => {
           // Handle successful registration response
