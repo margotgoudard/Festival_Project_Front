@@ -22,7 +22,7 @@ import { Subscription } from 'rxjs';
 })
 export class PlanningComponent implements OnInit, OnDestroy{
   weekend: string[] = ['Samedi', 'Dimanche'];
-  private itemselect?: Espace | Poste = undefined;
+  private itemselect?: Poste | Espace = undefined;
   @Input() items: Poste[] | Espace[] = [];
   @Input() creneaux: Creneau[] = [];
   joursEnum = Jour;
@@ -68,13 +68,13 @@ export class PlanningComponent implements OnInit, OnDestroy{
 
   fetchData() {
     this.planningService.getItems().subscribe(
-      (data: Espace[] | Poste[]) => {
+     /* (data: Espace[] | Poste[]) => {
         this.items = data;
         this.initializeItemDisponibles();
       },
       (error) => {
         console.error('Error fetching items:', error);
-      }
+      }*/
     );
 
     
@@ -105,7 +105,7 @@ toggleMultipleSelection(): void {
 onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: string, item: PlanningItem): void {
   console.log(`creneau=${JSON.stringify(creneau)}`)
   console.log(`item=${JSON.stringify(item)}`)
-  this.itemselect = item
+  /*this.itemselect = item
   if (this.multipleSelection) {
     // Multiple selection mode is active, add the button to the selected list
     const isSelected = this.isSelected(posteId, heureDebut);
@@ -147,7 +147,7 @@ onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: strin
       });
     }
   }
-}
+}*/
 }
 
 isSelected(posteId: number, heureDebut: string): boolean {
@@ -218,13 +218,13 @@ organizeCreneauxParJour(): void {
   this.creneauxParJour = {};
 
   // Organize creneaux by jour
-  this.creneaux.forEach(creneau => {
+  /*this.creneaux.forEach(creneau => {
     const jour = creneau.jour;
     if (!this.creneauxParJour[jour]) {
       this.creneauxParJour[jour] = [];
     }
     this.creneauxParJour[jour].push(creneau);
-  });
+  });*/
 }
 
 

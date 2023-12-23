@@ -29,7 +29,7 @@ export class UserService {
   }
 
   getUserRegistrations(pseudo: string): Observable<UserRegistration[]> {
-    const url = `${this.apiUrl}/user-registrations?pseudo=${pseudo}`;
+    const url = `${this.apiUrl}/inscriptions/${pseudo}`;
     return this.http.get<UserRegistration[]>(url);
   }
 

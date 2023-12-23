@@ -5,7 +5,6 @@ import { Poste } from "./poste.interface";
 
 export interface UserRegistration {
     user: User;
-    poste: Poste;
     espace: Espace;
     creneau: Creneau;
   }

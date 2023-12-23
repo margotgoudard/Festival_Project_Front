@@ -43,8 +43,8 @@ export class PlanningGeneralComponent implements OnInit {
           nomUtilisateur: registration.user.nom,
           prenom: registration.user.prenom,
           email: registration.user.email,
-          idPoste: registration.poste.id,
-          poste: registration.poste.nom, // Assuming 'poste' has a 'nom' property
+          //idPoste: registration.poste.id,
+          //poste: registration.poste.nom, // Assuming 'poste' has a 'nom' property
           idEspace: registration.espace.id,
           espace: registration.espace.nom, // Assuming 'poste' has 'espaces' array and 'nom' property
           jour: registration.creneau.jour,

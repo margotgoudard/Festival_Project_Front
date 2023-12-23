@@ -21,13 +21,12 @@ export class PlanningIndividualComponent implements OnInit {
   user: User | undefined; 
   dataSource = new MatTableDataSource<any>([]);
 
-  displayedColumns: string[] = ['poste', 'espace', 'jour', 'creneau'];
+  displayedColumns: string[] = ['poste', 'jour', 'creneau'];
 
   constructor(private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-     const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
-      this.fetchUserRegistrations(pseudo);
+      const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
       this.fetchUser(pseudo);
 
   }
@@ -38,6 +37,7 @@ export class PlanningIndividualComponent implements OnInit {
         this.user = userData;
         this.userName = `${this.user?.nom} ${this.user?.prenom}`;
         console.log('Fetched user data:', this.user);
+        console.log (this.userName);
         // Once user data is fetched, trigger fetching user registrations
         this.fetchUserRegistrations(pseudo);
       },
