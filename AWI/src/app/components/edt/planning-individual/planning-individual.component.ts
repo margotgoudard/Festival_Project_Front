@@ -50,7 +50,7 @@ export class PlanningIndividualComponent implements OnInit {
   fetchUserRegistrations(pseudo : string) {
     this.userService.getUserRegistrations(pseudo).subscribe(
       (data) => {
-        this.userRegistrations = data;
+        this.userRegistrations = data.filter(registration => registration.isAccepted && registration.isAffected);
         console.log('Fetched user registrations:', this.userRegistrations);
         // After fetching user registrations, update the data source for the table
         this.dataSource.data = this.userRegistrations;
