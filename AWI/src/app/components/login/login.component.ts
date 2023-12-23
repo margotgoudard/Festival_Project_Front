@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MockAuthService } from 'src/app/mocks/auth.service.mock'; // Importez le service de mock
+import { RegistrationComponent } from '../registration/registration.component';
+import { RegistrationPopupService } from 'src/app/services/registration-popup.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -12,9 +14,9 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessage: String = '';
 
-  constructor(private formBuilder: FormBuilder, private authService: MockAuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private registrationPopupService: RegistrationPopupService) {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
+      pseudo: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
@@ -23,18 +25,17 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      const { username, password } = this.loginForm.value;
+      const { pseudo, password } = this.loginForm.value;
   
-      this.authService.login(username, password).subscribe(
+      this.authService.login(pseudo, password).subscribe(
         (response) => {
-          // Connexion réussie, utilisez le token JWT simulé ici.
-          const jwtToken = response.token;
-  
-          // Vous pouvez stocker le token JWT dans le local storage ou un cookie
-          localStorage.setItem('jwtToken', jwtToken);
-  
-          // Redirection vers la page du profil utilisateur (simulée)
-          this.router.navigate(['/profile']);
+          console.log(response);
+
+          if (response.token) {
+            localStorage.setItem('jwtToken', response.token);
+            this.authService.setLoggedInUserPseudo(pseudo);
+            this.router.navigate(['/planning-individual']);
+          }
   
           // Autres actions à exécuter après une connexion réussie
         },
@@ -53,4 +54,9 @@ export class LoginComponent implements OnInit {
       );
     }
   }
+
+  openRegistrationPopup() {
+    this.registrationPopupService.openRegistrationPopup();
+  }
+
 }

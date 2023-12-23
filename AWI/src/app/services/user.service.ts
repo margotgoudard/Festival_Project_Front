@@ -1,21 +1,50 @@
+// user.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user.model';
+import { UserRegistration } from '../interfaces/user-registration.interface';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class UserService {
-  private apiUrl = 'URL_de_votre_API'; // Remplacez par l'URL de votre API
+  private apiUrl = 'http://localhost:3000'; 
+  private userPseudo : string ='';
 
   constructor(private http: HttpClient) {}
 
-  getUserById(userId: string): Observable<User> {
-    // Effectuez une requête HTTP vers votre API backend pour récupérer les données de l'utilisateur par son ID.
-    return this.http.get<User>(`${this.apiUrl}/users/${userId}`);
+  getUserById(id: number): Observable<User> {
+    const url = `${this.apiUrl}/users/${id}`;
+    return this.http.get<User>(url);
   }
 
-  updateUserProfile(userData: any): Observable<any> {
-    // Effectuez une requête HTTP vers votre API backend pour mettre à jour le profil de l'utilisateur.
-    return this.http.put(`${this.apiUrl}/user/update-profile`, userData);
+  setUserPseudo(pseudo: string): void {
+    this.userPseudo = pseudo;
+  }  
+
+  updateUserProfile(user: User): Observable<any> {
+    const url = `${this.apiUrl}/users/${user.id}`;
+    return this.http.put(url, user);
+  }
+
+  getUserRegistrations(pseudo: string): Observable<UserRegistration[]> {
+    const url = `${this.apiUrl}/inscriptions/${pseudo}`;
+    return this.http.get<UserRegistration[]>(url);
+  }
+
+  getUsersRegistration(): Observable<UserRegistration[]> {
+    const url = `${this.apiUrl}/user-registrations`;
+    return this.http.get<UserRegistration[]>(url);
+  }
+
+  getUserByPseudo(pseudo: string): Observable<User> {
+    const url = `${this.apiUrl}/users?pseudo=${pseudo}`;
+    return this.http.get<User>(url);
+  }
+
+  getUserPseudo(userId: number): Observable<string> {
+    const url = `${this.apiUrl}/users/${userId}/pseudo`;
+    return this.http.get<string>(url);
   }
 }

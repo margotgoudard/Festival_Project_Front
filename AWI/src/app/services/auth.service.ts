@@ -1,50 +1,107 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
 import { User } from '../model/user.model';
+import { Role } from '../model/role.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'URL_DE_VOTRE_API'; // Remplacez par l'URL de votre API.
+  private apiUrl = 'http://localhost:3000'; // Remplacez par l'URL de votre API.
+  private currentUserPseudo: string = ''; // Declare currentUser property
 
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string): Observable<any> {
-    // Effectuez une requête HTTP vers votre API backend pour vérifier les identifiants et obtenir un token JWT.
-    const loginData = { username, password };
-    return this.http.post(`${this.apiUrl}/login`, loginData).pipe(
+  login(pseudo: string, password: string): Observable<User> {
+    // Envoyez les informations de connexion au serveur pour validation
+    const loginData = { pseudo, password };
+    return this.http.post<any>(`${this.apiUrl}/login`, loginData).pipe(
+      tap((response: any) => {
+        if (response.token) {
+          localStorage.setItem('jwtToken', response.token);
+          this.setLoggedInUserPseudo(pseudo);
+        }
+      }),
+      catchError((error) => {
+        // Gérer les erreurs d'authentification ici
+        throw error;
+      })
+    );
+  }
+
+  getLoggedInUserPseudo(): string | null {
+    return this.currentUserPseudo;
+  }
+
+  setLoggedInUserPseudo(pseudo: string): void {
+    this.currentUserPseudo = pseudo;
+  }
+
+  /*
+  
+  private getUserDetails(pseudo: string): Observable<User> {
+    // Récupérez les détails du bénévole en fonction du pseudo
+    return this.http.get<any>(`${this.apiUrl}/benevoles/${pseudo}`).pipe(
+      tap((userDetails) => {
+        console.log('Valeur de userDetails :', userDetails);
+      }),
+      switchMap((userDetails) => {
+        // Assuming userDetails contains roles property representing associated roles
+        if (userDetails && userDetails.role) {
+          // Map roles from the response to Role objects
+          const role: Role = userDetails.role.map(
+            (role: any) => new Role(role.idR, role.libelleRole),
+          );
+  
+          // Create a new User object with the received details
+          const user = new User(
+            userDetails.idB,
+            userDetails.prenom,
+            userDetails.nom,
+            userDetails.pseudo,
+            userDetails.associations,
+            userDetails.email,
+            userDetails.password,
+            userDetails.numTel,
+            userDetails.chercheLogement,
+            userDetails.taille,
+            userDetails.vegetarian,
+            userDetails.photoDeProfil,
+            role,
+            userDetails.token,
+          );
+  
+          // Stockez les détails du bénévole dans une variable currentUser
+          this.setCurrentUser(user);
+  
+          return of(user);
+        } else {
+          return throwError('Réponse du serveur invalide');
+        }
+      }),
+    );
+  }
+
+  */
+
+  register(userData: User): Observable<any> {
+    console.log(userData)
+    return this.http.post(`${this.apiUrl}/registration`, userData).pipe(
       catchError((error: any) => {
-        // En cas d'erreur, renvoyez un message d'erreur.
-        let errorMessage = 'Erreur lors de la connexion.';
+        let errorMessage = 'Erreur lors de l\'inscription.';
         
-        if (error.status === 401) {
-          errorMessage = 'Identifiants invalides. Veuillez réessayer.';
+        if (error.status === 400) {
+          errorMessage = 'Ce pseudo est déjà utilisé. Veuillez en choisir un autre.';
         } else if (error.status === 500) {
           errorMessage = 'Une erreur interne du serveur s\'est produite. Veuillez réessayer plus tard.';
         }
         
         return throwError(errorMessage);
-      }),
-      tap((response: any) => {
-        // Stockez le token JWT dans le stockage local en cas de réussite.
-        localStorage.setItem('jwtToken', response.token);
       })
     );
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
-    // Effectuez une requête HTTP vers votre API backend pour enregistrer un nouvel utilisateur.
-    // Par exemple, utilisez http.post() pour envoyer les données d'inscription au backend.
-    const userData = { username, email, password };
-    return this.http.post(`${this.apiUrl}/register`, userData);
-  }
-
-  logout(): void {
-    // Supprimez le token JWT du stockage local.
-    localStorage.removeItem('jwtToken');
-  }
 
   getJwtToken(): string | null {
     return localStorage.getItem('jwtToken');
@@ -56,9 +113,5 @@ export class AuthService {
     return !!token; // Renvoie true si le token JWT est présent, sinon false.
   }
 
-  getUserById(userId: string): Observable<User> {
-    // Effectuez une requête HTTP vers votre API backend pour récupérer les données de l'utilisateur par son ID.
-    return this.http.get<User>(`${this.apiUrl}/users/${userId}`);
-  }
 
 }

@@ -3,7 +3,7 @@
   <div class="informations-personnelles">
     <p><strong>Nom :</strong> {{ nom }}</p>
     <p><strong>Prénom :</strong> {{ prenom }}</p>
-    <p><strong>Mail :</strong> {{ mail }}</p>
+    <p><strong>Mail :</strong> {{ email }}</p>
   </div>
 
   <div class="associations">
@@ -18,8 +18,8 @@
   </div>
 
   <div class="preferences">
-    <p><strong>Taille de T-shirt :</strong> {{ tailleTShirt }}</p>
-    <p><strong>Végétarien(ne) :</strong> {{ isVegetarian ? 'Oui' : 'Non' }}</p>
+    <p><strong>Taille de T-shirt :</strong> {{ taille }}</p>
+    <p><strong>Végétarien(ne) :</strong> {{ vegetarian ? 'Oui' : 'Non' }}</p>
   </div>
 
   <button (click)="redirectToPlanning()">Accéder au planning</button>

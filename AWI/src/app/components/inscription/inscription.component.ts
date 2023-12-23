@@ -2,7 +2,6 @@ import { Component, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
-import { MockInscriptionService } from 'src/app/mocks/inscription.service.mock';
 import { InscriptionService } from 'src/app/services/inscription.service';
 import { PosteDetailsComponent } from '../poste-details/poste-details.component';
 
@@ -13,9 +12,9 @@ import { PosteDetailsComponent } from '../poste-details/poste-details.component'
 })
 export class InscriptionComponent {
 
-  posteDetails: any; // Adjust the type based on your data structure
-  referentDetails: any; // Adjust the type based on your data structure
-  previousVolunteers: any[] = []; // Adjust the type based on your data structure
+  posteDetails: any; 
+  referentDetails: any; 
+  previousVolunteers: any[] = []; 
 
   
   constructor(
@@ -24,7 +23,7 @@ export class InscriptionComponent {
   ) {}
 
   ngOnInit() {
-    // Fetch référent and previous volunteers details from the backend
+    
     this.inscriptionService.getPosteReferent(this.data.poste.id)
       .subscribe((referentData) => {
         this.referentDetails = referentData;

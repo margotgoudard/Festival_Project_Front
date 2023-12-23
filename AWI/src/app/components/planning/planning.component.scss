@@ -1,84 +1,37 @@
-/* Style de la table */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid #ccc;
-}
-
-/* Style des en-têtes de colonnes (jours) */
-th {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
-}
-
-/* Style des en-têtes de lignes (heures) */
-th[scope="row"] {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  padding: 8px;
-}
-
-/* Style des cellules du tableau */
-td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
-}
-
-/* Style des boutons d'inscription */
-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-/* Style au survol des boutons */
-button:hover {
-  background-color: #0056b3;
-}
-
-/* Style du conteneur du planning */
 .planning-container {
-  margin: 20px;
+  margin-top: 20px; /* Espace en haut du conteneur */
 }
 
-/* Style de base pour le bouton "S'inscrire" */
-.pie-button {
-  border: 3px solid #3498db;
-  background: conic-gradient(#3498db 0% 0%, #3498db 0% 100%);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  color: #ffffff;
-  text-align: center;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  user-select: none;
+table {
+  width: 100%; /* La table occupe 100% de la largeur du conteneur */
+  border-collapse: collapse; /* Fusion des bordures des cellules */
 }
 
-/* Style pour le bouton lorsque des places sont disponibles */
-.pie-button.available {
-  background: conic-gradient(
-    #3498db 0% calc(100% - 10px),
-    transparent calc(100% - 10px) 100%
-  );
+th, td {
+  border: 1px solid #ddd; /* Bordure de 1 pixel avec couleur grise */
+  padding: 8px; /* Espace interne des cellules */
+  text-align: center; /* Centre le texte dans les cellules */
 }
 
-/* Style pour le bouton lorsque plus de places sont disponibles */
-.pie-button.full {
-  background: conic-gradient(
-    #e74c3c 0% calc(100% - 10px),
-    transparent calc(100% - 10px) 100%
-  );
+th {
+  background-color: #f2f2f2; /* Couleur de fond pour les en-têtes */
 }
 
-/* Style pour le bouton sélectionné */
+button {
+  padding: 8px; /* Espace interne du bouton */
+  cursor: pointer; /* Curseur de type pointeur au survol */
+}
+
 .selected-button {
-  background-color: #4CAF50;
-  color: #fff;
+  background-color: #3498db; /* Couleur de fond pour les boutons sélectionnés */
+  color: white; /* Couleur du texte pour les boutons sélectionnés */
+}
+
+.checkbox-label {
+  margin-bottom: 10px; /* Marge en bas de l'étiquette de la case à cocher */
+}
+
+h2 {
+  margin-top: 30px;
+  margin-left: 30px;
 }

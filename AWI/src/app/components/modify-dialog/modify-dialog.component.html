@@ -1,0 +1,26 @@
+<!-- Modify this template based on your requirements -->
+<div>
+    <h2>Modify Creneaux and Postes</h2>
+    
+      <div>
+        <h3>Creneaux</h3>
+        <button (click)="onAddCreneau()">Add Creneau</button>
+        <ul>
+          <li *ngFor="let creneau of creneaux">
+            {{ creneau.heureDebut }} - {{ creneau.heureFin }} ({{ creneau.jour }})
+            <button (click)="onRemoveCreneau(creneau)">Remove</button>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3>Postes</h3>
+        <button (click)="onAddPoste()">Add Poste</button>
+        <ul>
+          <li *ngFor="let poste of postes">
+            {{ poste.nom }} - {{ poste.description }} ({{ poste.placedisponible }} places disponibles)
+            <button (click)="onRemovePoste(poste)">Remove</button>
+          </li>
+        </ul>
+      </div>
+    <button (click)="onClose()">Close</button>
+  </div>

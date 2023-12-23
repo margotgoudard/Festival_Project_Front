@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { User } from './model/user.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,7 +7,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor() {
+  constructor(private router: Router) {
     
+  }
+
+  ngOnInit() {
+    this.router.navigate(['/login']);
+  }
+
+  isLoginPage(): boolean {
+    return this.router.url.includes('/login');
   }
 }
