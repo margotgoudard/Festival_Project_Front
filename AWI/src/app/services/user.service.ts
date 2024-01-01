@@ -10,7 +10,8 @@ import { UserRegistration } from '../interfaces/user-registration.interface';
 })
 export class UserService {
   private apiUrl = 'http://localhost:3000'; 
-  private userPseudo : string ='';
+  public userPseudo : string ='';
+  public userId : number = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -47,4 +48,11 @@ export class UserService {
     const url = `${this.apiUrl}/users/${userId}/pseudo`;
     return this.http.get<string>(url);
   }
+
+
+  getUserRole(pseudo: string): Observable<number> {
+    const url = `${this.apiUrl}/roleBenevole/${pseudo}`;
+    return this.http.get<number>(url);
+  }
+
 }
