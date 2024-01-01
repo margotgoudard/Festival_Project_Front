@@ -1,0 +1,21 @@
+h2 {
+    text-align: center; /* Centre le texte horizontalement */
+    line-height: 2em;   /* Ajustez la hauteur de ligne pour centrer le texte verticalement */
+    margin: 30px;          /* Supprime la marge par défaut pour un centrage plus précis */
+  }
+
+.dialog-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .close-button {
+    cursor: pointer;
+    font-size: 3em;
+    margin-right: 10px;
+  }
+  
+  .close-button:hover {
+    color: red; /* Changez la couleur au survol si nécessaire */
+  }

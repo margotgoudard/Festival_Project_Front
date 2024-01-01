@@ -1,9 +1,11 @@
 // registration.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { InscriptionComponent } from '../inscription/inscription.component';
+import { InscriptionReussiDialogComponent } from '../inscription-reussi-dialog/inscription-reussi-dialog.component';
 
 @Component({
   selector: 'app-registration',
@@ -14,8 +16,10 @@ export class RegistrationComponent implements OnInit {
 
   registrationForm: FormGroup;
   submitted: boolean = false;
+  registrationSuccess: boolean = false;
+  errorMessage: string = '';
 
-  constructor(private authService: AuthService ,private dialogRef: MatDialogRef<RegistrationComponent>, private formBuilder: FormBuilder) {
+  constructor( private dialog: MatDialog ,private authService: AuthService ,private dialogRef: MatDialogRef<RegistrationComponent>, private formBuilder: FormBuilder) {
     this.registrationForm = this.formBuilder.group({
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
@@ -42,24 +46,37 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit() {
     if (this.registrationForm.valid) {
-      // If the form is valid, you can send the data to your backend service
       const formData = this.registrationForm.value;
-      
-      // Assuming you have a method in your API service to handle registration
-      console.log(formData)
+  
       this.authService.register(formData).subscribe(
         (response) => {
           // Handle successful registration response
-          console.log('Registration successful:', response);
+          this.registrationSuccess = true;
+  
+          // Ouvre la popup avec le message d'inscription réussie
+          const dialogRef = this.dialog.open(InscriptionReussiDialogComponent, {
+            width: '300px', // Définissez la largeur souhaitée
+            data: { message: 'Inscription réussie, veuillez vous connecter.' },
+          });
+  
+          // Ferme la fenêtre d'inscription
+          this.dialogRef.close();
         },
         (error) => {
           // Handle registration error
-          console.error('Registration error:', error);
+          if (error.status === 409) {
+            this.errorMessage = 'Pseudo, email, or phone number already in use. Please choose different credentials.';
+          } else {
+            this.errorMessage = 'Le pseudo, email ou numéro de téléphone est déjà utilisé. Veuillez recommencer.';
+          }
         }
       );
     } else {
-      // Mark form fields as touched to display validation errors
       this.registrationForm.markAllAsTouched();
     }
+  }
+
+  closeDialog(): void {
+    this.dialogRef.close();
   }
 }

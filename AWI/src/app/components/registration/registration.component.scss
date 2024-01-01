@@ -1,0 +1,36 @@
+.registration-container {
+    margin-top: 150px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    /* You can adjust the styling based on your layout preferences */
+  }
+
+  .form-group {
+    margin-left: 20px; /* Adjust the margin as needed */
+    margin-right: 20px;
+  }
+
+  .error-message {
+    color: red;
+    margin-top: 5px; /* Ajoutez une marge supplémentaire en haut pour l'espace */
+  }
+
+  .dialog-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .close-button {
+    cursor: pointer;
+    font-size: 1.5em;
+    margin-right: 10px;
+  }
+  
+  .close-button:hover {
+    color: red; /* Changez la couleur au survol si nécessaire */
+  }
+ 

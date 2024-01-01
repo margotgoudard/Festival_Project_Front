@@ -33,6 +33,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { PlanningService } from './services/poste-creneau.service';
 import { RegistrationPopupService } from './services/registration-popup.service';
+import { InscriptionReussiDialogComponent } from './components/inscription-reussi-dialog/inscription-reussi-dialog.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { RegistrationPopupService } from './services/registration-popup.service'
     PosteDialogComponent,
     CreneauDialogComponent,
     PlanningGeneralComponent,
+    InscriptionReussiDialogComponent,
   ],
   imports: [
     BrowserModule,
