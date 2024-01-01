@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-navigation',
@@ -10,12 +11,17 @@ import { AuthService } from 'src/app/services/auth.service';
 export class NavigationComponent implements OnInit {
 
   user$!: Observable<any>;
+  userRole: number = 0; // Initialize userRole with a default value
 
-    constructor( private authService : AuthService) {}
+  constructor(private userService: UserService, private authService: AuthService) {}
 
-    ngOnInit() {
-        // Initialisez votre utilisateur ici, par exemple à partir d'un service d'authentification
-        //this.user$ =  this.authService.getCurrentUser();/* Récupérez l'utilisateur actuel */;
-    }
-
+  ngOnInit() {
+    const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
+    
+    // Get user information
+    this.userService.getUserRole(pseudo).subscribe((userRoleObject: any) => {
+      this.userRole = userRoleObject.firstRoleId;
+      console.log('User Role ID:', this.userRole);
+    });
+}
 }

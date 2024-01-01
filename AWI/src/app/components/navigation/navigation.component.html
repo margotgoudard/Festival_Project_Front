@@ -1,10 +1,6 @@
-<div class="dropdown">
-  <button class="dropbtn">Menu</button>
-  <div class="dropdown-content">
-    <!-- Utilisez async pour gérer les changements automatiques -->
-    <a routerLink="/planning-general" *ngIf="(user$ | async)?.role === 'admin'">Planning</a>
-    <a routerLink="/profile" *ngIf="(user$ | async)?.role === 'benevole' || (user$ | async)?.role === 'referent'">Profil</a>
-    <a routerLink="/planning-individuel" *ngIf="(user$ | async)?.role === 'benevole' || (user$ | async)?.role === 'referent'">Planning Individuel</a>
-    <a routerLink="/planning-inscription" *ngIf="(user$ | async)?.role === 'benevole' || (user$ | async)?.role === 'referent' || (user$ | async)?.role === 'admin'">Planning Inscription</a>
-  </div>
+<div class="horizontal-menu">
+  <a routerLink="/planning-general" *ngIf="userRole === 1">Planning</a>
+  <a routerLink="/profile" *ngIf="userRole === 2 || userRole === 3">Profil</a>
+  <a routerLink="/planning-individuel" *ngIf="userRole === 2 || userRole === 3">Planning Individuel</a>
+  <a routerLink="/planning-inscription" *ngIf="userRole === 1 || userRole === 2 || userRole === 3">Planning Inscription</a>
 </div>
