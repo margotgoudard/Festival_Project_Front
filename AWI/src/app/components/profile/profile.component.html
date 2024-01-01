@@ -1,26 +1,18 @@
+<app-navigation></app-navigation>
+
 <div class="profil-benevole">
   <h2>Profil Bénévole</h2>
   <div class="informations-personnelles">
     <p><strong>Nom :</strong> {{ nom }}</p>
     <p><strong>Prénom :</strong> {{ prenom }}</p>
+    <p><strong>Pseudo :</strong> {{ pseudo }}</p>
     <p><strong>Mail :</strong> {{ email }}</p>
+    <p><strong>Association(s) :</strong> {{ associations }} </p>
   </div>
 
-  <div class="associations">
-    <p><strong>Association(s) :</strong></p>
-    <ul>
-      <li *ngFor="let association of associations">{{ association }}</li>
-    </ul>
-  </div>
-
-  <div class="pseudo">
-    <p><strong>Pseudo unique :</strong> {{ pseudo }}</p>
-  </div>
 
   <div class="preferences">
     <p><strong>Taille de T-shirt :</strong> {{ taille }}</p>
     <p><strong>Végétarien(ne) :</strong> {{ vegetarian ? 'Oui' : 'Non' }}</p>
   </div>
-
-  <button (click)="redirectToPlanning()">Accéder au planning</button>
 </div>

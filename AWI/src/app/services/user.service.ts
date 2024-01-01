@@ -55,4 +55,10 @@ export class UserService {
     return this.http.get<number>(url);
   }
 
+  getUserAssociations(pseudo: string): Observable<string> {
+    const url = `${this.apiUrl}/associationBenevole/${pseudo}`;
+    return this.http.get<string>(url);
+  }
+
+
 }

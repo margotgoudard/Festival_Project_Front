@@ -4,6 +4,7 @@ import { User } from 'src/app/model/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { ModificationProfileComponent } from '../modification-profile/modification-profile.component';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -17,24 +18,20 @@ export class ProfileComponent implements OnInit {
   nom: string = '';
   prenom: string = '';
   email: string = '';
-  associations: string[] = [];
+  associations: string = '';
   pseudo: string = '';
   taille: string = '';
   vegetarian: boolean = false;
 
-    constructor(private route: ActivatedRoute, private userService: UserService, private dialog: MatDialog, private router: Router) { 
+    constructor(private authService: AuthService, private route: ActivatedRoute, private userService: UserService, private dialog: MatDialog, private router: Router) { 
     
   }
 
   ngOnInit() {
+    const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
     this.route.params.subscribe((params) => {
-      // Récupérez l'ID de l'utilisateur depuis les paramètres de l'URL
-      const userId = params['id'];
-      
-      // Utilisez le service UserService pour récupérer les données de l'utilisateur par son ID
-      this.userService.getUserById(userId).subscribe(
+      this.userService.getUserByPseudo(pseudo).subscribe(
         (data: User) => {
-          // Mettez à jour les données de l'utilisateur dans le composant
           this.nom = data.nom;
           this.prenom = data.prenom;
           this.email = data.email;
@@ -49,6 +46,16 @@ export class ProfileComponent implements OnInit {
         }
       );
     });
+    
+    this.userService.getUserAssociations(pseudo).subscribe(
+      (associationsObject: any) => {
+        this.associations = associationsObject.firstAssociationName;
+      },
+      (error) => {
+        this.errorMessage = 'Erreur lors de la récupération des associations de l\'utilisateur.';
+        console.error(error);
+      }
+    );
   }
 
   navigateToModificationProfile(): void {
@@ -60,11 +67,6 @@ export class ProfileComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('La modale a été fermée', result);
     });
-  }
-
-  redirectToPlanning(): void {
-    // Ici, vous pouvez utiliser le router pour naviguer vers la page du planning.
-    this.router.navigate(['/planning']); // Assurez-vous d'ajuster la route en fonction de votre configuration de routes.
   }
 
 }
