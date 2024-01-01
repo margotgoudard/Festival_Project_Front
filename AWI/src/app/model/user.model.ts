@@ -6,7 +6,7 @@ export class User {
     public prenom: string = '',
     public nom: string = '',
     public pseudo: string = '',
-    public associations: string[] = [],
+    public associations: string = '',
     public email: string = '',
     public password: string = '',
     public numTel: number = 0,
