@@ -12,9 +12,8 @@ export class PlacerService {
   constructor(private http: HttpClient) {}
 
   // Fonction pour récupérer le nombre de places dans la table Placer pour chaque espace et créneau
-  getNombrePlacesPourEspaces(espaceIds: number[], creneauId: number): Observable<any[]> {
-    const endpoint = `${this.baseUrl}/nombre-places`;
-    return this.http.post<any[]>(endpoint, { espaceIds, creneauId });
+  getNombrePlacesPourEspaces(espaceId: number, creneauId: number): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/nombre-places?espaceId=${espaceId}&creneauId=${creneauId}`);
   }
  
 
