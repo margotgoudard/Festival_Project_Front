@@ -7,7 +7,7 @@
         <button (click)="onAddCreneau()">Add Creneau</button>
         <ul>
           <li *ngFor="let creneau of creneaux">
-            {{ creneau.heureDebut }} - {{ creneau.heureFin }} ({{ creneau.jour }})
+            {{ creneau.heureDebut }} - {{ creneau.heureFin }} ({{ creneau.jourCreneau }})
             <button (click)="onRemoveCreneau(creneau)">Remove</button>
           </li>
         </ul>
@@ -17,7 +17,6 @@
         <button (click)="onAddPoste()">Add Poste</button>
         <ul>
           <li *ngFor="let poste of postes">
-            {{ poste.nom }} - {{ poste.description }} ({{ poste.placedisponible }} places disponibles)
             <button (click)="onRemovePoste(poste)">Remove</button>
           </li>
         </ul>

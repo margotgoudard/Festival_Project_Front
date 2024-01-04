@@ -6,7 +6,7 @@ import { PlanningComponent } from '../planning.component';
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { UserService } from 'src/app/services/user.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { PlanningService } from 'src/app/services/poste-creneau.service';
+import { InscriptionService } from 'src/app/services/inscription.service';
 
 @Component({
   selector: 'app-planning-inscription',
@@ -21,7 +21,7 @@ export class PlanningInscriptionComponent extends PlanningComponent {
     router: Router,
     httpClient: HttpClient, // Add this line to include httpClient
     authService: AuthService,
-    planningService: PlanningService,
+    planningService: InscriptionService,
     private userService: UserService,
   ) {
     super(dialog, router, httpClient, authService, planningService); // Ensure to call the parent's constructor

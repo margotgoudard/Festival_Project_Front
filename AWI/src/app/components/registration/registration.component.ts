@@ -2,9 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { InscriptionComponent } from '../inscription/inscription.component';
 import { InscriptionReussiDialogComponent } from '../inscription-reussi-dialog/inscription-reussi-dialog.component';
 
 @Component({

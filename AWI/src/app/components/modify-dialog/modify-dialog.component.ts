@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Jour } from 'src/app/enumeration/jour.enum';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
-import { PlanningService } from 'src/app/services/poste-creneau.service';
+import { InscriptionService } from 'src/app/services/inscription.service';
 
 @Component({
   selector: 'app-modify-dialog',
@@ -20,7 +20,7 @@ export class ModifyDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ModifyDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private PlanningService: PlanningService, // Inject your service
+    private PlanningService: InscriptionService, 
     private cdr: ChangeDetectorRef,
     private router: Router,
   ) {
@@ -37,17 +37,15 @@ export class ModifyDialogComponent {
   onSavePosteChanges(): void {
     if (this.selectedPoste) {
       const updatedPoste: Poste = {
-        id: this.selectedPoste.id || 0,
-        nom: this.selectedPoste.nom || '',
-        description: this.selectedPoste.description || '',
-        placedisponible: this.selectedPoste.placedisponible || 0,
-        espaces: this.selectedPoste.espaces|| []
+        idP: this.selectedPoste.idP || 0,
+        libellePoste: this.selectedPoste.libellePoste || '',
+        espaces: this.selectedPoste.espaces || [],
       };
   
       this.PlanningService.updatePoste(updatedPoste).subscribe(
         () => {
           // Update the local postes array after a successful update
-          const index = this.postes.findIndex(p => p.id === this.selectedPoste?.id);
+          const index = this.postes.findIndex(p => p.idP === this.selectedPoste?.idP);
           if (index !== -1) {
             this.postes[index] = { ...updatedPoste }; // Update the local array
           }
@@ -73,10 +71,10 @@ export class ModifyDialogComponent {
   onSaveCreneauChanges(): void {
     if (this.selectedCreneau) {
       const updatedCreneau: Creneau = {
-        id: this.selectedCreneau.id,
+        idC: this.selectedCreneau.idC,
         heureDebut: this.selectedCreneau.heureDebut || '', // Provide a default value if undefined
         heureFin: this.selectedCreneau.heureFin || '',     // Provide a default value if undefined
-        jour: this.selectedCreneau.jour             // Provide a default value if undefined
+        jourCreneau: this.selectedCreneau.jourCreneau             // Provide a default value if undefined
       };
   
       this.PlanningService.updateCreneau(updatedCreneau).subscribe(
@@ -100,10 +98,10 @@ export class ModifyDialogComponent {
   // Function to handle adding a new creneau
   onAddCreneau(): void {
     const newCreneau: Creneau = {
-      id: 0,
+      idC: 0,
       heureDebut: '', // Replace with the actual default value
       heureFin: '',   // Replace with the actual default value
-      jour: Jour.Samedi       // Replace with the actual default value
+      jourCreneau: Jour.Samedi       // Replace with the actual default value
     };
   
     this.PlanningService.addCreneau(newCreneau).subscribe(
@@ -144,11 +142,10 @@ export class ModifyDialogComponent {
 onAddPoste(): void {
   // Placeholder logic to add a new poste
   const newPoste: Poste = {
-    id: this.postes.length + 1,                // Replace with the actual logic to generate a unique ID
-    nom: '',                          // Replace with the actual default value
-    description: '',   // Replace with the actual default value
-    placedisponible: 0,  
-    espaces : []                     // Replace with the actual default value                             // Replace with the actual default value
+    idP: this.postes.length + 1, // Replace with the actual logic to generate a unique ID
+    espaces: [] // Replace with the actual default value                             // Replace with the actual default value
+    ,
+    libellePoste: ''
   };
 
   this.PlanningService.addPoste(newPoste).subscribe(

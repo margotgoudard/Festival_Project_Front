@@ -24,23 +24,7 @@ export class PlanningService {
     return this.http.get(`${this.baseUrl}/planningInscription`);
   }
 
-  getItems(): Observable<(Espace | Poste)[]> {
-    const url = `${this.baseUrl}/items`;
   
-    return this.http.get<any[]>(url).pipe(
-      map(items => {
-        // Check if the first item in the response has 'espaces' property
-        if (items.length > 0 && 'espaces' in items[0]) {
-          // If 'espaces' property exists, consider it as an array of espaces
-          return items as Espace[];
-        } else {
-          // If 'espaces' property does not exist, consider it as an array of postes
-          return items as Poste[];
-        }
-      })
-    );
-  }
-
   getPostes(): Observable<Poste[]> {
     return this.http.get<Poste[]>(`${this.baseUrl}/postes`);
   }
@@ -104,13 +88,13 @@ export class PlanningService {
 
   // Function to remove a poste
   removePoste(poste: Poste): Observable<void> {
-    const url = `${this.baseUrl}/postes/${poste.id}`;
+    const url = `${this.baseUrl}/postes/${poste.idP}`;
     return this.http.delete<void>(url);
   }
 
   // Function to update a poste
   updatePoste(poste: Poste): Observable<Poste> {
-    const url = `${this.baseUrl}/postes/${poste.id}`;
+    const url = `${this.baseUrl}/postes/${poste.idP}`;
     return this.http.put<Poste>(url, poste);
   }
 

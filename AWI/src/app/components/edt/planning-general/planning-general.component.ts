@@ -45,9 +45,9 @@ export class PlanningGeneralComponent implements OnInit {
           email: registration.user.email,
           //idPoste: registration.poste.id,
           //poste: registration.poste.nom, // Assuming 'poste' has a 'nom' property
-          idEspace: registration.espace.id,
-          espace: registration.espace.nom, // Assuming 'poste' has 'espaces' array and 'nom' property
-          jour: registration.creneau.jour,
+          //idEspace: registration.espace.id,
+          //espace: registration.espace.nom, // Assuming 'poste' has 'espaces' array and 'nom' property
+          jour: registration.creneau.jourCreneau,
           idCreneau: registration.creneau,
           creneau: registration.creneau.heureDebut + ' - ' + registration.creneau.heureFin
         }));

@@ -3,90 +3,76 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
-import { InscriptionComponent } from '../inscription/inscription.component';
 import { InscriptionService } from 'src/app/services/inscription.service';
-import { AnimationJeuPlanningComponent } from './animation-jeu-planning/animation-jeu-planning.component';
 import { HttpClient } from '@angular/common/http';
-import { Espace } from 'src/app/interfaces/espace.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { ModifyDialogComponent } from '../modify-dialog/modify-dialog.component';
-import { PlanningItem } from 'src/app/interfaces/planning-item.interface';
-import { PlanningService } from 'src/app/services/poste-creneau.service';
-import { Jour } from 'src/app/enumeration/jour.enum';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, catchError, forkJoin, map, switchMap, tap, throwError } from 'rxjs';
+import { PlacerService } from 'src/app/services/placerService';
+import { Espace } from 'src/app/interfaces/espace.interface';
 
 @Component({
   selector: 'app-planning',
   templateUrl: './planning.component.html',
   styleUrls: ['./planning.component.scss']
 })
-export class PlanningComponent implements OnInit, OnDestroy{
-  weekend: string[] = ['Samedi', 'Dimanche'];
-  private itemselect?: Poste | Espace = undefined;
-  @Input() items: Poste[] | Espace[] = [];
-  @Input() creneaux: Creneau[] = [];
-  joursEnum = Jour;
-  jours: Jour[] = [Jour.Samedi, Jour.Dimanche];
-  
-  
-  userRole: string = '';
-  private creneauxSubscription: Subscription | undefined;
+export class PlanningComponent implements OnInit {
+  heures: { debut: string, fin: string }[] = []; // Liste des heures de début et de fin
+  creneaux: Creneau[] = [];
+  espaces: Espace[] = [];
+  espacesFiltres : Espace[]=[];
+  postes: Poste[] = []; // Liste des postes
+  jours: string[] = []; // Tableau pour stocker les jours de la semaine
+  planning: { jour: string, creneaux: Creneau[] }[] = [];
+  posteEspacesMapping: { [posteId: number]: { [jour: string]: Espace } } = {};
 
-  itemDisponibles: { [itemId: number]: { [creneau: string]: string | number } } = {};
+  constructor(private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
-
-
-  constructor(
-    private dialog: MatDialog,
-    private router: Router,
-    private httpClient: HttpClient,
-    private authService: AuthService,
-    public planningService: PlanningService
-  ) {}
-
-  ngOnInit() {
-    //this.setUserRole();
-    this.fetchData();
-    this.organizeCreneauxParJour();
-  }
-
-  ngOnDestroy() {
-    // Assurez-vous de désabonner la souscription pour éviter les fuites de mémoire
-    if (this.creneauxSubscription) {
-      this.creneauxSubscription.unsubscribe();
-    }
-  }
-
-  initializeItemDisponibles() {
-    this.items.forEach(item => {
-      this.itemDisponibles[item.id] = {};
-      this.creneaux.forEach(creneau => {
-        this.itemDisponibles[item.id][creneau.heureDebut] = item.placedisponible;
-      });
-    });
-  }
-
-  fetchData() {
-    this.planningService.getItems().subscribe(
-     /* (data: Espace[] | Poste[]) => {
-        this.items = data;
-        this.initializeItemDisponibles();
-      },
-      (error) => {
-        console.error('Error fetching items:', error);
-      }*/
-    );
-
+  ngOnInit(): void {
     
-    this.planningService.getCreneaux().subscribe(
-      (data: Creneau[]) => {
-        console.log('PlanningComponent - Creneaux:', data);
-        this.creneaux = data;
-      },
-      (error) => {
-        console.error('Error fetching creneaux:', error);
-      }
+
+    // Call the service to retrieve postes from the database
+    this.planningService.getPostes().subscribe(postes => {
+      // Store the postes in your property postes
+      this.postes = postes; 
+    });
+
+    console.log('Postes:', this.postes); 
+
+    // Call the service to retrieve creneaux from the database
+    this.planningService.getCreneaux().subscribe(creneaux => {
+      // Organize the creneaux by day
+      creneaux.forEach(creneau => {
+        const existingDay = this.planning.find(item => item.jour === creneau.jourCreneau);
+
+        if (!existingDay) {
+          this.planning.push({ jour: creneau.jourCreneau, creneaux: [creneau] });
+          this.jours.push(creneau.jourCreneau);
+        } else {
+          existingDay.creneaux.push(creneau);
+        }
+      });
+
+      console.log('Planning:', this.planning);
+      console.log('Jours:', this.jours);
+    });
+    
+  }
+
+  getCreneauxByJour(jour: string): Creneau[] {
+    const day = this.planning.find(item => item.jour === jour);
+    console.log(day?.creneaux);
+    return day ? day.creneaux : [];
+  }
+
+  getEspaces(posteId: number): Observable<Espace[]> {
+    return this.planningService.getEspaces().pipe(
+      map(espaces => espaces.filter((espace) => espace.posteId === posteId))
     );
+  }
+
+  getNumberOfPlaces(creneauId: number, espaceId: number): Observable<any> {
+    return this.placerService.getNombrePlacesPourEspaces([espaceId], creneauId);
   }
 
 
@@ -102,10 +88,10 @@ toggleMultipleSelection(): void {
   this.selectedButtons = [];
 }
 
-onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: string, item: PlanningItem): void {
+onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: string, poste: Poste): void {
   console.log(`creneau=${JSON.stringify(creneau)}`)
-  console.log(`item=${JSON.stringify(item)}`)
-  /*this.itemselect = item
+  console.log(`poste=${JSON.stringify(poste)}`)
+  /*this.posteselect = poste
   if (this.multipleSelection) {
     // Multiple selection mode is active, add the button to the selected list
     const isSelected = this.isSelected(posteId, heureDebut);
@@ -120,8 +106,8 @@ onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: strin
     // Log the selected buttons to the console
     console.log('Selected Buttons:', this.selectedButtons);
   } 
-  if ( 'espaces' in item) {
-  const poste = item as Poste;
+  if ( 'espaces' in poste) {
+  const poste = poste as Poste;
     // s'il y a des espaces on ouvre planning animation jeu
     if(poste.espaces && poste.espaces.length > 1) {
       // Ouvrir le composant AnimationJeuPlanningComponent avec les espaces spécifiques
@@ -129,20 +115,20 @@ onButtonClick(jour: string, creneau: Creneau, posteId: number, heureDebut: strin
     } 
     else {
     // Your existing logic for handling button click
-    const itemSelectionne = this.items.find(p => p.id === posteId);
-    if (itemSelectionne) {
+    const posteselectionne = this.postes.find(p => p.id === posteId);
+    if (posteselectionne) {
       const creneauSelectionne = creneau;
       const jourSelectionne = jour;
 
       const dialogRef = this.dialog.open(InscriptionComponent, {
         width: '400px',
-        data: { jour: jourSelectionne, creneau: creneauSelectionne, item: itemSelectionne }
+        data: { jour: jourSelectionne, creneau: creneauSelectionne, poste: posteselectionne }
       });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result && result.success) {
           // Update available slots and re-render the button
-          itemSelectionne.placedisponible--;
+          posteselectionne.placedisponible--;
         }
       });
     }
@@ -183,7 +169,7 @@ openModificationDialog() {
     width: '600px', // Adjust the width as needed
     data: {
       creneaux: this.creneaux, // Pass your current creneaux and postes data to the dialog
-      postes: this.items
+      postes: this.postes
     }
   });
 
@@ -193,39 +179,9 @@ openModificationDialog() {
   });
 }
 
-getWeekendDays(): string[] {
-  return Object.values(this.joursEnum)
-    .filter(jour => jour === Jour.Samedi || jour === Jour.Dimanche) as string[];
-}
-
-getDisplayedColumns(): string[] {
-  // Implémentez la logique pour obtenir les colonnes que vous souhaitez afficher
-  // Retournez-les sous forme de tableau de chaînes (par exemple, ['nom', 'Lundi', 'Mardi', ...])
-  return ['nom', ...this.getWeekendDays().map(jour => jour), ...this.creneaux.map(creneau => creneau.heureDebut + '-' + creneau.heureFin)];
-}
-
 getCreneauxColumnDefs() {
   // Logique pour obtenir les noms de colonnes pour les créneaux
   // Par exemple, si vous avez une propriété creneaux dans votre composant, vous pouvez faire quelque chose comme ceci :
   return this.creneaux.map(creneau => creneau.heureDebut + '-' + creneau.heureFin);
 }
-
-// Inside your component class
-creneauxParJour: { [jour: string]: Creneau[] } = {};
-
-// Assume this method is called during data fetching or initialization
-organizeCreneauxParJour(): void {
-  this.creneauxParJour = {};
-
-  // Organize creneaux by jour
-  /*this.creneaux.forEach(creneau => {
-    const jour = creneau.jour;
-    if (!this.creneauxParJour[jour]) {
-      this.creneauxParJour[jour] = [];
-    }
-    this.creneauxParJour[jour].push(creneau);
-  });*/
-}
-
-
 }
