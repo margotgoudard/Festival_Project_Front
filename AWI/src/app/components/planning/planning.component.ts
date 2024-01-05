@@ -26,7 +26,7 @@ export class PlanningComponent implements OnInit {
   posteEspacesMapping: { [posteId: number]: Espace[] } = {};
   placesDisponibles: { [key: string]: number } = {};
 
-  constructor(private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
+  constructor(private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
   ngOnInit(): void {
     this.loadData();
@@ -38,7 +38,6 @@ export class PlanningComponent implements OnInit {
     this.loadEspaces().subscribe(() => {
       this.initPlacesDisponibles();
       for (const [numericPosteId, espaces] of Object.entries(this.posteEspacesMapping)) {
-        // Parse the key as a number, and check if it's a valid number
         const posteId = +numericPosteId;
         if (!isNaN(posteId)) {
           espaces.forEach((espace) => {
@@ -68,7 +67,6 @@ private loadEspaces(): Observable<Espace[]> {
         const posteEspaces = espaces.filter(espace => espace.posteId === poste.idP);
         this.posteEspacesMapping[poste.idP] = posteEspaces;
       });
-      console.log('Espaces loaded:', this.posteEspacesMapping);
     }),
     catchError(error => {
       console.error('Error loading Espaces:', error);
@@ -109,7 +107,6 @@ private initPlacesDisponibles(): void {
         existingDay.creneaux.push(creneau);
       }
     });
-    console.log(this.creneaux)
   }
 
   getCreneauxByJour(jour: string): Creneau[] {
@@ -123,19 +120,16 @@ private initPlacesDisponibles(): void {
     this.placerService.getNombrePlacesPourEspaces(espaceId, creneauId).subscribe(nbPlaces => {
       this.placesDisponibles[key] = nbPlaces;
     });
-    console.log(this.placesDisponibles)
   }
   
 
   calculateTotalPlaces(creneauId: number, posteId: number): number {
     const espaces = this.posteEspacesMapping[posteId];
-    console.log("espaces", espaces)
     let totalPlaces = 0;
 
     if (espaces && espaces.length > 0) {
         espaces.forEach((espace) => {
             const key = `${creneauId}_${espace.idEspace}`;
-            console.log("key", key)
             
             // Check if the key exists in this.placesDisponibles
             if (this.placesDisponibles[key] !== undefined) {
@@ -144,85 +138,52 @@ private initPlacesDisponibles(): void {
 
                 // Ensure that places is an object before accessing the nbPlaces property
                 if (typeof places === 'object' && places !== null && 'nbPlaces' in places) {
-                    console.log("places", places)
                     totalPlaces += (places as { nbPlaces: number }).nbPlaces;
-                } else {
-                    console.error(`La clé ${key} n'a pas de propriété nbPlaces valide.`);
-                }
-            } else {
-                console.error(`La clé ${key} n'existe pas dans placesDisponibles.`);
-            }
+                } 
+            } 
         });
     }
-    console.log("VALEUR", totalPlaces);
     return totalPlaces;
 }
   
 
 
+onButtonClick(creneau: Creneau, poste: Poste): void {
+  const espaces = this.posteEspacesMapping[poste.idP];
 
-/*  // Inside PlanningComponent class
-multipleSelection = false;
-selectedButtons: { posteId: number, heureDebut: string }[] = [];
-*/
-/*toggleMultipleSelection(): void {
-  // Toggle the multiple selection mode
-  this.multipleSelection = !this.multipleSelection;
+  if (espaces && espaces.length > 1) {
+    // Si le poste a plusieurs espaces, ouvrir le planning-animations-jeux
+    this.openPlanningAnimationsJeux(creneau.idC, poste.idP);
+  } else if (espaces && espaces.length === 1) {
+    this.openInscriptionDialog(this.calculateTotalPlaces(creneau.idC, poste.idP), creneau, poste);
 
-  // Clear the selected buttons list when switching modes
-  this.selectedButtons = [];
-}*/
-
-/*onButtonClick(creneauId: number, creneauId: number, espaceId: number): void {
-
-  this.posteselect = poste
-  if (this.multipleSelection) {
-    // Multiple selection mode is active, add the button to the selected list
-    const isSelected = this.isSelected(posteId, heureDebut);
-    if (isSelected) {
-      // Button is already selected, remove it from the list
-      this.selectedButtons = this.selectedButtons.filter(button => !(button.posteId === posteId && button.heureDebut === heureDebut));
-    } else {
-      // Button is not selected, add it to the list
-      this.selectedButtons.push({ posteId, heureDebut });
-    }
-
-    // Log the selected buttons to the console
-    console.log('Selected Buttons:', this.selectedButtons);
-  } 
-  if ( 'espaces' in poste) {
-  const poste = poste as Poste;
-    // s'il y a des espaces on ouvre planning animation jeu
-    if(poste.espaces && poste.espaces.length > 1) {
-      // Ouvrir le composant AnimationJeuPlanningComponent avec les espaces spécifiques
-      this.router.navigate(['/animation-jeu-planning']);
-    } 
-    else {
-    // Your existing logic for handling button click
-    const posteselectionne = this.postes.find(p => p.id === posteId);
-    if (posteselectionne) {
-      const creneauSelectionne = creneau;
-      const jourSelectionne = jour;
-
-      const dialogRef = this.dialog.open(InscriptionComponent, {
-        width: '400px',
-        data: { jour: jourSelectionne, creneau: creneauSelectionne, poste: posteselectionne }
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result && result.success) {
-          // Update available slots and re-render the button
-          posteselectionne.placedisponible--;
-        }
-      });
-    }
   }
 }
-}*/
 
-/*isSelected(posteId: number, heureDebut: string): boolean {
-  return this.selectedButtons.some(button => button.posteId === posteId && button.heureDebut === heureDebut);
-}*/
+openInscriptionDialog(totalPlaces: number, creneau: Creneau, poste: Poste) {
+  const dialogRef = this.dialog.open(InscriptionComponent, {
+    width: '600px',
+    data: {
+      totalPlaces: totalPlaces,
+      creneau: {
+        idC: creneau.idC,
+        jour: creneau.jourCreneau,
+        heureDebut: creneau.heureDebut,
+        heureFin: creneau.heureFin,
+      },
+      poste: {
+        idP: poste.idP,
+        libelle: poste.libellePoste,
+      },
+      posteEspacesMapping: this.posteEspacesMapping[poste.idP], 
+    }
+  });
+}
+
+private openPlanningAnimationsJeux(creneauId: number, posteId: number): void {
+  this.router.navigate(['/planning-animations-jeux', creneauId, posteId]);
+}
+
 
 /*inscrireATousLesPostes() {
 

@@ -4,6 +4,7 @@ import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { InscriptionService } from 'src/app/services/inscription.service';
 import { PosteDetailsComponent } from '../poste-details/poste-details.component';
+import { User } from 'src/app/model/user.model';
 
 @Component({
   selector: 'app-inscription',
@@ -13,8 +14,8 @@ import { PosteDetailsComponent } from '../poste-details/poste-details.component'
 export class InscriptionComponent {
 
   posteDetails: any; 
-  referentDetails: any; 
-  previousVolunteers: any[] = []; 
+  referents: User[] = []; 
+  previousVolunteers: User[] = []; 
 
   
   constructor(
@@ -23,18 +24,26 @@ export class InscriptionComponent {
   ) {}
 
   ngOnInit() {
-    
-    this.inscriptionService.getPosteReferent(this.data.poste.id)
-      .subscribe((referentData) => {
-        this.referentDetails = referentData;
-      });
 
-    this.inscriptionService.getPreviousVolunteers(this.data.jour, this.data.creneau, this.data.poste.id)
+    const espace = this.data.posteEspacesMapping[0];
+    const idEspace = espace ? espace.idEspace : null;
+    
+    this.inscriptionService.getPosteReferent(idEspace)
+      .subscribe((referentData) => {
+        this.referents = referentData;
+        console.log('Référents du poste:', this.referents);
+      });
+      
+    
+        this.inscriptionService.getPreviousVolunteers(this.data.creneau.idC, idEspace)
       .subscribe((volunteersData) => {
         this.previousVolunteers = volunteersData;
       });
-  }
+  } 
 
+
+
+  
   onNoClick(): void {
     this.dialogRef.close(false);
   }
@@ -56,24 +65,8 @@ export class InscriptionComponent {
           console.error('Erreur lors de l\'inscription :', error);
         });
   
-      this.dialogRef.close({ success: true, jour, creneau, poste: this.data.poste });
+      this.dialogRef.close({ success: true, creneau, poste: this.data.poste });
     }
   }
 
-  onDetailsClick() {
-    const posteDetails = {
-      nom: this.data.poste.nom,
-      description: this.data.poste.description,
-      placedisponible: this.data.poste.placedisponible
-      // Add any other details you want to display
-    };
-  
-    const dialogRef = this.dialog.open(PosteDetailsComponent, {
-      width: '400px',
-      data: { description: this.data.poste.description },
-    });
-      
-     
-
-  }
 }

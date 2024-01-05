@@ -6,6 +6,7 @@ import { PlanningComponent } from './components/planning/planning.component';
 import { InscriptionComponent } from './components/inscription/inscription.component';
 import { PlanningIndividualComponent } from './components/edt/planning-individual/planning-individual.component';
 import { PlanningGeneralComponent } from './components/edt/planning-general/planning-general.component';
+import { AnimationJeuPlanningComponent } from './components/planning/animation-jeu-planning/animation-jeu-planning.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,6 +20,8 @@ const routes: Routes = [
   { path: 'planning-individual', component: PlanningIndividualComponent },
   { path: 'planning-general', component:PlanningGeneralComponent},
   { path: 'planning-individual/:id', component: PlanningIndividualComponent },
+  { path:  'app-animation-jeu-planning', component: AnimationJeuPlanningComponent },
+ 
 
 ];
 

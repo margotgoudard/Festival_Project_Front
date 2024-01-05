@@ -26,9 +26,9 @@
           <td>{{ poste.libellePoste }}</td>
           <ng-container *ngFor="let jour of jours">
             <td *ngFor="let creneau of getCreneauxByJour(jour)">
-              <ng-container *ngIf="posteEspacesMapping[poste.idP]">
+              <button (click)="onButtonClick(creneau, poste)">
                 {{ calculateTotalPlaces(creneau.idC, poste.idP) }}
-              </ng-container>
+              </button>
             </td>
           </ng-container>
         </tr>

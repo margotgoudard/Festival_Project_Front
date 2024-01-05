@@ -7,6 +7,7 @@ import { PosteDialogComponent } from '../components/poste-dialog/poste-dialog.co
 import { CreneauDialogComponent } from '../components/creneau-dialog/creneau-dialog.component';
 import { Espace } from '../interfaces/espace.interface';
 import { MatDialog } from '@angular/material/dialog';
+import { User } from '../model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,22 +17,20 @@ export class InscriptionService {
 
   constructor(private dialog: MatDialog, private http: HttpClient) { }
 
-  inscrire(jour: string, creneau: string, poste: string) {
-    // Effectuez une requête HTTP pour enregistrer l'inscription dans la base de données
-    const inscriptionData = { jour, creneau, poste };
+  inscrire(benevolePseudo: string, creneauId: number, espaceId: number) {
+    const inscriptionData = { benevolePseudo, creneauId, espaceId };
     return this.http.post(`${this.apiUrl}/inscription`, inscriptionData);
   }
 
-  // Define the getPosteReferent method
-  getPosteReferent(posteId: number): Observable<any> {
-    const url = `${this.apiUrl}/getPosteReferent/${posteId}`; // Replace with your actual API endpoint
-    return this.http.get(url);
+  getPosteReferent(espaceId: number): Observable<User[]> {
+    const url = `${this.apiUrl}/getPosteReferent/${espaceId}`; 
+    return this.http.get<User[]>(url);
+
   }
 
-  // Define the getPreviousVolunteers method
-  getPreviousVolunteers(jour: string, creneau: any, posteId: number): Observable<any> {
-    const url = `${this.apiUrl}/getPreviousVolunteers/${jour}/${creneau}/${posteId}`; // Replace with your actual API endpoint
-    return this.http.get(url);
+  getPreviousVolunteers(creneauId: number, espaceId: number): Observable<User[]> {
+    const url = `${this.apiUrl}/volontairesPrecedents/${creneauId}/${espaceId}`; 
+    return this.http.get<User[]>(url);
   }
 
   getPlanningInscription(): Observable<any> {
