@@ -35,7 +35,7 @@ export class PlanningGeneralComponent implements OnInit {
 
 
   loadUsers() {
-    this.userService.getUsersRegistration().subscribe(
+   /* this.userService.getUsersRegistration().subscribe(
       (userRegistrations) => {
         // Map UserRegistration objects to a format suitable for display
         const mappedUsers = userRegistrations.map(registration => ({
@@ -57,7 +57,7 @@ export class PlanningGeneralComponent implements OnInit {
       (error) => {
         console.error('Error loading users', error);
       }
-    );
+    );*/
   }
 
   onSortAttributeChange(event: any) {

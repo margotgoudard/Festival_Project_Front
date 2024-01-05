@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { InscriptionService } from 'src/app/services/inscription.service';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/services/auth.service';
-import { ModifyDialogComponent } from '../modify-dialog/modify-dialog.component';
+import { UserService } from 'src/app/services/user.service';
 import { Observable, Subscription, catchError, forkJoin, map, of, switchMap, tap, throwError } from 'rxjs';
 import { PlacerService } from 'src/app/services/placerService';
 import { Espace } from 'src/app/interfaces/espace.interface';
 import { InscriptionComponent } from '../inscription/inscription.component';
 import { Component, OnInit } from '@angular/core';
+import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 
 @Component({
   selector: 'app-planning',
@@ -25,8 +25,9 @@ export class PlanningComponent implements OnInit {
   planning: { jour: string, creneaux: Creneau[] }[] = [];
   posteEspacesMapping: { [posteId: number]: Espace[] } = {};
   placesDisponibles: { [key: string]: number } = {};
+  placesInscrites: { [key: string]: number } = {};
 
-  constructor(private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
+  constructor(private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
   ngOnInit(): void {
     this.loadData();
@@ -46,6 +47,7 @@ export class PlanningComponent implements OnInit {
       
               creneaux.forEach((creneau) => {
                 this.getNumberOfPlaces(creneau.idC, espace.idEspace);
+                this.placesDejaInscrites(creneau.idC, espace.idEspace);
                 
               });
             });
@@ -182,6 +184,32 @@ openInscriptionDialog(totalPlaces: number, creneau: Creneau, poste: Poste) {
 
 private openPlanningAnimationsJeux(creneauId: number, posteId: number): void {
   this.router.navigate(['/planning-animations-jeux', creneauId, posteId]);
+}
+
+placesDejaInscrites(creneauId: number, posteId: number): void {
+  const posteEspaces = this.posteEspacesMapping[posteId];
+  const espace = posteEspaces ? posteEspaces[0] : null;
+  const idEspace = espace ? espace.idEspace : null;
+  const key = `${creneauId}_${idEspace}`;
+  
+  this.userService.getUsersRegistration().subscribe(userRegistrations => {
+    const filteredRegistrations = userRegistrations.filter(registration =>
+      registration.creneauId === creneauId && registration.espaceId === idEspace
+    );
+
+    this.placesInscrites[key] = filteredRegistrations.length;
+  });
+}
+
+
+placesRestantes(creneauId: number, posteId: number): number  {
+  const posteEspaces = this.posteEspacesMapping[posteId];
+  const espace = posteEspaces ? posteEspaces[0] : null;
+  const idEspace = espace ? espace.idEspace : null;
+    const calculateTotal = this.calculateTotalPlaces(creneauId, posteId);
+    const nbPlaces = calculateTotal - this.placesInscrites[`${creneauId}_${idEspace}`];
+     
+  return nbPlaces;
 }
 
 

@@ -27,7 +27,7 @@
           <ng-container *ngFor="let jour of jours">
             <td *ngFor="let creneau of getCreneauxByJour(jour)">
               <button (click)="onButtonClick(creneau, poste)" [disabled]="calculateTotalPlaces(creneau.idC, poste.idP) <= 0">
-                {{ calculateTotalPlaces(creneau.idC, poste.idP) }}
+                {{ placesRestantes(creneau.idC, poste.idP) }}
               </button>
             </td>
           </ng-container>

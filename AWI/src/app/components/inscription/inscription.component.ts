@@ -7,6 +7,7 @@ import { PosteDetailsComponent } from '../poste-details/poste-details.component'
 import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
+import { InscriptionReussiDialogComponent } from '../inscription-reussi-dialog/inscription-reussi-dialog.component';
 
 @Component({
   selector: 'app-inscription',
@@ -68,17 +69,21 @@ export class InscriptionComponent {
             if (!isAlreadyRegistered) {
               // If not already registered, proceed with the inscription
               this.inscriptionService.inscrire(benevolePseudo, creneau.idC, idEspace).subscribe(
-                (response) => {
-                  // Gérez la réussite de l'inscription ici
-                  console.log('Inscription réussie :', response);
-                  this.dialogRef.close({ success: true, creneau, poste: this.data.poste });
-                },
-                (error) => {
-                  // Gérez les erreurs d'inscription ici
-                  console.error('Erreur lors de l\'inscription :', error);
-                }
+                  (response) => {
+                      // Gérez la réussite de l'inscription ici
+                      console.log('Inscription réussie :', response);
+                      
+                      // Open the success dialog
+                      this.openSuccessDialog('Inscription réussie');
+                      
+                      this.dialogRef.close({ success: true, creneau, poste: this.data.poste });
+                  },
+                  (error) => {
+                      // Gérez les erreurs d'inscription ici
+                      console.error('Erreur lors de l\'inscription :', error);
+                  }
               );
-            } else {
+          } else {
               // Handle case where user is already registered
               console.error('Erreur lors de l\'inscription : L\'utilisateur est déjà inscrit à ce creneau et cet espace.');
               // You may want to show an error message to the user
@@ -92,5 +97,15 @@ export class InscriptionComponent {
       }
     }
   }
+
+  openSuccessDialog(message: string): void {
+    const dialogRef = this.dialog.open(InscriptionReussiDialogComponent, {
+        data: { message: message },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+        // Handle actions after the dialog is closed, if needed
+    });
+}
 
 }

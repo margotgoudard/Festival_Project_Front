@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user.model';
 import { UserRegistration } from '../interfaces/user-registration.interface';
+import { Inscription } from '../interfaces/inscription.interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -34,9 +35,9 @@ export class UserService {
     return this.http.get<UserRegistration[]>(url);
   }
 
-  getUsersRegistration(): Observable<UserRegistration[]> {
-    const url = `${this.apiUrl}/user-registrations`;
-    return this.http.get<UserRegistration[]>(url);
+  getUsersRegistration(): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/users-registrations`;
+    return this.http.get<Inscription[]>(url);
   }
 
   getUserByPseudo(pseudo: string): Observable<User> {
