@@ -1,5 +1,5 @@
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { InscriptionService } from 'src/app/services/inscription.service';
@@ -11,6 +11,7 @@ import { Espace } from 'src/app/interfaces/espace.interface';
 import { InscriptionComponent } from '../inscription/inscription.component';
 import { Component, OnInit } from '@angular/core';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
+import { InscriptionDialogEspacesComponent } from '../inscription-dialog-espaces/inscription-dialog-espaces.component';
 
 @Component({
   selector: 'app-planning',
@@ -19,13 +20,17 @@ import { UserRegistration } from 'src/app/interfaces/user-registration.interface
 })
 export class PlanningComponent implements OnInit {
   creneaux: Creneau[] = [];
+  selectedPoste: Poste | null = null;
   espaces: Espace[] = [];
+  espacesPostes: Espace[] = [];
   postes: Poste[] = []; // Liste des postes
   jours: string[] = []; // Tableau pour stocker les jours de la semaine
   planning: { jour: string, creneaux: Creneau[] }[] = [];
   posteEspacesMapping: { [posteId: number]: Espace[] } = {};
   placesDisponibles: { [key: string]: number } = {};
   placesInscrites: { [key: string]: number } = {};
+  aPlusieursEspaces : boolean = false;
+  posteId: number | null = null;
 
   constructor(private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
@@ -151,14 +156,13 @@ private initPlacesDisponibles(): void {
 
 
 onButtonClick(creneau: Creneau, poste: Poste): void {
-  const espaces = this.posteEspacesMapping[poste.idP];
-
-  if (espaces && espaces.length > 1) {
-    // Si le poste a plusieurs espaces, ouvrir le planning-animations-jeux
-    this.openPlanningAnimationsJeux(creneau.idC, poste.idP);
-  } else if (espaces && espaces.length === 1) {
-    this.openInscriptionDialog(this.calculateTotalPlaces(creneau.idC, poste.idP), creneau, poste);
-
+  this.posteId = poste.idP;
+  this.espacesPostes = this.posteEspacesMapping[poste.idP];
+  if (  this.espacesPostes &&   this.espacesPostes.length > 1) {
+    this.aPlusieursEspaces = true;
+  } else if (this.espacesPostes && this.espacesPostes.length === 1) {
+    this.openInscriptionDialog(this.placesRestantes(creneau.idC, poste.idP), creneau, poste);
+    this.aPlusieursEspaces = false;
   }
 }
 
@@ -180,10 +184,6 @@ openInscriptionDialog(totalPlaces: number, creneau: Creneau, poste: Poste) {
       posteEspacesMapping: this.posteEspacesMapping[poste.idP], 
     }
   });
-}
-
-private openPlanningAnimationsJeux(creneauId: number, posteId: number): void {
-  this.router.navigate(['/planning-animations-jeux', creneauId, posteId]);
 }
 
 placesDejaInscrites(creneauId: number, posteId: number): void {
@@ -212,6 +212,37 @@ placesRestantes(creneauId: number, posteId: number): number  {
   return nbPlaces;
 }
 
+placesRestantesEspaces(creneauId: number, espaceId: number): number  {
+
+    const nbPlaces = this.placesDisponibles[`${creneauId}_${espaceId}`] - this.placesInscrites[`${creneauId}_${espaceId}`];
+     
+  return nbPlaces;
+}
+
+onButtonClickEspace(creneau: Creneau, espace: Espace): void {
+    this.openInscriptionDialogEspaces(this.placesRestantesEspaces(creneau.idC, espace.idEspace), creneau, espace);
+    this.aPlusieursEspaces = false;
+  }
+
+openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espace) {
+    const dialogRef = this.dialog.open(InscriptionDialogEspacesComponent, {
+      width: '600px',
+      data: {
+        totalPlaces: totalPlaces,
+        creneau: {
+          idC: creneau.idC,
+          jour: creneau.jourCreneau,
+          heureDebut: creneau.heureDebut,
+          heureFin: creneau.heureFin,
+        },
+        espace: {
+          idEspace: espace.idEspace,
+          libelle: espace.libelleEspace,
+        },
+      }
+    });
+  }
+}
 
 /*inscrireATousLesPostes() {
 
@@ -251,5 +282,3 @@ placesRestantes(creneauId: number, posteId: number): number  {
     console.log('Modification dialog closed with result:', result);
   });
 }*/
-
-}

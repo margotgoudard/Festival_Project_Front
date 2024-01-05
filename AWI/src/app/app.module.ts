@@ -32,6 +32,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { RegistrationPopupService } from './services/registration-popup.service';
 import { InscriptionReussiDialogComponent } from './components/inscription-reussi-dialog/inscription-reussi-dialog.component';
 import { InscriptionService } from './services/inscription.service';
+import { InscriptionDialogEspacesComponent } from './components/inscription-dialog-espaces/inscription-dialog-espaces.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { InscriptionService } from './services/inscription.service';
     CreneauDialogComponent,
     PlanningGeneralComponent,
     InscriptionReussiDialogComponent,
+    InscriptionDialogEspacesComponent
   ],
   imports: [
     BrowserModule,

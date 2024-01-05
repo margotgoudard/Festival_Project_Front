@@ -26,7 +26,7 @@
           <td>{{ poste.libellePoste }}</td>
           <ng-container *ngFor="let jour of jours">
             <td *ngFor="let creneau of getCreneauxByJour(jour)">
-              <button (click)="onButtonClick(creneau, poste)" [disabled]="calculateTotalPlaces(creneau.idC, poste.idP) <= 0">
+              <button (click)="onButtonClick(creneau, poste)" [disabled]="placesRestantes(creneau.idC, poste.idP) <= 0">
                 {{ placesRestantes(creneau.idC, poste.idP) }}
               </button>
             </td>
@@ -35,4 +35,42 @@
       </ng-container>
     </tbody>
   </table>
+  <div *ngIf="aPlusieursEspaces == true">
+    Veuillez sélectionner un espace
+  <table>
+    <thead>
+      <tr>
+        <th></th> <!-- Cellule vide pour l'angle supérieur gauche -->
+        <th *ngFor="let jour of jours" [attr.colspan]="getCreneauxByJour(jour).length">
+          {{ jour }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Header row with time slots -->
+      <tr>
+        <td></td>
+        <ng-container *ngFor="let jour of jours">
+          <td *ngFor="let creneau of getCreneauxByJour(jour)">
+            {{ creneau.heureDebut }} - {{ creneau.heureFin }}
+          </td>
+        </ng-container>
+      </tr>
+      
+      <!-- Data rows for each poste and their available spaces -->
+      <ng-container *ngFor="let espace of espacesPostes">
+        <tr>
+          <td>{{ espace.libelleEspace }}</td>
+          <ng-container *ngFor="let jour of jours">
+            <td *ngFor="let creneau of getCreneauxByJour(jour)">
+              <button (click)="onButtonClickEspace(creneau, espace)" [disabled]="placesRestantes(creneau.idC, espace.idEspace) <= 0">
+                {{ placesRestantesEspaces(creneau.idC, espace.idEspace) }}
+              </button>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+  </div>
 </div>
