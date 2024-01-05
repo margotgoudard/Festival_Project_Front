@@ -33,7 +33,7 @@ export class PlanningComponent implements OnInit {
     this.loadData();
   }
 
-  private loadData(): void {
+  private async loadData(): Promise<void> {
     this.loadPostes();
     this.loadCreneaux();
     this.loadEspaces().subscribe(() => {
