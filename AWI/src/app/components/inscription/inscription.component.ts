@@ -5,6 +5,8 @@ import { Poste } from 'src/app/interfaces/poste.interface';
 import { InscriptionService } from 'src/app/services/inscription.service';
 import { PosteDetailsComponent } from '../poste-details/poste-details.component';
 import { User } from 'src/app/model/user.model';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-inscription',
@@ -18,7 +20,7 @@ export class InscriptionComponent {
   previousVolunteers: User[] = []; 
 
   
-  constructor(
+  constructor( private authService : AuthService, private userService:UserService, 
     public dialogRef: MatDialogRef<InscriptionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private inscriptionService: InscriptionService, private dialog: MatDialog
   ) {}
@@ -31,7 +33,6 @@ export class InscriptionComponent {
     this.inscriptionService.getPosteReferent(idEspace)
       .subscribe((referentData) => {
         this.referents = referentData;
-        console.log('Référents du poste:', this.referents);
       });
       
     
@@ -49,23 +50,46 @@ export class InscriptionComponent {
   }
 
   onInscriptionClick() {
-    const jour = this.data.jour;
+    const espace = this.data.posteEspacesMapping[0];
+    const idEspace = espace ? espace.idEspace : null;
     const creneau = this.data.creneau;
     const poste = this.data.poste;
+    const benevolePseudo = this.authService.getLoggedInUserPseudo();
   
-    if (poste.placedisponible > 0) {
-      // Effectuez l'inscription
-      this.inscriptionService.inscrire(jour, creneau, poste).subscribe(
-        (response) => {
-          // Gérez la réussite de l'inscription ici
-          console.log('Inscription réussie :', response);
-        },
-        (error) => {
-          // Gérez les erreurs d'inscription ici
-          console.error('Erreur lors de l\'inscription :', error);
-        });
+    if (this.data.totalPlaces > 0) {
+      if (idEspace !== null && benevolePseudo !== null) {
+        // Check if the user is already registered for the specified creneau and espace
+        this.userService.getUserRegistrations(benevolePseudo).subscribe(
+          (registrations) => {
+            const isAlreadyRegistered = registrations.some(registration =>
+              registration.creneau.idC === creneau.idC && registration.espace.idEspace === idEspace
+            );
   
-      this.dialogRef.close({ success: true, creneau, poste: this.data.poste });
+            if (!isAlreadyRegistered) {
+              // If not already registered, proceed with the inscription
+              this.inscriptionService.inscrire(benevolePseudo, creneau.idC, idEspace).subscribe(
+                (response) => {
+                  // Gérez la réussite de l'inscription ici
+                  console.log('Inscription réussie :', response);
+                  this.dialogRef.close({ success: true, creneau, poste: this.data.poste });
+                },
+                (error) => {
+                  // Gérez les erreurs d'inscription ici
+                  console.error('Erreur lors de l\'inscription :', error);
+                }
+              );
+            } else {
+              // Handle case where user is already registered
+              console.error('Erreur lors de l\'inscription : L\'utilisateur est déjà inscrit à ce creneau et cet espace.');
+              // You may want to show an error message to the user
+            }
+          },
+          (error) => {
+            // Handle error fetching user registrations
+            console.error('Erreur lors de la récupération des inscriptions de l\'utilisateur :', error);
+          }
+        );
+      }
     }
   }
 

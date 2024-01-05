@@ -18,9 +18,9 @@ export class InscriptionService {
   constructor(private dialog: MatDialog, private http: HttpClient) { }
 
   inscrire(benevolePseudo: string, creneauId: number, espaceId: number) {
-    const inscriptionData = { benevolePseudo, creneauId, espaceId };
-    return this.http.post(`${this.apiUrl}/inscription`, inscriptionData);
-  }
+    const url = `${this.apiUrl}/inscription/${benevolePseudo}/${creneauId}/${espaceId}`;
+    return this.http.post(url, {});
+}
 
   getPosteReferent(espaceId: number): Observable<User[]> {
     const url = `${this.apiUrl}/getPosteReferent/${espaceId}`; 
