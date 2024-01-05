@@ -36,15 +36,7 @@ export class PlanningComponent implements OnInit {
     this.loadPostes();
     this.loadCreneaux();
     this.loadEspaces().subscribe(() => {
-      this.ngAfterViewInit();
       this.initPlacesDisponibles();
-    });
-  }
-
-  async ngAfterViewInit(): Promise<void>  {
-    console.log("espaces map", this.posteEspacesMapping);
-      console.log("object espaces", Object.entries(this.posteEspacesMapping))
-  
       for (const [numericPosteId, espaces] of Object.entries(this.posteEspacesMapping)) {
         // Parse the key as a number, and check if it's a valid number
         const posteId = +numericPosteId;
@@ -61,7 +53,8 @@ export class PlanningComponent implements OnInit {
           });
         }
       }
-}
+    });
+  }
 
 private loadEspaces(): Observable<Espace[]> {
   if (this.espaces.length > 0) {
@@ -131,27 +124,39 @@ private initPlacesDisponibles(): void {
       this.placesDisponibles[key] = nbPlaces;
     });
     console.log(this.placesDisponibles)
-
-    
   }
   
 
   calculateTotalPlaces(creneauId: number, posteId: number): number {
     const espaces = this.posteEspacesMapping[posteId];
+    console.log("espaces", espaces)
     let totalPlaces = 0;
-  console.log(this.placesDisponibles)
+
     if (espaces && espaces.length > 0) {
-      espaces.forEach((espace) => {
-        const key = `${creneauId}_${espace.idEspace}`;
-        console.log(key);
-        console.log(this.placesDisponibles);
-          
-          totalPlaces += this.placesDisponibles[key];
-      });
+        espaces.forEach((espace) => {
+            const key = `${creneauId}_${espace.idEspace}`;
+            console.log("key", key)
+            
+            // Check if the key exists in this.placesDisponibles
+            if (this.placesDisponibles[key] !== undefined) {
+                // Use type assertion to inform TypeScript
+                const places = this.placesDisponibles[key] as unknown;
+
+                // Ensure that places is an object before accessing the nbPlaces property
+                if (typeof places === 'object' && places !== null && 'nbPlaces' in places) {
+                    console.log("places", places)
+                    totalPlaces += (places as { nbPlaces: number }).nbPlaces;
+                } else {
+                    console.error(`La clé ${key} n'a pas de propriété nbPlaces valide.`);
+                }
+            } else {
+                console.error(`La clé ${key} n'existe pas dans placesDisponibles.`);
+            }
+        });
     }
-  
+    console.log("VALEUR", totalPlaces);
     return totalPlaces;
-  }
+}
   
 
 
