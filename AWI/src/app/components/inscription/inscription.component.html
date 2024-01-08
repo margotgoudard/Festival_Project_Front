@@ -1,16 +1,18 @@
 <!-- inscription.component.html -->
+<div class="dialog-header">
+  <span class="close-button" (click)="onNoClick()">&times;</span>
+</div>
 <h2>Inscription</h2>
-<p>{{ data.jour }} - {{ data.creneau.heureDebut }} - {{ data.creneau.heureFin }}</p>
-<p>{{ data.poste.nom }}</p>
-<p>Référent du poste: {{ data.poste.referent }}</p> <!-- Assuming you have a referent property in the Poste interface -->
-
-<!-- Display the list of previous volunteers -->
-<p>Volontaires précédents :</p>
+<p>{{ data.creneau.jour }} - {{ data.creneau.heureDebut }} - {{ data.creneau.heureFin }}</p>
+<p>{{ data.poste.libelle }}</p>
+<p>Référent(s) du poste:</p> 
 <ul>
-  <li *ngFor="let volunteer of data.poste.volunteers">{{ volunteer.nom }} {{ volunteer.prenom }}</li>
+  <li *ngFor="let referent of referents">{{ referent.nom }} {{ referent.prenom }} - mail : {{ referent.email }} - tel : {{referent.numTel}} </li>
 </ul>
 
-<button (click)="onDetailsClick()">Détails du poste</button>
+<p>Volontaires précédents :</p>
+<ul>
+  <li *ngFor="let volunteer of previousVolunteers">{{ volunteer.nom }} {{ volunteer.prenom }}</li>
+</ul>
 <!--<button (click)="onContactRClick()">Contact référent</button>-->
-<button (click)="onNoClick()">Annuler</button>
 <button (click)="onInscriptionClick()">S'inscrire</button>

@@ -10,11 +10,11 @@ import { UserService } from 'src/app/services/user.service';
 import { InscriptionReussiDialogComponent } from '../inscription-reussi-dialog/inscription-reussi-dialog.component';
 
 @Component({
-  selector: 'app-inscription',
-  templateUrl: './inscription.component.html',
-  styleUrls: ['./inscription.component.scss']
+  selector: 'inscription-dialog-espaces',
+  templateUrl: './inscription-dialog-espaces.component.html',
+  styleUrls: ['./inscription-dialog-espaces.component.scss']
 })
-export class InscriptionComponent {
+export class InscriptionDialogEspacesComponent {
 
   posteDetails: any; 
   referents: User[] = []; 
@@ -22,15 +22,14 @@ export class InscriptionComponent {
 
   
   constructor( private authService : AuthService, private userService:UserService, 
-    public dialogRef: MatDialogRef<InscriptionComponent>,
+    public dialogRef: MatDialogRef<InscriptionDialogEspacesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private inscriptionService: InscriptionService, private dialog: MatDialog
   ) {}
 
   ngOnInit() {
 
-    const espace = this.data.posteEspacesMapping[0];
-    const idEspace = espace ? espace.idEspace : null;
-    
+    const idEspace = this.data.espace.idEspace;
+  
     this.inscriptionService.getPosteReferent(idEspace)
       .subscribe((referentData) => {
         this.referents = referentData;
@@ -51,11 +50,8 @@ export class InscriptionComponent {
   }
 
   onInscriptionClick() {
-    const espace = this.data.posteEspacesMapping[0];
-    const idEspace = espace ? espace.idEspace : null;
     const creneau = this.data.creneau;
-    console.log("creneau", creneau);
-    const poste = this.data.poste;
+    const idEspace = this.data.espace.idEspace;
     const benevolePseudo = this.authService.getLoggedInUserPseudo();
   
     if (this.data.totalPlaces > 0) {

@@ -1,10 +1,6 @@
 <!-- poste-dialog.component.html -->
 <h2>Edit Poste</h2>
 <form>
-  <!-- Add form fields for editing poste properties -->
-  <label>Nom: <input [(ngModel)]="data.poste.nom" [ngModelOptions]="{standalone: true}" /></label>
-  <label>Description: <input [(ngModel)]="data.poste.description" [ngModelOptions]="{standalone: true}" /></label>
-  <label>Places Disponibles: <input [(ngModel)]="data.poste.placedisponible" [ngModelOptions]="{standalone: true}" /></label>
   <button mat-button (click)="onSaveClick()">Save Changes</button>
   <button mat-button (click)="onCancelClick()">Cancel</button>
 </form>

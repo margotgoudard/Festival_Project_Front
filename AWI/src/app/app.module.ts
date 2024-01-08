@@ -15,13 +15,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { InscriptionComponent } from './components/inscription/inscription.component';
 import { PosteDetailsComponent } from './components/poste-details/poste-details.component';
 import { MatIconModule } from '@angular/material/icon';
-import { AnimationJeuPlanningComponent } from './components/planning/animation-jeu-planning/animation-jeu-planning.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { PlanningIndividualComponent } from './components/edt/planning-individual/planning-individual.component';
-import { PlanningInscriptionComponent } from './components/planning/planning-inscription/planning-inscription.component';
 import { ModifyDialogComponent } from './components/modify-dialog/modify-dialog.component';
 import { PosteDialogComponent } from './components/poste-dialog/poste-dialog.component';
 import { CreneauDialogComponent } from './components/creneau-dialog/creneau-dialog.component';
@@ -31,9 +29,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select'; 
 import { MatSortModule } from '@angular/material/sort';
-import { PlanningService } from './services/poste-creneau.service';
 import { RegistrationPopupService } from './services/registration-popup.service';
 import { InscriptionReussiDialogComponent } from './components/inscription-reussi-dialog/inscription-reussi-dialog.component';
+import { InscriptionService } from './services/inscription.service';
+import { InscriptionDialogEspacesComponent } from './components/inscription-dialog-espaces/inscription-dialog-espaces.component';
 
 @NgModule({
   declarations: [
@@ -44,16 +43,15 @@ import { InscriptionReussiDialogComponent } from './components/inscription-reuss
     PlanningComponent,
     InscriptionComponent,
     PosteDetailsComponent,
-    AnimationJeuPlanningComponent,
     RegistrationComponent,
     NavigationComponent,
     PlanningIndividualComponent,
-    PlanningInscriptionComponent,
     ModifyDialogComponent,
     PosteDialogComponent,
     CreneauDialogComponent,
     PlanningGeneralComponent,
     InscriptionReussiDialogComponent,
+    InscriptionDialogEspacesComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +72,7 @@ import { InscriptionReussiDialogComponent } from './components/inscription-reuss
   providers: [
     AuthService,
     UserService,
-    PlanningService,
+    InscriptionService,
     RegistrationPopupService,
   ],
   bootstrap: [AppComponent]
