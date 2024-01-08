@@ -201,6 +201,20 @@ placesDejaInscrites(creneauId: number, posteId: number): void {
   });
 }
 
+placesDejaInscritesEspaces(creneauId: number, espaceId: number): number {
+  const key = `${creneauId}_${espaceId}`;
+  
+  this.userService.getUsersRegistration().subscribe(userRegistrations => {
+    const filteredRegistrations = userRegistrations.filter(registration =>
+      registration.creneauId === creneauId && registration.espaceId === espaceId
+    );
+
+    this.placesInscrites[key] = filteredRegistrations.length;
+  });
+
+  return this.placesInscrites[key];
+}
+
 
 placesRestantes(creneauId: number, posteId: number): number  {
   const posteEspaces = this.posteEspacesMapping[posteId];
@@ -213,9 +227,21 @@ placesRestantes(creneauId: number, posteId: number): number  {
 }
 
 placesRestantesEspaces(creneauId: number, espaceId: number): number  {
+  
+  let nbPlacesDisponibles = 0;
+  let nbPlacesInscrites = 0;
+  let nbPlaces = 0;
+   if (this.placesDisponibles[`${creneauId}_${espaceId}`] !== undefined) {
+    const places = this.placesDisponibles[`${creneauId}_${espaceId}`] as unknown;
 
-    const nbPlaces = this.placesDisponibles[`${creneauId}_${espaceId}`] - this.placesInscrites[`${creneauId}_${espaceId}`];
-     
+    if (typeof places === 'object' && places !== null && 'nbPlaces' in places) {
+      nbPlacesDisponibles = (places as { nbPlaces: number }).nbPlaces;
+    } 
+} 
+
+  nbPlacesInscrites = this.placesDejaInscritesEspaces(creneauId, espaceId);
+  
+    nbPlaces = nbPlacesDisponibles - nbPlacesInscrites;
   return nbPlaces;
 }
 

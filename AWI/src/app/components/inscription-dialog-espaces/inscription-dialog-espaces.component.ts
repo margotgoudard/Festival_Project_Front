@@ -28,9 +28,8 @@ export class InscriptionDialogEspacesComponent {
 
   ngOnInit() {
 
-    const espace = this.data.posteEspacesMapping[0];
-    const idEspace = espace ? espace.idEspace : null;
-    
+    const idEspace = this.data.espace.idEspace;
+  
     this.inscriptionService.getPosteReferent(idEspace)
       .subscribe((referentData) => {
         this.referents = referentData;
@@ -51,10 +50,8 @@ export class InscriptionDialogEspacesComponent {
   }
 
   onInscriptionClick() {
-    const espace = this.data.posteEspacesMapping[0];
-    const idEspace = espace ? espace.idEspace : null;
     const creneau = this.data.creneau;
-    const poste = this.data.poste;
+    const idEspace = this.data.espace.idEspace;
     const benevolePseudo = this.authService.getLoggedInUserPseudo();
   
     if (this.data.totalPlaces > 0) {
@@ -63,7 +60,7 @@ export class InscriptionDialogEspacesComponent {
         this.userService.getUserRegistrations(benevolePseudo).subscribe(
           (registrations) => {
             const isAlreadyRegistered = registrations.some(registration =>
-              registration.creneau.idC === creneau.idC && registration.espace.idEspace === idEspace
+              registration.Creneau.idC === creneau.idC && registration.Espace.idEspace === idEspace
             );
   
             if (!isAlreadyRegistered) {

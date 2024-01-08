@@ -54,6 +54,7 @@ export class InscriptionComponent {
     const espace = this.data.posteEspacesMapping[0];
     const idEspace = espace ? espace.idEspace : null;
     const creneau = this.data.creneau;
+    console.log("creneau", creneau);
     const poste = this.data.poste;
     const benevolePseudo = this.authService.getLoggedInUserPseudo();
   
@@ -63,7 +64,7 @@ export class InscriptionComponent {
         this.userService.getUserRegistrations(benevolePseudo).subscribe(
           (registrations) => {
             const isAlreadyRegistered = registrations.some(registration =>
-              registration.creneau.idC === creneau.idC && registration.espace.idEspace === idEspace
+              registration.Creneau.idC === creneau.idC && registration.Espace.idEspace === idEspace
             );
   
             if (!isAlreadyRegistered) {
