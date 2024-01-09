@@ -57,23 +57,9 @@ export class InscriptionService {
   
   // Function to add a new creneau
   addCreneau(creneau: Creneau): Observable<Creneau> {
-    // Open a dialog to get new information for the creneau
-    const dialogRef = this.dialog.open(CreneauDialogComponent, {
-      width: '400px',
-      data: { creneau: { ...creneau } } // Pass the current creneau data to the dialog
-    });
-
-    return dialogRef.afterClosed().pipe(
-      switchMap(newCreneau => {
-        if (newCreneau) {
-          // Send the newCreneau to the backend
-          const url = `${this.apiUrl}/creneaux`;
-          return this.http.post<Creneau>(url, newCreneau);
-        } else {
-          return EMPTY; // Return an empty observable if the user cancels the operation
-        }
-      })
-    );
+          const url = `${this.apiUrl}/creneau`;
+          console.log("creneau", creneau)
+          return this.http.post<Creneau>(url, creneau);
   }
 
   // Function to remove a creneau
@@ -117,7 +103,7 @@ export class InscriptionService {
 
   // Function to update a creneau
   updateCreneau(creneau: Creneau): Observable<Creneau> {
-    const url = `${this.apiUrl}/creneaux/${creneau.heureDebut}`;
+    const url = `${this.apiUrl}/creneau/${creneau.idC}`;
     return this.http.put<Creneau>(url, creneau);
   }
 
@@ -132,5 +118,10 @@ export class InscriptionService {
 
   getEspaceById(espaceId: number): Observable<Espace> {
     return this.http.get<any>(`${this.apiUrl}/espace/${espaceId}`);
+  }
+
+  deleteCreneau(creneauId: number): Observable<void> {
+    const url = `${this.apiUrl}/creneau/${creneauId}`;
+    return this.http.delete<void>(url);
   }
 }

@@ -279,7 +279,7 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
     const dialogRef = this.dialog.open(CreneauDialogComponent, {
       width: '600px', 
       data: {
-        creneau: this.creneaux,
+        creneaux: this.creneaux,
       },
     });
   

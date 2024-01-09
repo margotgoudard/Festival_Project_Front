@@ -1,12 +1,34 @@
 <!-- creneau-dialog.component.html -->
-<h2>Edit Creneau</h2>
+<h2>Gestion Creneau</h2>
+<span class="close-button" (click)="onCancelClick()">&times;</span>
 <form>
-  <!-- Add form fields for editing creneau properties -->
-  <input type="hidden" [(ngModel)]="data.creneau.idC" [ngModelOptions]="{standalone: true}" />
-  <label>Heure de Début: <input [(ngModel)]="data.creneau.heureDebut" [ngModelOptions]="{standalone: true}" /></label>
-  <label>Heure de Fin: <input [(ngModel)]="data.creneau.heureFin" [ngModelOptions]="{standalone: true}" /></label>
-  <label>Jour<input [(ngModel)]="data.creneau.jourCreneau" [ngModelOptions]="{standalone: true}" /></label>
+  <!-- Dropdown for selecting a creneau -->
+  <label>Selectionner un Créneau:
+    <select [(ngModel)]="selectedCreneau" [ngModelOptions]="{ standalone: true }">
+      <option *ngFor="let creneau of data.creneaux" [ngValue]="creneau">{{ creneau.heureDebut }} - {{ creneau.heureFin }} ({{ creneau.jourCreneau }})</option>
+    </select>
+  </label>
 
-  <button mat-button (click)="onSaveClick()">Save Changes</button>
-  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <!-- Buttons for editing or deleting the selected creneau -->
+  <button mat-button (click)="onEditClick()" [disabled]="selectedCreneau.idC === 0">Modifier</button>
+  <button mat-button (click)="onDeleteClick()" [disabled]="selectedCreneau.idC === 0">Supprimer</button>
+</form>
+
+
+<form *ngIf="isEditing">
+  <!-- Form fields for adding/editing a creneau -->
+  <label>Heure de Début: <input [(ngModel)]="newCreneau.heureDebut" name="heureDebut" /></label>
+  <label>Heure de Fin: <input [(ngModel)]="newCreneau.heureFin" name="heureFin" /></label>
+  <label>Jour: <input [(ngModel)]="newCreneau.jourCreneau" name="jourCreneau" /></label>
+
+  <button mat-button (click)="onModifClick(newCreneau)">Modifier Creneau</button>
+</form>
+
+<form>
+  <!-- Form fields for adding a new creneau -->
+  <label>Heure de Début: <input [(ngModel)]="newCreneau.heureDebut" name="heureDebut" /></label>
+  <label>Heure de Fin: <input [(ngModel)]="newCreneau.heureFin" name="heureFin" /></label>
+  <label>Jour: <input [(ngModel)]="newCreneau.jourCreneau" name="jourCreneau" /></label>
+
+  <button mat-button (click)="onSaveClick(newCreneau)">Ajouter</button>
 </form>

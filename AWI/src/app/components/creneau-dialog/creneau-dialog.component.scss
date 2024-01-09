@@ -1,0 +1,67 @@
+/* creneau-dialog.component.css */
+
+:host {
+    display: block;
+    position: relative;
+  }
+  
+  /* Espacement et disposition des éléments */
+  h2, form, button {
+    padding : 30px
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  button {
+    width: 150px; /* Ajuster la largeur des boutons selon vos besoins */
+    padding: 10px;
+    text-align: center;
+    background-color: #4CAF50; /* Couleur de fond du bouton */
+    color: white; /* Couleur du texte à l'intérieur du bouton */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #CCCCCC; /* Couleur de fond du bouton désactivé */
+    cursor: not-allowed;
+  }
+
+  /* Style pour les étiquettes et les champs de formulaire */
+  label, input {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  /* Ajuster la largeur des champs de formulaire */
+  input {
+    width: 100%; /* Ajustez la largeur selon vos besoins */
+  }
+  
+  /* Style pour le formulaire en mode édition */
+  form[ngIf="isEditing"] {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+/* Style pour le bouton de fermeture */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.5em;
+  }
+  
+  .close-button:hover {
+    color: red; /* Changez la couleur au survol si nécessaire */
+  }
+  
