@@ -1,1 +1,25 @@
-<p>modifier-places-dialog works!</p>
+<h1>Modifier le Nombre de Places</h1>
+
+<div>
+  <label for="selectEspace">Sélectionner un Espace:</label>
+  <select id="selectEspace" [(ngModel)]="selectedEspace" required>
+    <option *ngFor="let espace of data.espaces" [ngValue]="espace">{{ espace.libelleEspace }}</option>
+  </select>
+</div>
+
+<div>
+  <label for="selectCreneau">Sélectionner un Créneau:</label>
+  <select id="selectCreneau" [(ngModel)]="selectedCreneau" required>
+    <option *ngFor="let creneau of data.creneaux" [ngValue]="creneau">{{ creneau.heureDebut }} - {{ creneau.heureFin }}</option>
+  </select>
+</div>
+
+<div>
+  <label for="inputNombrePlaces">Nouveau Nombre de Places:</label>
+  <input id="inputNombrePlaces" type="number" [(ngModel)]="newNumberOfPlaces" required>
+</div>
+
+<div class="dialog-buttons">
+  <button mat-button (click)="onNoClick()">Annuler</button>
+  <button mat-button (click)="onSaveClick()">Enregistrer</button>
+</div>

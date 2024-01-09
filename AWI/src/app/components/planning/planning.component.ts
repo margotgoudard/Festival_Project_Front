@@ -78,6 +78,7 @@ private loadEspaces(): Observable<Espace[]> {
         const posteEspaces = espaces.filter(espace => espace.posteId === poste.idP);
         this.posteEspacesMapping[poste.idP] = posteEspaces;
       });
+       this.espaces.push(...espaces);
     }),
     catchError(error => {
       console.error('Error loading Espaces:', error);
@@ -104,6 +105,7 @@ private initPlacesDisponibles(): void {
   private loadCreneaux(): void {
     this.planningService.getCreneaux().subscribe(creneaux => {
       this.organizeCreneauxByDay(creneaux);
+      this.creneaux.push(...creneaux);
     });
   }
 
@@ -296,10 +298,22 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
     this.dialog.open(EspaceDialogComponent, { /* dialog configuration */ });
   }
   
-  openModifierPlacesDialog() {
-     this.dialog.open(ModifierPlacesDialogComponent, { /* dialog configuration */ });
+  openModifierPlacesDialog(): void {
+      const dialogRef = this.dialog.open(ModifierPlacesDialogComponent, {
+        width: '600px',
+        data: {
+          espaces: this.espaces,
+          creneaux: this.creneaux
+        }
+      });
+      console.log("creneaux", this.creneaux);
+      console.log("espaces", this.espaces);
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('Modification dialog closed with result:', result);
+      });
+    }
   }
-}
 
 /*inscrireATousLesPostes() {
 
