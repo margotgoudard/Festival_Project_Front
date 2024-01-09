@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { User } from 'src/app/model/user.model';
+import { InscriptionService } from 'src/app/services/inscription.service';
 import { UserService } from 'src/app/services/user.service';
 
 
@@ -17,13 +18,10 @@ import { UserService } from 'src/app/services/user.service';
 export class PlanningGeneralComponent implements OnInit {
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatSort) sort!: MatSort;
-  currentSortAttribute: string = 'nomUtilisateur';
 
+  displayedColumns: string[] = ['prenom', 'email', 'poste', 'espace', 'jour', 'creneau'];
 
-
-  displayedColumns: string[] = ['nomUtilisateur', 'prenom', 'email', 'poste', 'zone', 'espace', 'jour', 'creneau'];
-
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private planningService: InscriptionService ,private userService: UserService, private router: Router) {}
 
   ngOnInit() {
     this.loadUsers();
@@ -33,41 +31,70 @@ export class PlanningGeneralComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-
   loadUsers() {
-   /* this.userService.getUsersRegistration().subscribe(
+    this.userService.getUsersRegistration().subscribe(
       (userRegistrations) => {
         // Map UserRegistration objects to a format suitable for display
         const mappedUsers = userRegistrations.map(registration => ({
-          idUtilisateur: registration.user.id,
-          nomUtilisateur: registration.user.nom,
-          prenom: registration.user.prenom,
-          email: registration.user.email,
-          //idPoste: registration.poste.id,
-          //poste: registration.poste.nom, // Assuming 'poste' has a 'nom' property
-          //idEspace: registration.espace.id,
-          //espace: registration.espace.nom, // Assuming 'poste' has 'espaces' array and 'nom' property
-          jour: registration.creneau.jourCreneau,
-          idCreneau: registration.creneau,
-          creneau: registration.creneau.heureDebut + ' - ' + registration.creneau.heureFin
-        }));
-  
+          benevolePseudo: registration.benevolePseudo,
+          espaceId: registration.espaceId,
+          creneauId: registration.creneauId,
+        })); 
+
         this.dataSource.data = mappedUsers;
+
+        this.fetchAdditionalUserInfo(mappedUsers);
       },
       (error) => {
         console.error('Error loading users', error);
       }
-    );*/
+    );
   }
 
-  onSortAttributeChange(event: any) {
+  fetchAdditionalUserInfo(users: any[]) {
+    users.forEach(user => {
+      this.userService.getUserByPseudo(user.benevolePseudo).subscribe(
+        (benevoleInfo) => {
+          console.log('Benevole Info:', benevoleInfo);
+        },
+        (error) => {
+          console.error('Error fetching benevole info', error);
+        }
+      );
+
+      this.planningService.getCreneauById(user.creneauId).subscribe(
+        (creneauInfo) => {
+          // Handle the creneau information, e.g., update the user object with creneauInfo
+          console.log('Creneau Info:', creneauInfo);
+        },
+        (error) => {
+          console.error('Error fetching creneau info', error);
+        }
+      );
+
+      this.planningService.getEspaceById(user.espaceId).subscribe(
+        (espaceInfo) => {
+          // Handle the espace information, e.g., update the user object with espaceInfo
+          console.log('Espace Info:', espaceInfo);
+        },
+        (error) => {
+          console.error('Error fetching espace info', error);
+        }
+      );
+    });
+  }
+
+
+
+  /*onSortAttributeChange(event: any) {
     // Update the current sorting attribute
     this.currentSortAttribute = event.value;
 
     // Apply sorting based on the selected attribute
     this.applySorting();
-  }
+  }*/
 
+  /*
   applySorting() {
     // Check if dataSource and sort are defined
     if (this.dataSource && this.dataSource.sort) {
@@ -80,7 +107,7 @@ export class PlanningGeneralComponent implements OnInit {
     } else {
       console.error('dataSource or sort is null');
     }
-  }
+  }*/
 
   afficherPlanningIndividuel(user: any) {
     // Check if user is defined and if the user.idUtilisateur is defined

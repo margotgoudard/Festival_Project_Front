@@ -120,4 +120,12 @@ export class InscriptionService {
     const url = `${this.apiUrl}/espaces/${posteId}`;  
     return this.http.get<any[]>(url);
   }
+
+  getCreneauById(creneauId: number): Observable<Creneau> {
+    return this.http.get<any>(`${this.apiUrl}/creneau/${creneauId}`);
+  }
+
+  getEspaceById(espaceId: number): Observable<Espace> {
+    return this.http.get<any>(`${this.apiUrl}/espace/${espaceId}`);
+  }
 }
