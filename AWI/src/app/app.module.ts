@@ -34,6 +34,9 @@ import { InscriptionReussiDialogComponent } from './components/inscription-reuss
 import { InscriptionService } from './services/inscription.service';
 import { InscriptionDialogEspacesComponent } from './components/inscription-dialog-espaces/inscription-dialog-espaces.component';
 import { PlanningIndividuelAdminComponent } from './components/edt/planning-individuel-admin/planning-individuel-admin.component';
+import { PlanningAdminComponent } from './components/planning-admin/planning-admin.component';
+import { InscriptionAdminComponent } from './components/inscription-admin/inscription-admin.component';
+import { InscriptionDialogEspacesAdminComponent } from './components/inscription-dialog-espaces-admin/inscription-dialog-espaces-admin.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +56,10 @@ import { PlanningIndividuelAdminComponent } from './components/edt/planning-indi
     PlanningGeneralComponent,
     InscriptionReussiDialogComponent,
     InscriptionDialogEspacesComponent,
-    PlanningIndividuelAdminComponent
+    PlanningIndividuelAdminComponent,
+    PlanningAdminComponent,
+    InscriptionAdminComponent,
+    InscriptionDialogEspacesAdminComponent
   ],
   imports: [
     BrowserModule,

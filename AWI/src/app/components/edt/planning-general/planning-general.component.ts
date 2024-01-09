@@ -23,7 +23,7 @@ import { UserService } from 'src/app/services/user.service';
     dataSource = new MatTableDataSource<any>([]);
     @ViewChild(MatSort) sort!: MatSort;
   
-    displayedColumns: string[] = ['prenom', 'email', 'poste', 'espace', 'jour', 'creneau'];
+    displayedColumns: string[] = ['prenom', 'email','espace', 'jour', 'creneau'];
     usersLoaded = false; // Variable pour suivre si les utilisateurs ont été chargés
   
     constructor(private planningService: InscriptionService, private userService: UserService, private router: Router) {}

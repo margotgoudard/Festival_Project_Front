@@ -1,4 +1,4 @@
-<app-navigation></app-navigation>
+
 <!-- Structure du composant Angular -->
 <h2>Planning Général</h2>
 <div class="mat-elevation-z8">
@@ -16,11 +16,6 @@
   <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.benevoleInfo?.email }}</td>
 </ng-container>
 
-<!-- Poste Column -->
-<ng-container matColumnDef="poste">
-  <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste</th>
-  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.posteInfo?.libellePoste }}</td>
-</ng-container>
 
 <!-- Espace Column -->
 <ng-container matColumnDef="espace">

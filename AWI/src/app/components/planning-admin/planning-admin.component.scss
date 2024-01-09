@@ -1,0 +1,39 @@
+.planning-container {
+    margin-top: 20px; /* Espace en haut du conteneur */
+  }
+  
+  table {
+    width: 100%; /* La table occupe 100% de la largeur du conteneur */
+    border-collapse: collapse; /* Fusion des bordures des cellules */
+  }
+  
+  th, td {
+    border: 1px solid #ddd; /* Bordure de 1 pixel avec couleur grise */
+    padding: 8px; /* Espace interne des cellules */
+    text-align: center; /* Centre le texte dans les cellules */
+  }
+  
+  th {
+    background-color: #f2f2f2; /* Couleur de fond pour les en-têtes */
+  }
+  
+  button {
+    padding: 8px; /* Espace interne du bouton */
+    cursor: pointer; /* Curseur de type pointeur au survol */
+  }
+  
+  .selected-button {
+    background-color: #3498db; /* Couleur de fond pour les boutons sélectionnés */
+    color: white; /* Couleur du texte pour les boutons sélectionnés */
+  }
+  
+  .checkbox-label {
+    margin-bottom: 10px; /* Marge en bas de l'étiquette de la case à cocher */
+  }
+  
+  h2 {
+    margin-top: 100px;
+    margin-left: 30px;
+    text-align: center;
+  }
+  
