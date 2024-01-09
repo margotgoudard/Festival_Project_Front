@@ -5,14 +5,7 @@
   <input type="hidden" [(ngModel)]="data.creneau.idC" [ngModelOptions]="{standalone: true}" />
   <label>Heure de Début: <input [(ngModel)]="data.creneau.heureDebut" [ngModelOptions]="{standalone: true}" /></label>
   <label>Heure de Fin: <input [(ngModel)]="data.creneau.heureFin" [ngModelOptions]="{standalone: true}" /></label>
-
-  <!-- Replace input with a select dropdown for the day -->
-  <label>Jour:
-    <select [(ngModel)]="data.creneau.jourCreneau" [ngModelOptions]="{standalone: true}">
-      <!-- Replace the options with your enum values -->
-      <option *ngFor="let jour of jours" [value]="jour">{{ jour }}</option>
-    </select>
-  </label>
+  <label>Jour<input [(ngModel)]="data.creneau.jourCreneau" [ngModelOptions]="{standalone: true}" /></label>
 
   <button mat-button (click)="onSaveClick()">Save Changes</button>
   <button mat-button (click)="onCancelClick()">Cancel</button>

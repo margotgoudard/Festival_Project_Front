@@ -11,7 +11,7 @@ import { Creneau } from 'src/app/interfaces/creaneau.interface';
 })
 export class CreneauDialogComponent {
 
-  jours = [Jour.Samedi, Jour.Dimanche];
+  
   constructor(
     public dialogRef: MatDialogRef<CreneauDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { creneau: Creneau }

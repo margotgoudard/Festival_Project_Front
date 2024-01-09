@@ -4,6 +4,7 @@ import { Espace } from "./espace.interface";
 import { Poste } from "./poste.interface";
 
 export interface UserRegistration {
+    id: number;
     isAffected: boolean;
     isAccepted: boolean;
     user: User;

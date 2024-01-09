@@ -3,11 +3,11 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { Creneau } from 'src/app/interfaces/creaneau.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { InscriptionService } from 'src/app/services/inscription.service';
-import { PosteDetailsComponent } from '../poste-details/poste-details.component';
+import { PosteDetailsComponent } from '../../poste-details/poste-details.component';
 import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
-import { InscriptionReussiDialogComponent } from '../inscription-reussi-dialog/inscription-reussi-dialog.component';
+import { InscriptionReussiDialogComponent } from '../../inscription-reussi-dialog/inscription-reussi-dialog.component';
 
 @Component({
   selector: 'app-inscription',

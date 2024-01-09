@@ -5,8 +5,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { InscriptionComponent } from './components/inscription/inscription.component';
 import { PlanningIndividualComponent } from './components/edt/planning-individual/planning-individual.component';
-import { PlanningGeneralComponent } from './components/edt/planning-general/planning-general.component';
-import { PlanningIndividuelAdminComponent } from './components/edt/planning-individuel-admin/planning-individuel-admin.component';
+import { PlanningGeneralComponent } from './components/admin/planning-general/planning-general.component';
+import { PlanningIndividuelAdminComponent } from './components/admin/planning-individuel-admin/planning-individuel-admin.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },

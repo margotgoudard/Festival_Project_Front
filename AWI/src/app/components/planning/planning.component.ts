@@ -12,6 +12,10 @@ import { InscriptionComponent } from '../inscription/inscription.component';
 import { Component, OnInit } from '@angular/core';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { InscriptionDialogEspacesComponent } from '../inscription-dialog-espaces/inscription-dialog-espaces.component';
+import { PosteDialogComponent } from '../poste-dialog/poste-dialog.component';
+import { EspaceDialogComponent } from '../espace-dialog/espace-dialog.component';
+import { ModifierPlacesDialogComponent } from '../modifier-places-dialog/modifier-places-dialog.component';
+import { CreneauDialogComponent } from '../creneau-dialog/creneau-dialog.component';
 
 @Component({
   selector: 'app-planning',
@@ -267,6 +271,33 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
         },
       }
     });
+  }
+
+  openCreneauDialog() {
+    const dialogRef = this.dialog.open(CreneauDialogComponent, {
+      width: '600px', 
+      data: {
+        creneau: this.creneaux,
+      },
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Creneau dialog closed with result:', result);
+      }
+    });
+  }
+  
+  openPosteDialog() {
+   this.dialog.open(PosteDialogComponent, { /* dialog configuration */ });
+  }
+  
+  openEspaceDialog() {
+    this.dialog.open(EspaceDialogComponent, { /* dialog configuration */ });
+  }
+  
+  openModifierPlacesDialog() {
+     this.dialog.open(ModifierPlacesDialogComponent, { /* dialog configuration */ });
   }
 }
 

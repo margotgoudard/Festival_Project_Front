@@ -23,7 +23,7 @@ import { PlanningIndividualComponent } from './components/edt/planning-individua
 import { ModifyDialogComponent } from './components/modify-dialog/modify-dialog.component';
 import { PosteDialogComponent } from './components/poste-dialog/poste-dialog.component';
 import { CreneauDialogComponent } from './components/creneau-dialog/creneau-dialog.component';
-import { PlanningGeneralComponent } from './components/edt/planning-general/planning-general.component';
+import { PlanningGeneralComponent } from './components/admin/planning-general/planning-general.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -33,10 +33,12 @@ import { RegistrationPopupService } from './services/registration-popup.service'
 import { InscriptionReussiDialogComponent } from './components/inscription-reussi-dialog/inscription-reussi-dialog.component';
 import { InscriptionService } from './services/inscription.service';
 import { InscriptionDialogEspacesComponent } from './components/inscription-dialog-espaces/inscription-dialog-espaces.component';
-import { PlanningIndividuelAdminComponent } from './components/edt/planning-individuel-admin/planning-individuel-admin.component';
-import { PlanningAdminComponent } from './components/planning-admin/planning-admin.component';
-import { InscriptionAdminComponent } from './components/inscription-admin/inscription-admin.component';
-import { InscriptionDialogEspacesAdminComponent } from './components/inscription-dialog-espaces-admin/inscription-dialog-espaces-admin.component';
+import { PlanningIndividuelAdminComponent } from './components/admin/planning-individuel-admin/planning-individuel-admin.component';
+import { PlanningAdminComponent } from './components/admin/planning-admin/planning-admin.component';
+import { InscriptionAdminComponent } from './components/admin/inscription-admin/inscription-admin.component';
+import { InscriptionDialogEspacesAdminComponent } from './components/admin/inscription-dialog-espaces-admin/inscription-dialog-espaces-admin.component';
+import { EspaceDialogComponent } from './components/espace-dialog/espace-dialog.component';
+import { ModifierPlacesDialogComponent } from './components/modifier-places-dialog/modifier-places-dialog.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +61,9 @@ import { InscriptionDialogEspacesAdminComponent } from './components/inscription
     PlanningIndividuelAdminComponent,
     PlanningAdminComponent,
     InscriptionAdminComponent,
-    InscriptionDialogEspacesAdminComponent
+    InscriptionDialogEspacesAdminComponent,
+    EspaceDialogComponent,
+    ModifierPlacesDialogComponent
   ],
   imports: [
     BrowserModule,

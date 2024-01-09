@@ -7,6 +7,10 @@ import { Poste } from 'src/app/interfaces/poste.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { CreneauDialogComponent } from '../../creneau-dialog/creneau-dialog.component';
+import { PosteDialogComponent } from '../../poste-dialog/poste-dialog.component';
+import { EspaceDialogComponent } from '../../espace-dialog/espace-dialog.component';
+import { ModifierPlacesDialogComponent } from '../../modifier-places-dialog/modifier-places-dialog.component';
 
 @Component({
   selector: 'planning-individual',
@@ -67,5 +71,12 @@ export class PlanningIndividualComponent implements OnInit {
         console.error('Error fetching user registrations:', error);
       }
     );
+  }
+
+  deleteUserRegistration(registration: UserRegistration) {
+    const confirmation = confirm('Voulez-vous vraiment supprimer cette inscription ?');
+    if (confirmation) {
+      this.userService.deleteUserRegistration(registration.id);
+    }
   }
 }

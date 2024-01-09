@@ -1,12 +1,13 @@
 // planning-individual.component.ts
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { Poste } from 'src/app/interfaces/poste.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'planning-individuel-admin',
@@ -21,9 +22,9 @@ export class PlanningIndividuelAdminComponent implements OnInit {
   user: User | undefined; 
   dataSource = new MatTableDataSource<any>([]);
 
-  displayedColumns: string[] = ['poste', 'jour', 'creneau'];
+  displayedColumns: string[] = ['poste', 'jour', 'creneau', 'actions'];
 
-  constructor(private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
+  constructor(private location: Location, private router: Router, private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -61,5 +62,10 @@ export class PlanningIndividuelAdminComponent implements OnInit {
     );
   }
 
-
+  deleteUserRegistration(registration: UserRegistration) {
+    const confirmation = confirm('Voulez-vous vraiment supprimer cette inscription ?');
+    if (confirmation) {
+      this.userService.deleteUserRegistration(registration.id);
+    }
+  }
 }

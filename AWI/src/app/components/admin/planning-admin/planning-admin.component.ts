@@ -8,12 +8,16 @@ import { UserService } from 'src/app/services/user.service';
 import { Observable, Subscription, catchError, forkJoin, map, of, switchMap, tap, throwError } from 'rxjs';
 import { PlacerService } from 'src/app/services/placerService';
 import { Espace } from 'src/app/interfaces/espace.interface';
-import { InscriptionComponent } from '../inscription/inscription.component';
+import { InscriptionComponent } from '../../inscription/inscription.component';
 import { Component, Input, OnInit } from '@angular/core';
-import { InscriptionDialogEspacesComponent } from '../inscription-dialog-espaces/inscription-dialog-espaces.component';
+import { InscriptionDialogEspacesComponent } from '../../inscription-dialog-espaces/inscription-dialog-espaces.component';
 import { User } from 'src/app/model/user.model';
 import { InscriptionAdminComponent } from '../inscription-admin/inscription-admin.component';
 import { InscriptionDialogEspacesAdminComponent } from '../inscription-dialog-espaces-admin/inscription-dialog-espaces-admin.component';
+import { CreneauDialogComponent } from '../../creneau-dialog/creneau-dialog.component';
+import { PosteDialogComponent } from '../../poste-dialog/poste-dialog.component';
+import { EspaceDialogComponent } from '../../espace-dialog/espace-dialog.component';
+import { ModifierPlacesDialogComponent } from '../../modifier-places-dialog/modifier-places-dialog.component';
 
 @Component({
   selector: 'app-planning-admin',
@@ -273,6 +277,33 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
       }
     });
   }
+
+  openCreneauDialog() {
+    const dialogRef = this.dialog.open(CreneauDialogComponent, {
+      width: '600px', 
+      data: {
+        creneau: this.creneaux,
+      },
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Creneau dialog closed with result:', result);
+      }
+    });
+  }
+  
+  openPosteDialog() {
+   this.dialog.open(PosteDialogComponent, { /* dialog configuration */ });
+  }
+  
+  openEspaceDialog() {
+    this.dialog.open(EspaceDialogComponent, { /* dialog configuration */ });
+  }
+  
+  openModifierPlacesDialog() {
+     this.dialog.open(ModifierPlacesDialogComponent, { /* dialog configuration */ });
+  }
 }
 
 /*inscrireATousLesPostes() {
@@ -299,18 +330,6 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
   );
 }*/
 
-/*openModificationDialog() {
-  const dialogRef = this.dialog.open(ModifyDialogComponent, {
-    width: '600px', // Adjust the width as needed
-    data: {
-      creneaux: this.creneaux, // Pass your current creneaux and postes data to the dialog
-      postes: this.postes
-    }
-  });
 
-  dialogRef.afterClosed().subscribe(result => {
-    // Handle the result from the modification dialog if needed
-    console.log('Modification dialog closed with result:', result);
-  });
-}*/
+
 
