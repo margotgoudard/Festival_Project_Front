@@ -33,6 +33,7 @@ import { RegistrationPopupService } from './services/registration-popup.service'
 import { InscriptionReussiDialogComponent } from './components/inscription-reussi-dialog/inscription-reussi-dialog.component';
 import { InscriptionService } from './services/inscription.service';
 import { InscriptionDialogEspacesComponent } from './components/inscription-dialog-espaces/inscription-dialog-espaces.component';
+import { PlanningIndividuelAdminComponent } from './components/edt/planning-individuel-admin/planning-individuel-admin.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { InscriptionDialogEspacesComponent } from './components/inscription-dial
     CreneauDialogComponent,
     PlanningGeneralComponent,
     InscriptionReussiDialogComponent,
-    InscriptionDialogEspacesComponent
+    InscriptionDialogEspacesComponent,
+    PlanningIndividuelAdminComponent
   ],
   imports: [
     BrowserModule,

@@ -5,41 +5,41 @@
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
   
   <!-- Prénom Column -->
-  <ng-container matColumnDef="prenom">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Prénom</th>
-    <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user)">{{ user.benevoleInfo?.prenom }}</td>
-  </ng-container>
-  
-  <!-- E-mail Column -->
-  <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>E-mail</th>
-    <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user)">{{ user.benevoleInfo?.email }}</td>
-  </ng-container>
-  
-  <!-- Poste Column -->
-  <ng-container matColumnDef="poste">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste</th>
-    <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user)">{{ user.benevoleInfo?.poste }}</td>
-  </ng-container>
-  
-  
-  <!-- Espace Column -->
-  <ng-container matColumnDef="espace">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Espace</th>
-    <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user)">{{ user.espaceInfo?.nom }}</td>
-  </ng-container>
-  
-  <!-- Jour Column -->
-  <ng-container matColumnDef="jour">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Jour</th>
-    <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user)">{{ user.creneauInfo?.jour }}</td>
-  </ng-container>
-  
-  <!-- Créneau Column -->
-  <ng-container matColumnDef="creneau">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Créneau</th>
-    <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user)">{{ user.creneauInfo?.horaire }}</td>
-  </ng-container>
+<ng-container matColumnDef="prenom">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Prénom</th>
+  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.benevoleInfo?.prenom }}</td>
+</ng-container>
+
+<!-- E-mail Column -->
+<ng-container matColumnDef="email">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>E-mail</th>
+  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.benevoleInfo?.email }}</td>
+</ng-container>
+
+<!-- Poste Column -->
+<ng-container matColumnDef="poste">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste</th>
+  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.posteInfo?.libellePoste }}</td>
+</ng-container>
+
+<!-- Espace Column -->
+<ng-container matColumnDef="espace">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Espace</th>
+  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.espaceInfo?.libelleEspace }}</td>
+</ng-container>
+
+<!-- Jour Column -->
+<ng-container matColumnDef="jour">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Jour</th>
+  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.creneauInfo?.jourCreneau }}</td>
+</ng-container>
+
+<!-- Créneau Column -->
+<ng-container matColumnDef="creneau">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Créneau</th>
+  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.creneauInfo?.heureDebut }} - {{ user.creneauInfo?.heureFin }}</td>
+</ng-container>
+
 
   <!-- Définition des colonnes -->
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

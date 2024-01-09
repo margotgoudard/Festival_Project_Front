@@ -2,7 +2,7 @@
 export interface Inscription {
     isAffected: boolean;
     isAccepted: boolean;
-    benevolePseudo: number;
+    benevolePseudo: string;
     espaceId: number;
     creneauId: number;
   }

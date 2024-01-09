@@ -4,6 +4,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { Inscription } from 'src/app/interfaces/inscription.interfaces';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { User } from 'src/app/model/user.model';
 import { InscriptionService } from 'src/app/services/inscription.service';
@@ -15,77 +17,76 @@ import { UserService } from 'src/app/services/user.service';
   templateUrl: './planning-general.component.html',
   styleUrls: ['./planning-general.component.scss']
 })
-export class PlanningGeneralComponent implements OnInit {
-  dataSource = new MatTableDataSource<any>([]);
-  @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['prenom', 'email', 'poste', 'espace', 'jour', 'creneau'];
 
-  constructor(private planningService: InscriptionService ,private userService: UserService, private router: Router) {}
-
-  ngOnInit() {
-    this.loadUsers();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
-  loadUsers() {
-    this.userService.getUsersRegistration().subscribe(
-      (userRegistrations) => {
-        // Map UserRegistration objects to a format suitable for display
-        const mappedUsers = userRegistrations.map(registration => ({
-          benevolePseudo: registration.benevolePseudo,
-          espaceId: registration.espaceId,
-          creneauId: registration.creneauId,
-        })); 
-
-        this.dataSource.data = mappedUsers;
-
-        this.fetchAdditionalUserInfo(mappedUsers);
-      },
-      (error) => {
-        console.error('Error loading users', error);
+  export class PlanningGeneralComponent implements OnInit {
+    dataSource = new MatTableDataSource<any>([]);
+    @ViewChild(MatSort) sort!: MatSort;
+  
+    displayedColumns: string[] = ['prenom', 'email', 'poste', 'espace', 'jour', 'creneau'];
+    usersLoaded = false; // Variable pour suivre si les utilisateurs ont été chargés
+  
+    constructor(private planningService: InscriptionService, private userService: UserService, private router: Router) {}
+  
+    ngOnInit() {
+      // Charge les utilisateurs uniquement si ce n'est pas déjà fait
+      if (!this.usersLoaded) {
+        this.loadUsers();
       }
-    );
-  }
+    }
+  
+    ngAfterViewInit() {
+      // Applique le tri uniquement si les utilisateurs ont été chargés
+      if (this.usersLoaded) {
+        this.dataSource.sort = this.sort;
+      }
+    }
+  
+    loadUsers() {
+      this.userService.getUsersRegistration().subscribe(
+        (userRegistrations) => {
+          const mappedUsers = userRegistrations.map(registration => ({
+            benevolePseudo: registration.benevolePseudo,
+            espaceId: registration.espaceId,
+            creneauId: registration.creneauId,
+            isAffected: registration.isAffected,
+            isAccepted: registration.isAccepted
+          })); 
+    
+          // Use forkJoin to wait for all requests to complete
+          forkJoin(mappedUsers.map(user => 
+            forkJoin({
+              benevoleInfo: this.userService.getUserByPseudo(user.benevolePseudo),
+              creneauInfo: this.planningService.getCreneauById(user.creneauId),
+              espaceInfo: this.planningService.getEspaceById(user.espaceId),
+            })
+            )).subscribe(
+              (results) => {
+                // Update the user objects with fetched information
+                this.dataSource.data = results.map((result, index) => {
+                  const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
+                  console.log('Poste Info:', posteInfo); // Log posteInfo to the console
+                  console.log('Benevole Info:', result.benevoleInfo);
 
-  fetchAdditionalUserInfo(users: any[]) {
-    users.forEach(user => {
-      this.userService.getUserByPseudo(user.benevolePseudo).subscribe(
-        (benevoleInfo) => {
-          console.log('Benevole Info:', benevoleInfo);
-        },
-        (error) => {
-          console.error('Error fetching benevole info', error);
-        }
-      );
-
-      this.planningService.getCreneauById(user.creneauId).subscribe(
-        (creneauInfo) => {
-          // Handle the creneau information, e.g., update the user object with creneauInfo
-          console.log('Creneau Info:', creneauInfo);
-        },
-        (error) => {
-          console.error('Error fetching creneau info', error);
-        }
-      );
-
-      this.planningService.getEspaceById(user.espaceId).subscribe(
-        (espaceInfo) => {
-          // Handle the espace information, e.g., update the user object with espaceInfo
-          console.log('Espace Info:', espaceInfo);
-        },
-        (error) => {
-          console.error('Error fetching espace info', error);
-        }
-      );
-    });
-  }
-
-
-
+            
+                  return {
+                    benevoleInfo: result.benevoleInfo,
+                    creneauInfo: result.creneauInfo,
+                    espaceInfo: result.espaceInfo,
+                    posteInfo: posteInfo,
+                    ...mappedUsers[index]
+                  };
+                });
+           
+                this.usersLoaded = true;
+              },
+              (error) => {
+                console.error('Error loading additional user info', error);
+              }
+            );
+            }
+  )}            
+  
   /*onSortAttributeChange(event: any) {
     // Update the current sorting attribute
     this.currentSortAttribute = event.value;
@@ -109,14 +110,9 @@ export class PlanningGeneralComponent implements OnInit {
     }
   }*/
 
-  afficherPlanningIndividuel(user: any) {
-    // Check if user is defined and if the user.idUtilisateur is defined
-    if (user && user.pseudo) {
-      const userPseudo = user.pseudo;
-      this.userService.setUserPseudo(userPseudo); // Set the userId in the service
-      this.router.navigate(['planning-individuel', userPseudo]);
-    } else {
-      console.error('Données utilisateur incorrectes :', user);
-    }
-  }
+  afficherPlanningIndividuel(pseudo: string) {
+    console.log("pseudo", pseudo)
+    this.router.navigate(['planning-individuel-admin', pseudo]);
+}
+
 }

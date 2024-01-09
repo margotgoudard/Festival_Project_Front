@@ -13,6 +13,7 @@ import { User } from '../model/user.model';
   providedIn: 'root'
 })
 export class InscriptionService {
+
   private apiUrl = 'http://localhost:3000';
 
   constructor(private dialog: MatDialog, private http: HttpClient) { }
@@ -26,6 +27,10 @@ export class InscriptionService {
     const url = `${this.apiUrl}/getPosteReferent/${espaceId}`; 
     return this.http.get<User[]>(url);
 
+  }
+
+  getPosteById(idP : number): Observable<Poste> {
+    return this.http.get<Poste>(`${this.apiUrl}/poste/${idP}`);
   }
 
   getPreviousVolunteers(creneauId: number, espaceId: number): Observable<User[]> {
