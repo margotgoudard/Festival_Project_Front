@@ -15,6 +15,12 @@ export class PlacerService {
   getNombrePlacesPourEspaces(espaceId: number, creneauId: number): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/nombre-places?espaceId=${espaceId}&creneauId=${creneauId}`);
   }
+
+  updatePlaces(espaceId: number, creneauId: number, newNumberOfPlaces: number): Observable<any> {
+    const payload = { espaceId, creneauId, newNumberOfPlaces };
+
+    return this.http.put(`${this.baseUrl}/update-places`, payload);
+  }
  
 
 }

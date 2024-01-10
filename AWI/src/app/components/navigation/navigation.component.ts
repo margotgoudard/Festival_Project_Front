@@ -17,9 +17,7 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit() {
     const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
-    
-    // Get user information
-    this.userService.getUserRole(pseudo).subscribe((userRoleObject: any) => {
+      this.userService.getUserRole(pseudo).subscribe((userRoleObject: any) => {
       this.userRole = userRoleObject.firstRoleId;
       console.log('User Role ID:', this.userRole);
     });

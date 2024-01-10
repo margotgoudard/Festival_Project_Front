@@ -5,7 +5,8 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { PlanningComponent } from './components/planning/planning.component';
 import { InscriptionComponent } from './components/inscription/inscription.component';
 import { PlanningIndividualComponent } from './components/edt/planning-individual/planning-individual.component';
-import { PlanningGeneralComponent } from './components/edt/planning-general/planning-general.component';
+import { PlanningGeneralComponent } from './components/admin/planning-general/planning-general.component';
+import { PlanningIndividuelAdminComponent } from './components/admin/planning-individuel-admin/planning-individuel-admin.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'inscription', component: InscriptionComponent },
   { path: 'planning-individual', component: PlanningIndividualComponent },
   { path: 'planning-general', component:PlanningGeneralComponent},
-  { path: 'planning-individual/:id', component: PlanningIndividualComponent },
+  { path: 'planning-individual/:pseudo', component: PlanningIndividualComponent },
+  { path: 'planning-individuel-admin/:pseudo', component: PlanningIndividuelAdminComponent },
  
 
 ];

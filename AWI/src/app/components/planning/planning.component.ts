@@ -12,6 +12,10 @@ import { InscriptionComponent } from '../inscription/inscription.component';
 import { Component, OnInit } from '@angular/core';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { InscriptionDialogEspacesComponent } from '../inscription-dialog-espaces/inscription-dialog-espaces.component';
+import { PosteDialogComponent } from '../poste-dialog/poste-dialog.component';
+import { EspaceDialogComponent } from '../espace-dialog/espace-dialog.component';
+import { ModifierPlacesDialogComponent } from '../modifier-places-dialog/modifier-places-dialog.component';
+import { CreneauDialogComponent } from '../creneau-dialog/creneau-dialog.component';
 
 @Component({
   selector: 'app-planning',
@@ -31,11 +35,15 @@ export class PlanningComponent implements OnInit {
   placesInscrites: { [key: string]: number } = {};
   aPlusieursEspaces : boolean = false;
   posteId: number | null = null;
+  admin : boolean = false;
+  userRole: number = 0; 
+
 
   constructor(private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
   ngOnInit(): void {
     this.loadData();
+    this.estAdmin();
   }
 
   private async loadData(): Promise<void> {
@@ -74,6 +82,7 @@ private loadEspaces(): Observable<Espace[]> {
         const posteEspaces = espaces.filter(espace => espace.posteId === poste.idP);
         this.posteEspacesMapping[poste.idP] = posteEspaces;
       });
+       this.espaces.push(...espaces);
     }),
     catchError(error => {
       console.error('Error loading Espaces:', error);
@@ -100,6 +109,7 @@ private initPlacesDisponibles(): void {
   private loadCreneaux(): void {
     this.planningService.getCreneaux().subscribe(creneaux => {
       this.organizeCreneauxByDay(creneaux);
+      this.creneaux.push(...creneaux);
     });
   }
 
@@ -267,6 +277,59 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
         },
       }
     });
+  }
+
+  openCreneauDialog() {
+    const dialogRef = this.dialog.open(CreneauDialogComponent, {
+      width: '600px', 
+      data: {
+        creneaux: this.creneaux,
+      },
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Creneau dialog closed with result:', result);
+      }
+    });
+  }
+  
+  openPosteDialog() {
+   this.dialog.open(PosteDialogComponent, { /* dialog configuration */ });
+  }
+  
+  openEspaceDialog() {
+    this.dialog.open(EspaceDialogComponent, { /* dialog configuration */ });
+  }
+  
+  openModifierPlacesDialog(): void {
+      const dialogRef = this.dialog.open(ModifierPlacesDialogComponent, {
+        width: '600px',
+        data: {
+          espaces: this.espaces,
+          creneaux: this.creneaux
+        }
+      });
+      console.log("creneaux", this.creneaux);
+      console.log("espaces", this.espaces);
+
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('Modification dialog closed with result:', result);
+      });
+    }
+
+    estAdmin(): boolean {
+      
+      const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
+
+      this.userService.getUserRole(pseudo).subscribe((userRoleObject: any) => {
+        this.userRole = userRoleObject.firstRoleId;
+  
+        if (this.userRole == 1) {
+            this.admin = true;
+        }
+      })
+      return this.admin;
   }
 }
 

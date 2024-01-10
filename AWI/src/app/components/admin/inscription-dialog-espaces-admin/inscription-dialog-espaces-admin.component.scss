@@ -1,0 +1,38 @@
+h2 {
+    padding-top: 10px; 
+    padding-left: 20px;
+  }
+  
+  p {
+    padding-left: 8px; /* Add margin at the bottom of paragraphs */
+  }
+  
+  ul {
+    padding: 20px;
+  }
+  
+  li {
+    padding-left: 20px; /* Add margin at the bottom of list items */
+  }
+  
+  button {
+    padding-left: 20px; 
+    padding-bottom: 20px;
+  }
+
+  .dialog-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .close-button {
+    cursor: pointer;
+    font-size: 1.5em;
+    margin-right: 10px;
+  }
+  
+  .close-button:hover {
+    color: red; /* Changez la couleur au survol si nécessaire */
+  }
+ 

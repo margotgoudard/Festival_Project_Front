@@ -1,0 +1,18 @@
+<!-- inscription.component.html -->
+<div class="dialog-header">
+    <span class="close-button" (click)="onNoClick()">&times;</span>
+  </div>
+  <h2>Inscription</h2>
+  <p>{{ data.creneau.jour }} - {{ data.creneau.heureDebut }} - {{ data.creneau.heureFin }}</p>
+  <p>{{ data.poste.libelle }}</p>
+  <p>Référent(s) du poste:</p> 
+  <ul>
+    <li *ngFor="let referent of referents">{{ referent.nom }} {{ referent.prenom }} - mail : {{ referent.email }} - tel : {{referent.numTel}} </li>
+  </ul>
+  
+  <p>Volontaires précédents :</p>
+  <ul>
+    <li *ngFor="let volunteer of previousVolunteers">{{ volunteer.nom }} {{ volunteer.prenom }}</li>
+  </ul>
+  <!--<button (click)="onContactRClick()">Contact référent</button>-->
+  <button (click)="onInscriptionClick()">S'inscrire</button>

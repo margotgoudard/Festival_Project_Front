@@ -61,5 +61,10 @@ export class UserService {
     return this.http.get<string>(url);
   }
 
+  deleteUserRegistration(id: number): Observable<any> {
+    const url = `${this.apiUrl}/inscriptions/${id}`;
+    return this.http.delete(url);
+  }
+
 
 }
