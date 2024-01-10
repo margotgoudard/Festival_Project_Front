@@ -1,6 +1,28 @@
 
 <!-- Structure du composant Angular -->
 <h2>Planning Général</h2>
+
+<mat-form-field class="search-field">
+  <mat-label>Rechercher par nom</mat-label>
+  <input matInput (keyup)="applyFilter($event)">
+</mat-form-field>
+
+<mat-form-field class="search-field">
+  <mat-label>Rechercher par espace</mat-label>
+  <input matInput (keyup)="applyFilter($event)">
+</mat-form-field>
+
+<mat-form-field class="search-field">
+  <mat-label>Rechercher par jour</mat-label>
+  <input matInput (keyup)="applyFilter($event)">
+</mat-form-field>
+
+<mat-form-field class="search-field">
+  <mat-label>Rechercher par créneau</mat-label>
+  <input matInput (keyup)="applyFilter($event)">
+</mat-form-field>
+
+
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
   
@@ -10,12 +32,23 @@
   <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.benevoleInfo?.prenom }}</td>
 </ng-container>
 
+ <!-- Nom Column -->
+ <ng-container matColumnDef="nom">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom</th>
+  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.benevoleInfo?.nom }}</td>
+</ng-container>
+
 <!-- E-mail Column -->
 <ng-container matColumnDef="email">
   <th mat-header-cell *matHeaderCellDef mat-sort-header>E-mail</th>
   <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.benevoleInfo?.email }}</td>
 </ng-container>
 
+<!-- Tel Column -->
+<ng-container matColumnDef="tel">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Tel</th>
+  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.benevoleInfo?.numTel }}</td>
+</ng-container>
 
 <!-- Espace Column -->
 <ng-container matColumnDef="espace">

@@ -33,17 +33,20 @@ export class LoginComponent implements OnInit {
       this.authService.login(pseudo, password).subscribe(
         (response) => {
           console.log(response);
-
+  
           if (response.token) {
             localStorage.setItem('jwtToken', response.token);
             this.authService.setLoggedInUserPseudo(pseudo);
             console.log("pseudo", pseudo)
             this.userService.getUserRole(pseudo).subscribe((userRoleObject: any) => {
-              this.userRole = userRoleObject.firstRoleId;})
+              this.userRole = userRoleObject.firstRoleId;
+  
               if (this.userRole == 2 || this.userRole == 3) {
-                  this.router.navigate(['/planning-individual']);
+                this.router.navigate(['/planning-individual']);
+              } else {
+                this.router.navigate(['/planning-general']);
               }
-              else this.router.navigate(['/planning-general'])
+            });
           }
   
           // Autres actions à exécuter après une connexion réussie

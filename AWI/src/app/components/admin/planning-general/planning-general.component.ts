@@ -23,8 +23,9 @@ import { UserService } from 'src/app/services/user.service';
     dataSource = new MatTableDataSource<any>([]);
     @ViewChild(MatSort) sort!: MatSort;
   
-    displayedColumns: string[] = ['prenom', 'email','espace', 'jour', 'creneau'];
-    usersLoaded = false; // Variable pour suivre si les utilisateurs ont été chargés
+    displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'espace', 'jour', 'creneau'];
+    usersLoaded = false; 
+    selectedSearchField: string = 'prenom';
   
     constructor(private planningService: InscriptionService, private userService: UserService, private router: Router) {}
   
@@ -114,5 +115,13 @@ import { UserService } from 'src/app/services/user.service';
     console.log("pseudo", pseudo)
     this.router.navigate(['planning-individuel-admin', pseudo]);
 }
+
+applyFilter(event: Event) {
+  const filterValue = (event.target as HTMLInputElement).value;
+  console.log("datasource", this.dataSource);
+  this.dataSource.filter = filterValue.trim().toLowerCase();
+}
+
+
 
 }

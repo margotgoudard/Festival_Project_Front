@@ -35,11 +35,15 @@ export class PlanningComponent implements OnInit {
   placesInscrites: { [key: string]: number } = {};
   aPlusieursEspaces : boolean = false;
   posteId: number | null = null;
+  admin : boolean = false;
+  userRole: number = 0; 
+
 
   constructor(private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
   ngOnInit(): void {
     this.loadData();
+    this.estAdmin();
   }
 
   private async loadData(): Promise<void> {
@@ -313,7 +317,21 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
         console.log('Modification dialog closed with result:', result);
       });
     }
+
+    estAdmin(): boolean {
+      
+      const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
+
+      this.userService.getUserRole(pseudo).subscribe((userRoleObject: any) => {
+        this.userRole = userRoleObject.firstRoleId;
+  
+        if (this.userRole == 1) {
+            this.admin = true;
+        }
+      })
+      return this.admin;
   }
+}
 
 /*inscrireATousLesPostes() {
 
