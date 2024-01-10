@@ -113,5 +113,14 @@ export class AuthService {
     return !!token; // Renvoie true si le token JWT est présent, sinon false.
   }
 
+  logout(): void {
+    const isConfirmed = window.confirm('Êtes-vous sûr de vous déconnecter ?');
 
+    if (isConfirmed) {
+      localStorage.removeItem('jwtToken');
+      this.setLoggedInUserPseudo('');
+
+      console.log('Déconnexion effectuée');
+    }
+  }
 }
