@@ -4,9 +4,10 @@ h2 {
   }
 
   .search-field {
-    width: 300px;
+    width: 200px;
     height: 80px;
-    margin-left : 600px;
+    margin-left : 15px;
+    flex: 1;
   }
   
   /* Ajustez la hauteur de la barre de recherche */
@@ -18,3 +19,11 @@ h2 {
   .mat-form-field-wrapper {
     line-height: 24px; /* Ajustez la hauteur selon vos besoins */
   }
+
+  .search-fields-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    margin : auto;
+  }
+  

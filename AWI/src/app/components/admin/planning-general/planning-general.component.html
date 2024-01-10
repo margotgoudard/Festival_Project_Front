@@ -2,25 +2,28 @@
 <!-- Structure du composant Angular -->
 <h2>Planning Général</h2>
 
-<mat-form-field class="search-field">
-  <mat-label>Rechercher par nom</mat-label>
-  <input matInput (keyup)="applyFilter($event)">
-</mat-form-field>
+<div class="search-fields-container">
+  <mat-form-field class="search-field">
+    <mat-label>Rechercher par nom</mat-label>
+    <input matInput (keyup)="applyFilterNom($event)">
+  </mat-form-field>
 
-<mat-form-field class="search-field">
-  <mat-label>Rechercher par espace</mat-label>
-  <input matInput (keyup)="applyFilter($event)">
-</mat-form-field>
+  <mat-form-field class="search-field">
+    <mat-label>Rechercher par espace</mat-label>
+    <input matInput (keyup)="applyFilterEspace($event)">
+  </mat-form-field>
 
-<mat-form-field class="search-field">
-  <mat-label>Rechercher par jour</mat-label>
-  <input matInput (keyup)="applyFilter($event)">
-</mat-form-field>
+  <mat-form-field class="search-field">
+    <mat-label>Rechercher par jour</mat-label>
+    <input matInput (keyup)="applyFilterJour($event)">
+  </mat-form-field>
 
-<mat-form-field class="search-field">
-  <mat-label>Rechercher par créneau</mat-label>
-  <input matInput (keyup)="applyFilter($event)">
-</mat-form-field>
+  <mat-form-field class="search-field">
+    <mat-label>Rechercher par créneau</mat-label>
+    <input matInput (keyup)="applyFilterCreneau($event)">
+  </mat-form-field>
+</div>
+
 
 
 <div class="mat-elevation-z8">

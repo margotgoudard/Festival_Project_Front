@@ -66,7 +66,7 @@ import { UserService } from 'src/app/services/user.service';
                 // Update the user objects with fetched information
                 this.dataSource.data = results.map((result, index) => {
                   const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
-                  console.log('Poste Info:', posteInfo); // Log posteInfo to the console
+                  console.log('Poste Info:', posteInfo); 
                   console.log('Benevole Info:', result.benevoleInfo);
 
             
@@ -116,12 +116,35 @@ import { UserService } from 'src/app/services/user.service';
     this.router.navigate(['planning-individuel-admin', pseudo]);
 }
 
-applyFilter(event: Event) {
-  const filterValue = (event.target as HTMLInputElement).value;
-  console.log("datasource", this.dataSource);
-  this.dataSource.filter = filterValue.trim().toLowerCase();
+applyFilterNom(event: any) {
+  const filterValue = event.target.value.trim().toLowerCase();
+  this.dataSource.data = this.dataSource.data.filter(item =>
+    item.benevoleInfo.nom.toLowerCase().includes(filterValue)
+  );
 }
 
+applyFilterEspace(event: any) {
+  const filterValue = event.target.value.trim().toLowerCase();
+  this.dataSource.data = this.dataSource.data.filter(item =>
+    item.espaceInfo.libelleEspace.toLowerCase().includes(filterValue)
+  );
+}
+
+applyFilterJour(event: any) {
+  const filterValue = event.target.value.trim().toLowerCase();
+  // Filtrer dans le champ 'jour' si nécessaire
+  this.dataSource.data = this.dataSource.data.filter(item =>
+    item.creneauInfo.jourCreneau.toLowerCase().includes(filterValue)
+  );
+}
+
+applyFilterCreneau(event: any) {
+  const filterValue = event.target.value.trim().toLowerCase();
+  // Filtrer dans le champ 'creneau' si nécessaire
+  this.dataSource.data = this.dataSource.data.filter(item =>
+    item.creneau.heureDebut.toLowerCase().includes(filterValue)
+  );
+}
 
 
 }
