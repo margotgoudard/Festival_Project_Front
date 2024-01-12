@@ -64,7 +64,7 @@ export class InscriptionAdminComponent {
         this.userService.getUserRegistrations(benevolePseudo).subscribe(
           (registrations) => {
             const isAlreadyRegistered = registrations.some(registration =>
-              registration.Creneau.idC === creneau.idC && registration.Espace.idEspace === idEspace
+              registration.Creneau.idC === creneau.idC
             );
   
             if (!isAlreadyRegistered) {
