@@ -39,6 +39,7 @@ import { InscriptionAdminComponent } from './components/admin/inscription-admin/
 import { InscriptionDialogEspacesAdminComponent } from './components/admin/inscription-dialog-espaces-admin/inscription-dialog-espaces-admin.component';
 import { EspaceDialogComponent } from './components/espace-dialog/espace-dialog.component';
 import { ModifierPlacesDialogComponent } from './components/modifier-places-dialog/modifier-places-dialog.component';
+import { ListeBenevolesComponent } from './components/liste-benevoles/liste-benevoles.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { ModifierPlacesDialogComponent } from './components/modifier-places-dial
     InscriptionAdminComponent,
     InscriptionDialogEspacesAdminComponent,
     EspaceDialogComponent,
-    ModifierPlacesDialogComponent
+    ModifierPlacesDialogComponent,
+    ListeBenevolesComponent
   ],
   imports: [
     BrowserModule,
