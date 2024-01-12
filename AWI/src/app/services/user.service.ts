@@ -66,5 +66,9 @@ export class UserService {
     return this.http.delete(url);
   }
 
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/benevoles`)
+  }
+
 
 }

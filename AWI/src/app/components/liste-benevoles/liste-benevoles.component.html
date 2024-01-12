@@ -1,0 +1,29 @@
+<div>
+    <input type="text" [(ngModel)]="recherche" placeholder="Rechercher par nom ou prénom" (input)="filtrerBenevoles()">
+  </div>
+  
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="nom">
+      <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
+      <mat-cell *matCellDef="let benevole" (click)="afficherPlanningIndividuel(benevole.pseudo)">{{ benevole.nom }}</mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="prenom">
+      <mat-header-cell *matHeaderCellDef>Prénom</mat-header-cell>
+      <mat-cell *matCellDef="let benevole" (click)="afficherPlanningIndividuel(benevole.pseudo)">{{ benevole.prenom }}</mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef>Mail</mat-header-cell>
+      <mat-cell *matCellDef="let benevole" (click)="afficherPlanningIndividuel(benevole.pseudo)">{{ benevole.email }}</mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="numTel">
+      <mat-header-cell *matHeaderCellDef>Numéro de téléphone</mat-header-cell>
+      <mat-cell *matCellDef="let benevole" (click)="afficherPlanningIndividuel(benevole.pseudo)">{{ benevole.numTel }}</mat-cell>
+    </ng-container>
+  
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  
