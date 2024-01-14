@@ -64,12 +64,12 @@ export class InscriptionAdminComponent {
         this.userService.getUserRegistrations(benevolePseudo).subscribe(
           (registrations) => {
             const isAlreadyRegistered = registrations.some(registration =>
-              registration.Creneau.idC === creneau.idC && registration.Espace.idEspace === idEspace
+              registration.Creneau.idC === creneau.idC
             );
   
             if (!isAlreadyRegistered) {
               // If not already registered, proceed with the inscription
-              this.inscriptionService.inscrire(benevolePseudo, creneau.idC, idEspace).subscribe(
+              this.inscriptionService.inscrireByAdmin(benevolePseudo, creneau.idC, idEspace).subscribe(
                   (response) => {
                       // Gérez la réussite de l'inscription ici
                       console.log('Inscription réussie :', response);

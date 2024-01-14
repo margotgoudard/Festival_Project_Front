@@ -8,6 +8,8 @@ import { PlanningIndividualComponent } from './components/edt/planning-individua
 import { PlanningGeneralComponent } from './components/admin/planning-general/planning-general.component';
 import { PlanningIndividuelAdminComponent } from './components/admin/planning-individuel-admin/planning-individuel-admin.component';
 import { ListeBenevolesComponent } from './components/liste-benevoles/liste-benevoles.component';
+import { InscriptionAttenteComponent } from './components/admin/inscription-attente/inscription-attente.component';
+import { InscriptionAttenteBenevoleComponent } from './components/inscription-attente-benevole/inscription-attente-benevole.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,8 +24,12 @@ const routes: Routes = [
   { path: 'planning-general', component:PlanningGeneralComponent},
   { path: 'planning-individual/:pseudo', component: PlanningIndividualComponent },
   { path: 'planning-individuel-admin/:pseudo', component: PlanningIndividuelAdminComponent },
-  { path: 'liste', component: ListeBenevolesComponent }
- 
+  { path: 'inscription-attente', component: InscriptionAttenteComponent },
+  { path: 'inscription-attente-benevole', component: InscriptionAttenteBenevoleComponent },
+  { path: 'liste', component: ListeBenevolesComponent } 
+
+
+
 
 ];
 
