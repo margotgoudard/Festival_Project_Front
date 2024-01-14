@@ -1,0 +1,144 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
+import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
+import { InscriptionService } from 'src/app/services/inscription.service';
+import { UserService } from 'src/app/services/user.service';
+
+@Component({
+  selector: 'app-inscription-attente',
+  templateUrl: './inscription-attente.component.html',
+  styleUrls: ['./inscription-attente.component.scss']
+})
+export class InscriptionAttenteComponent implements OnInit {
+
+  dataSource = new MatTableDataSource<any>([]);
+  @ViewChild(MatSort) sort!: MatSort;
+
+  displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'espace', 'jour', 'creneau'];
+  usersLoaded = false; 
+  selectedSearchField: string = 'prenom';
+
+  constructor(private planningService: InscriptionService, private userService: UserService, private router: Router) {}
+
+  ngOnInit() {
+    // Charge les utilisateurs uniquement si ce n'est pas déjà fait
+    if (!this.usersLoaded) {
+      this.loadUsers();
+    }
+  }
+
+  ngAfterViewInit() {
+    // Applique le tri uniquement si les utilisateurs ont été chargés
+    if (this.usersLoaded) {
+      this.dataSource.sort = this.sort;
+    }
+  }
+
+  loadUsers() {
+    this.userService.getUsersRegistrationByAdmin().subscribe(
+      (userRegistrations) => {
+        const mappedUsers = userRegistrations.map(registration => ({
+          benevolePseudo: registration.benevolePseudo,
+          espaceId: registration.espaceId,
+          creneauId: registration.creneauId,
+          isAffected: registration.isAffected,
+          isAccepted: registration.isAccepted
+        })); 
+  
+        // Use forkJoin to wait for all requests to complete
+        forkJoin(mappedUsers.map(user => 
+          forkJoin({
+            benevoleInfo: this.userService.getUserByPseudo(user.benevolePseudo),
+            creneauInfo: this.planningService.getCreneauById(user.creneauId),
+            espaceInfo: this.planningService.getEspaceById(user.espaceId),
+          })
+          )).subscribe(
+            (results) => {
+              // Update the user objects with fetched information
+              this.dataSource.data = results.map((result, index) => {
+                const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
+                console.log('Poste Info:', posteInfo); 
+                console.log('Benevole Info:', result.benevoleInfo);
+
+          
+                return {
+                  benevoleInfo: result.benevoleInfo,
+                  creneauInfo: result.creneauInfo,
+                  espaceInfo: result.espaceInfo,
+                  posteInfo: posteInfo,
+                  ...mappedUsers[index]
+                };
+              });
+         
+              this.usersLoaded = true;
+            },
+            (error) => {
+              console.error('Error loading additional user info', error);
+            }
+          );
+          }
+)}            
+
+/*onSortAttributeChange(event: any) {
+  // Update the current sorting attribute
+  this.currentSortAttribute = event.value;
+
+  // Apply sorting based on the selected attribute
+  this.applySorting();
+}*/
+
+/*
+applySorting() {
+  // Check if dataSource and sort are defined
+  if (this.dataSource && this.dataSource.sort) {
+    // Sort the data based on the current attribute and direction
+    this.dataSource.sort.sort({
+      id: this.currentSortAttribute,
+      start: 'asc', // Initial direction or 'asc' as needed
+      disableClear: false,
+    });
+  } else {
+    console.error('dataSource or sort is null');
+  }
+}*/
+
+afficherPlanningIndividuel(pseudo: string) {
+  console.log("pseudo", pseudo)
+  this.router.navigate(['planning-individuel-admin', pseudo]);
+}
+
+applyFilterNom(event: any) {
+const filterValue = event.target.value.trim().toLowerCase();
+this.dataSource.data = this.dataSource.data.filter(item =>
+  item.benevoleInfo.nom.toLowerCase().includes(filterValue)
+);
+}
+
+applyFilterEspace(event: any) {
+const filterValue = event.target.value.trim().toLowerCase();
+this.dataSource.data = this.dataSource.data.filter(item =>
+  item.espaceInfo.libelleEspace.toLowerCase().includes(filterValue)
+);
+}
+
+applyFilterJour(event: any) {
+const filterValue = event.target.value.trim().toLowerCase();
+// Filtrer dans le champ 'jour' si nécessaire
+this.dataSource.data = this.dataSource.data.filter(item =>
+  item.creneauInfo.jourCreneau.toLowerCase().includes(filterValue)
+);
+}
+
+applyFilterCreneau(event: any) {
+const filterValue = event.target.value.trim().toLowerCase();
+// Filtrer dans le champ 'creneau' si nécessaire
+this.dataSource.data = this.dataSource.data.filter(item =>
+  item.creneau.heureDebut.toLowerCase().includes(filterValue)
+);
+}
+
+
+}

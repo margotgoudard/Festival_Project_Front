@@ -65,7 +65,7 @@ export class InscriptionDialogEspacesAdminComponent {
   
             if (!isAlreadyRegistered) {
               // If not already registered, proceed with the inscription
-              this.inscriptionService.inscrire(benevolePseudo, creneau.idC, idEspace).subscribe(
+              this.inscriptionService.inscrireByAdmin(benevolePseudo, creneau.idC, idEspace).subscribe(
                   (response) => {
                       // Gérez la réussite de l'inscription ici
                       console.log('Inscription réussie :', response);

@@ -23,6 +23,16 @@ export class InscriptionService {
     return this.http.post(url, {});
 }
 
+  updateRegistration(benevolePseudo: string, creneauId: number, espaceId: number): Observable<void> {
+    const url = `${this.apiUrl}/inscription-update/${benevolePseudo}/${creneauId}/${espaceId}`;
+    return this.http.put<void>(url, {});
+  }
+
+  inscrireByAdmin(benevolePseudo: string, creneauId: number, espaceId: number) {
+    const url = `${this.apiUrl}/inscriptionByAdmin/${benevolePseudo}/${creneauId}/${espaceId}`;
+    return this.http.post(url, {});
+  }
+
   getPosteReferent(espaceId: number): Observable<User[]> {
     const url = `${this.apiUrl}/getPosteReferent/${espaceId}`; 
     return this.http.get<User[]>(url);

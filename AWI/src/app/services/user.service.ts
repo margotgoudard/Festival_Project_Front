@@ -40,6 +40,17 @@ export class UserService {
     return this.http.get<Inscription[]>(url);
   }
 
+  getUsersRegistrationByAdmin(): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/users-registrations-admin`;
+    return this.http.get<Inscription[]>(url);
+  }
+
+  getUserRegistrationWaiting(pseudo: string): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/user-registrations-admin/${pseudo}`;
+    return this.http.get<Inscription[]>(url);
+  }
+
+
   getUserByPseudo(pseudo: string): Observable<User> {
     const url = `${this.apiUrl}/users?pseudo=${pseudo}`;
     return this.http.get<User>(url);
