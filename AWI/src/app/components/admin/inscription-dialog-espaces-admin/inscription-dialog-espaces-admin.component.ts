@@ -8,6 +8,8 @@ import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { InscriptionReussiDialogComponent } from '../../inscription-reussi-dialog/inscription-reussi-dialog.component';
+import { Jeu } from 'src/app/model/jeu.model';
+import { JeuService } from 'src/app/services/jeu.service';
 
 @Component({
   selector: 'inscription-dialog-espaces-admin',
@@ -19,9 +21,10 @@ export class InscriptionDialogEspacesAdminComponent {
   posteDetails: any; 
   referents: User[] = []; 
   previousVolunteers: User[] = []; 
+  jeux: Jeu[] = [];
 
   
-  constructor( private authService : AuthService, private userService:UserService, 
+  constructor( private jeuService: JeuService, private authService : AuthService, private userService:UserService, 
     public dialogRef: MatDialogRef<InscriptionDialogEspacesAdminComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private inscriptionService: InscriptionService, private dialog: MatDialog
   ) {}
@@ -34,9 +37,13 @@ export class InscriptionDialogEspacesAdminComponent {
       .subscribe((referentData) => {
         this.referents = referentData;
       });
-      
     
-        this.inscriptionService.getPreviousVolunteers(this.data.creneau.idC, idEspace)
+    this.jeuService.getJeuxByEspace(idEspace)
+      .subscribe((jeuData) => {
+        this.jeux = jeuData;
+      })
+      
+    this.inscriptionService.getPreviousVolunteers(this.data.creneau.idC, idEspace)
       .subscribe((volunteersData) => {
         this.previousVolunteers = volunteersData;
       });

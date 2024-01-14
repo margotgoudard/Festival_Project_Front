@@ -14,4 +14,10 @@
   <ul>
     <li *ngFor="let volunteer of previousVolunteers">{{ volunteer.nom }} {{ volunteer.prenom }}</li>
   </ul>
+
+  <p> Jeux </p>
+  <ul>
+    <li *ngFor="let jeu of jeux">{{ jeu.nomJeu }} </li>
+  </ul>
+  
   <button (click)="onInscriptionClick()">S'inscrire</button>
