@@ -1,3 +1,6 @@
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 [build]
-command = "ng build --prod"
-publish = "dist/awi"
+  publish = "dist/awi"
+  command = "npm run build"  # Utilisez npm run build au lieu de ng build --prod
