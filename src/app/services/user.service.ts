@@ -10,7 +10,7 @@ import { Inscription } from '../interfaces/inscription.interfaces';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com/'; 
+  private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com'; 
   public userPseudo : string ='';
   public userId : number = 0;
 

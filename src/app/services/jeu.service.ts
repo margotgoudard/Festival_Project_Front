@@ -9,8 +9,8 @@ import { Jeu } from '../model/jeu.model';
 export class JeuService {
 
 
-  private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com/';
-  
+  private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com'; // Remplacez par l'URL de votre API.
+    
   constructor(private http: HttpClient) {}
 
   getJeuxByEspace(idEspace: number): Observable<Jeu[]> {

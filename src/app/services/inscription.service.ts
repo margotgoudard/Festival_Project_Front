@@ -14,8 +14,8 @@ import { User } from '../model/user.model';
 })
 export class InscriptionService {
 
-  private apiUrl = 'http://localhost:3000';
-
+  private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com'; // Remplacez par l'URL de votre API.
+  
   constructor(private dialog: MatDialog, private http: HttpClient) { }
 
   inscrire(benevolePseudo: string, creneauId: number, espaceId: number) {

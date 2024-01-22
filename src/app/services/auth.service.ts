@@ -8,7 +8,7 @@ import { Role } from '../model/role.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com/'; // Remplacez par l'URL de votre API.
+  private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com'; // Remplacez par l'URL de votre API.
   private currentUserPseudo: string = ''; // Declare currentUser property
 
   constructor(private http: HttpClient) {}
