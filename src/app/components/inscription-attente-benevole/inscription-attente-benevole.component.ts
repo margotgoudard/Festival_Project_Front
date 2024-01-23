@@ -31,57 +31,78 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
     ngOnInit() {
       const loggedInUserPseudo = this.authService.getLoggedInUserPseudo();
       this.pseudo = loggedInUserPseudo !== null ? loggedInUserPseudo : '';
-      this.loadUsers();
+      this.loadData();
     }
   
   
-    loadUsers() {
-      this.userService.getUserRegistrationWaiting(this.pseudo).subscribe(
-        (userRegistrations) => {
-          const mappedUsers = userRegistrations.map(registration => ({
+    loadData() {
+      const userRegistrations$ = this.userService.getUserRegistrationWaiting(this.pseudo);
+      const candidatureWaiting$ = this.userService.getCandidatureWaiting(this.pseudo);
+  
+      forkJoin({
+        userRegistrations: userRegistrations$,
+        candidatureWaiting: candidatureWaiting$
+      }).subscribe(
+        ({ userRegistrations, candidatureWaiting }) => {
+          const mappedUserRegistrations = userRegistrations.map(registration => ({
             benevolePseudo: registration.benevolePseudo,
             espaceId: registration.espaceId,
             creneauId: registration.creneauId,
             isAffected: registration.isAffected,
-            isAccepted: registration.isAccepted
-          })); 
-    
-          // Use forkJoin to wait for all requests to complete
-          forkJoin(mappedUsers.map(user => 
-            forkJoin({
-              benevoleInfo: this.userService.getUserByPseudo(user.benevolePseudo),
-              creneauInfo: this.planningService.getCreneauById(user.creneauId),
-              espaceInfo: this.planningService.getEspaceById(user.espaceId),
-            })
-            )).subscribe(
-              (results) => {
-                // Update the user objects with fetched information
-                this.dataSource.data = results.map((result, index) => {
-                  const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
-                  console.log('Poste Info:', posteInfo); 
-                  console.log('Benevole Info:', result.benevoleInfo);
+            isAccepted: registration.isAccepted,
+            isRegistration: true,
+          }));
   
-            
-                  return {
-                    benevoleInfo: result.benevoleInfo,
-                    creneauInfo: result.creneauInfo,
-                    espaceInfo: result.espaceInfo,
-                    posteInfo: posteInfo,
-                    inscriptionId: userRegistrations[index].id,
-                    inscriptionEspaceId: userRegistrations[index].espaceId,
-                    inscriptionCreneauId: userRegistrations[index].creneauId,
-                    ...mappedUsers[index]
-                  };
-                });
-           
-                this.usersLoaded = true;
-              },
-              (error) => {
-                console.error('Error loading additional user info', error);
-              }
-            );
+          const mappedCandidatureWaiting = candidatureWaiting.map(candidature => ({
+            benevolePseudo: candidature.benevolePseudo,
+            espaceId: candidature.espaceId,
+            creneauId: candidature.creneauId,
+            isAffected: candidature.isAffected,
+            isAccepted: candidature.isAccepted,
+            isRegistration: false,
+          }));
+  
+          const combinedData = [...mappedUserRegistrations, ...mappedCandidatureWaiting];
+  
+          forkJoin(
+            combinedData.map(data =>
+              forkJoin({
+                benevoleInfo: this.userService.getUserByPseudo(data.benevolePseudo),
+                creneauInfo: this.planningService.getCreneauById(data.creneauId),
+                espaceInfo: this.planningService.getEspaceById(data.espaceId),
+              })
+            )
+          ).subscribe(
+            (results) => {
+              this.dataSource.data = results.map((result, index) => {
+                const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
+  
+                return {
+                  benevoleInfo: result.benevoleInfo,
+                  creneauInfo: result.creneauInfo,
+                  espaceInfo: result.espaceInfo,
+                  posteInfo: posteInfo,
+                  inscriptionId: userRegistrations[index]?.id,
+                  inscriptionEspaceId: userRegistrations[index]?.espaceId,
+                  inscriptionCreneauId: userRegistrations[index]?.creneauId,
+                  ...mappedUserRegistrations[index],
+                };
+              });
+  
+              this.usersLoaded = true;
+            },
+            (error) => {
+              console.error('Error loading additional user info', error);
             }
-  )}            
+          );
+        },
+        (error) => {
+          console.error('Error loading data', error);
+        }
+      );
+    }
+  
+    
 
   validerInscription(benevolePseudo: string, creneauId: number, espaceId: number): void {
     this.planningService.updateRegistration(benevolePseudo, creneauId, espaceId).subscribe(

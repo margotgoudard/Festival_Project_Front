@@ -6,6 +6,10 @@ import { forkJoin } from 'rxjs';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { InscriptionService } from 'src/app/services/inscription.service';
 import { UserService } from 'src/app/services/user.service';
+import { InscriptionReussiDialogComponent } from '../../inscription-reussi-dialog/inscription-reussi-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { Inscription } from 'src/app/interfaces/inscription.interfaces';
+import { CandidaterService } from 'src/app/services/candidater.service';
 
 @Component({
   selector: 'app-inscription-attente',
@@ -17,17 +21,16 @@ export class InscriptionAttenteComponent implements OnInit {
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'espace', 'jour', 'creneau'];
+  displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'espace', 'jour', 'creneau', 'action'];
   usersLoaded = false; 
   selectedSearchField: string = 'prenom';
 
-  constructor(private planningService: InscriptionService, private userService: UserService, private router: Router) {}
+  constructor(private dialog: MatDialog,private candidatureService: CandidaterService, private planningService: InscriptionService, private userService: UserService, private router: Router) {}
 
   ngOnInit() {
     // Charge les utilisateurs uniquement si ce n'est pas déjà fait
     if (!this.usersLoaded) {
-      this.loadUsers();
-    }
+      this.loadData();    }
   }
 
   ngAfterViewInit() {
@@ -37,50 +40,109 @@ export class InscriptionAttenteComponent implements OnInit {
     }
   }
 
-  loadUsers() {
-    this.userService.getUsersRegistrationByAdmin().subscribe(
-      (userRegistrations) => {
-        const mappedUsers = userRegistrations.map(registration => ({
+  loadData() {
+    const userRegistrations$ = this.userService.getUsersRegistrationByAdmin();
+    const candidatureWaiting$ = this.userService.getAllCandidaturesWainting();
+  
+    forkJoin({ userRegistrations$, candidatureWaiting$ }).subscribe(
+      (result: { userRegistrations$: Inscription[]; candidatureWaiting$: Inscription[] }) => {
+        const userRegistrations = result.userRegistrations$;
+        const candidatureWaiting = result.candidatureWaiting$;
+  
+        const mappedUserRegistrations = userRegistrations.map(registration => ({
           benevolePseudo: registration.benevolePseudo,
           espaceId: registration.espaceId,
           creneauId: registration.creneauId,
           isAffected: registration.isAffected,
-          isAccepted: registration.isAccepted
-        })); 
+          isAccepted: registration.isAccepted,
+          isRegistration: true,
+        }));
   
-        // Use forkJoin to wait for all requests to complete
-        forkJoin(mappedUsers.map(user => 
-          forkJoin({
-            benevoleInfo: this.userService.getUserByPseudo(user.benevolePseudo),
-            creneauInfo: this.planningService.getCreneauById(user.creneauId),
-            espaceInfo: this.planningService.getEspaceById(user.espaceId),
-          })
-          )).subscribe(
-            (results) => {
-              // Update the user objects with fetched information
-              this.dataSource.data = results.map((result, index) => {
-                const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
-                console.log('Poste Info:', posteInfo); 
-                console.log('Benevole Info:', result.benevoleInfo);
-
-          
-                return {
-                  benevoleInfo: result.benevoleInfo,
-                  creneauInfo: result.creneauInfo,
-                  espaceInfo: result.espaceInfo,
-                  posteInfo: posteInfo,
-                  ...mappedUsers[index]
-                };
-              });
-         
-              this.usersLoaded = true;
-            },
-            (error) => {
-              console.error('Error loading additional user info', error);
-            }
-          );
+        const mappedCandidatureWaiting = candidatureWaiting.map(candidature => ({
+          benevolePseudo: candidature.benevolePseudo,
+          espaceId: candidature.espaceId,
+          creneauId: candidature.creneauId,
+          isAffected: candidature.isAffected,
+          isAccepted: candidature.isAccepted,
+          isRegistration: false,
+        }));
+  
+        const combinedData = [...mappedUserRegistrations, ...mappedCandidatureWaiting];
+  
+        forkJoin(
+          combinedData.map(data =>
+            forkJoin({
+              benevoleInfo: this.userService.getUserByPseudo(data.benevolePseudo),
+              creneauInfo: this.planningService.getCreneauById(data.creneauId),
+              espaceInfo: this.planningService.getEspaceById(data.espaceId),
+            })
+          )
+        ).subscribe(
+          (results) => {
+            this.dataSource.data = results.map((result, index) => {
+              const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
+  
+              return {
+                benevoleInfo: result.benevoleInfo,
+                creneauInfo: result.creneauInfo,
+                espaceInfo: result.espaceInfo,
+                posteInfo: posteInfo,
+                inscriptionId: candidatureWaiting[index]?.id,
+                inscriptionEspaceId: candidatureWaiting[index]?.espaceId,
+                inscriptionCreneauId: candidatureWaiting[index]?.creneauId,
+                ...mappedCandidatureWaiting[index],
+                // Add properties for candidatureWaiting as needed
+              };
+            });
+  
+            this.usersLoaded = true;
+          },
+          (error) => {
+            console.error('Error loading additional user info', error);
           }
-)}            
+        );
+      },
+      (error) => {
+        console.error('Error loading data', error);
+      }
+    );
+  }
+  
+  validerCandidature(benevolePseudo: string, creneauId: number, espaceId: number): void {
+    this.candidatureService.updateCandidature(benevolePseudo, creneauId, espaceId).subscribe(
+      () => {
+        const dialogRef = this.dialog.open(InscriptionReussiDialogComponent, {
+          data: { message: 'Inscription réussie' }
+        });
+
+        // After the dialog is closed, trigger ngOnInit
+        dialogRef.afterClosed().subscribe(result => {
+          this.ngOnInit();
+        });
+      },
+      (error) => {
+        console.error('Erreur lors de la validation de l\'inscription', error);
+      }
+    );
+  }
+
+  supprimerCandidature(id: number): void {
+    this.userService.deleteUserCandidature(id).subscribe({
+      next: (response) => {
+        console.log('Suppression réussie :', response);
+        const dialogRef = this.dialog.open(InscriptionReussiDialogComponent, {
+          data: { message: 'Suppression réussie' }
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+          this.ngOnInit();
+        });
+      },
+      error: (error) => {
+        console.error('Error deleting user registration', error);
+      }
+    });
+  }
 
 /*onSortAttributeChange(event: any) {
   // Update the current sorting attribute

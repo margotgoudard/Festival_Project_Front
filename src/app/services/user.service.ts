@@ -10,7 +10,9 @@ import { Inscription } from '../interfaces/inscription.interfaces';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com'; 
+  //private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com'; 
+  private apiUrl = 'http://localhost:3000'; 
+
   public userPseudo : string ='';
   public userId : number = 0;
 
@@ -50,7 +52,16 @@ export class UserService {
     return this.http.get<Inscription[]>(url);
   }
 
+  getCandidatureWaiting(pseudo: string): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/candidature/${pseudo}`;
+    return this.http.get<Inscription[]>(url);
+  }
 
+  getAllCandidaturesWainting(): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/candidatures`;
+    return this.http.get<Inscription[]>(url);
+  }
+  
   getUserByPseudo(pseudo: string): Observable<User> {
     const url = `${this.apiUrl}/users?pseudo=${pseudo}`;
     return this.http.get<User>(url);
@@ -74,6 +85,11 @@ export class UserService {
 
   deleteUserRegistration(id: number): Observable<any> {
     const url = `${this.apiUrl}/inscriptions/${id}`;
+    return this.http.delete(url);
+  }
+
+  deleteUserCandidature(id: number): Observable<any> {
+    const url = `${this.apiUrl}/candidature/${id}`;
     return this.http.delete(url);
   }
 
