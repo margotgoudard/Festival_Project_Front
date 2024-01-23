@@ -14,11 +14,13 @@
         <td></td>
         <ng-container *ngFor="let jour of jours">
           <td *ngFor="let creneau of getCreneauxByJour(jour)">
-            {{ creneau.heureDebut }} - {{ creneau.heureFin }}
+            <div class="creneau-container">
+              {{ creneau.heureDebut }} - {{ creneau.heureFin }}
+              <button (click)="onCreneauSelect(creneau)" *ngIf="userRole != 1">Selectionner</button>
+            </div>
           </td>
         </ng-container>
-      </tr>
-      
+      </tr>      
       <!-- Data rows for each poste and their available spaces -->
       <ng-container *ngFor="let poste of postes">
         <tr>

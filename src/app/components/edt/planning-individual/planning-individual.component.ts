@@ -25,7 +25,7 @@ export class PlanningIndividualComponent implements OnInit {
   userName: string = '';
   dataSource = new MatTableDataSource<any>([]);
 
-  displayedColumns: string[] = ['poste', 'jour', 'creneau'];
+  displayedColumns: string[] = ['poste', 'jour', 'creneau', 'actions'];
 
   constructor(private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
 
@@ -76,7 +76,20 @@ export class PlanningIndividualComponent implements OnInit {
   deleteUserRegistration(registration: UserRegistration) {
     const confirmation = confirm('Voulez-vous vraiment supprimer cette inscription ?');
     if (confirmation) {
-      this.userService.deleteUserRegistration(registration.id);
+      this.userService.deleteUserRegistration(registration.id).subscribe(
+        (response) => {
+          console.log('Response from deleteUserRegistration:', response);
+          // Peut-être, vous pouvez mettre à jour votre tableau local après la suppression
+          const index = this.userRegistrations.findIndex(reg => reg.id === registration.id);
+          if (index !== -1) {
+            this.userRegistrations.splice(index, 1);
+            this.dataSource.data = this.userRegistrations;
+          }
+        },
+        (error) => {
+          console.error('Error calling deleteUserRegistration:', error);
+        }
+      );
     }
   }
 }

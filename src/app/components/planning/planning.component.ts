@@ -16,6 +16,8 @@ import { PosteDialogComponent } from '../poste-dialog/poste-dialog.component';
 import { EspaceDialogComponent } from '../espace-dialog/espace-dialog.component';
 import { ModifierPlacesDialogComponent } from '../modifier-places-dialog/modifier-places-dialog.component';
 import { CreneauDialogComponent } from '../creneau-dialog/creneau-dialog.component';
+import { CandidaterService } from 'src/app/services/candidater.service';
+import { InscriptionReussiDialogComponent } from '../inscription-reussi-dialog/inscription-reussi-dialog.component';
 
 @Component({
   selector: 'app-planning',
@@ -39,7 +41,7 @@ export class PlanningComponent implements OnInit {
   userRole: number = 0; 
 
 
-  constructor(private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
+  constructor(private candidaterService: CandidaterService, private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
   ngOnInit(): void {
     this.loadData();
@@ -331,8 +333,60 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
       })
       return this.admin;
   }
+
+selectedCreneaux: Creneau[] = []; // Track selected creneaux
+
+onCreneauSelect(creneau: Creneau): void {
+  // Toggle the selection status
+  const index = this.selectedCreneaux.findIndex(selected => selected.idC === creneau.idC);
+
+  if (index !== -1) {
+    // Creneau is already selected, remove it
+    this.selectedCreneaux.splice(index, 1);
+  } else {
+    // Creneau is not selected, add it to the selectedCreneaux array
+    this.selectedCreneaux.push(creneau);
+  }
+
+  // Handle the insertion to the database
+  this.candidaterVolunteers();
 }
 
+candidaterVolunteers(): void {
+  const benevolePseudo = this.authService.getLoggedInUserPseudo() || '';
+  this.selectedCreneaux.forEach(creneau => {
+    // Assuming candidaterService.candidaterVolunteer method exists
+    this.candidaterService.candidaterVolunteer(benevolePseudo, creneau.idC).subscribe(
+      () => {
+        console.log('Volunteer candidated successfully for creneau', creneau);
+
+        // Open the existing MatDialog with your component after successful candidature
+        this.openInscriptionReussiDialog(creneau);
+      },
+      error => {
+        console.error('Error candidating volunteer:', error);
+      }
+    );
+  });
+
+  // Clear the selected creneaux array after candidating
+  this.selectedCreneaux = [];
+}
+
+// Fonction pour ouvrir le MatDialog existant avec votre composant
+openInscriptionReussiDialog(creneau: Creneau): void {
+  const dialogRef = this.dialog.open(InscriptionReussiDialogComponent, {
+    data: {
+      message: `Vous venez de vous déclarez flexible pour le créneau ${creneau.heureDebut} - ${creneau.heureFin} le ${creneau.jourCreneau}`
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    console.log('Dialog closed with result:', result);
+    // Handle any logic after the dialog is closed
+  });
+}
+}
 /*inscrireATousLesPostes() {
 
   if (this.selectedButtons.length === 0) {
