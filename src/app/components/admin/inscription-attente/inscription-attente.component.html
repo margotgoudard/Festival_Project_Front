@@ -72,18 +72,18 @@
 <ng-container matColumnDef="action">
   <th mat-header-cell *matHeaderCellDef>Action</th>
   <td mat-cell *matCellDef="let user">
-    <ng-container *ngIf="user.isRegistration; else candidatureActions">
-      <!-- Display text for registration -->
-      <span>Attente de validation de {{ user.benevoleInfo?.pseudo }}</span>
-    </ng-container>
-    <ng-template #candidatureActions>
-      <!-- Display buttons for candidature -->
-      <button mat-icon-button (click)="validerCandidature(user.benevoleInfo?.pseudo, user.creneauInfo?.idC, user.espaceInfo?.idEspace)">
+    <ng-container *ngIf="user.isRegistration === false ; else candidatureActions">
+       <!-- Display buttons for candidature -->
+       <button mat-icon-button (click)="validerCandidature(user.benevoleInfo?.pseudo, user.creneauInfo?.idC, user.espaceInfo?.idEspace)">
         <mat-icon color="primary">check</mat-icon>
       </button>
       <button mat-icon-button (click)="supprimerCandidature(user.inscriptionId)">
         <mat-icon color="warn">clear</mat-icon>
       </button>
+    </ng-container>
+    <ng-template #candidatureActions>
+     <!-- Display text for registration -->
+     <span>Attente de validation de {{ user.benevoleInfo?.pseudo }}</span>
     </ng-template>
   </td>
 </ng-container>

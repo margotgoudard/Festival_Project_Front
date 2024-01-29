@@ -1,4 +1,6 @@
-<h2>Planning Individuel de {{ userName }}</h2>
+<a [routerLink]="['/profile', user?.pseudo ]">
+    <h2>Planning Individuel de {{ userName }}</h2>
+</a>
 
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">

@@ -11,37 +11,43 @@
   width: 100%; /* Ajustez la largeur selon vos besoins */
 }
 
-.profil-benevole h2 {
-  text-align: center;
-  color: #333;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.informations-personnelles p,
-.associations p,
-.pseudo p,
-.preferences p {
-  margin: 5px 0;
+.profil-benevole {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center; /* Ajout de cette ligne pour centrer les paragraphes */
 }
 
-.associations ul {
-  list-style: disc;
-  padding-left: 20px;
+h2 {
+  color: #333333;
 }
 
-.pseudo {
-  background-color: #e0e0e0;
-  padding: 5px;
-  border-radius: 5px;
+strong {
+  color: #555555;
 }
 
-.preferences p {
-  margin-bottom: 10px;
+p {
+  margin: 10px 0;
 }
 
-.preferences p strong {
-  color: #555;
+label {
+  display: block;
+  margin-top: 10px;
 }
 
-.preferences p:last-child {
-  margin-bottom: 0;
+input[type="checkbox"] {
+  margin-right: 5px;
 }
+

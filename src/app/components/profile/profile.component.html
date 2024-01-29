@@ -13,4 +13,17 @@
     <p><strong>Taille de T-shirt :</strong> {{ taille }}</p>
     <p><strong>Végétarien(ne) :</strong> {{ vegetarian ? 'Oui' : 'Non' }}</p>
   </div>
+  
+  <div class="referent">
+    <ng-container *ngIf="roleUser === 3; else notReferent">
+      <p>Referent : Oui</p>
+    </ng-container>
+    <ng-template #notReferent>
+      <p>Referent : Non</p>
+    </ng-template>
+    <label>
+      <input type="checkbox" *ngIf="role === 1" [checked]="roleUser === 3" (change)="onCheckboxChange($event)"> Référent
+    </label>
+  </div>
+
 </div>

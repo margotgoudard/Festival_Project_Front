@@ -125,7 +125,26 @@ private initPlacesDisponibles(): void {
 
   getCreneauxByJour(jour: string): Creneau[] {
     const day = this.planning.find(item => item.jour === jour);
-    return day ? day.creneaux : [];
+  
+    if (day) {
+      // Fonction de comparaison pour trier les créneaux par heure de début
+      const comparaison = (creneauA: Creneau, creneauB: Creneau) => {
+        const heureDebutA = this.convertirHeureEnNombre(creneauA.heureDebut);
+        const heureDebutB = this.convertirHeureEnNombre(creneauB.heureDebut);
+        return heureDebutA - heureDebutB;
+      };
+  
+      // Trier les créneaux par ordre chronologique
+      return day.creneaux.sort(comparaison);
+    } else {
+      return [];
+    }
+  }
+  
+  // Fonction utilitaire pour convertir l'heure de format "10h" en nombre
+  convertirHeureEnNombre(heure: string): number {
+    const heureSansH = heure.replace('h', '');
+    return parseInt(heureSansH, 10);
   }
 
   

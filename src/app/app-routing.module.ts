@@ -18,6 +18,7 @@ const routes: Routes = [
     component: ProfileComponent,
   },
   { path: 'profile', component: ProfileComponent },
+  { path: 'profile/:pseudo', component: ProfileComponent },
   { path: 'planning', component: PlanningComponent },
   { path: 'inscription', component: InscriptionComponent },
   { path: 'planning-individual', component: PlanningIndividualComponent },
