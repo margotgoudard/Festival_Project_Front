@@ -22,51 +22,120 @@ export class ProfileComponent implements OnInit {
   pseudo: string = '';
   taille: string = '';
   vegetarian: boolean = false;
+  role: number = 0;
+  roleUser: number = 0;
 
-    constructor(private authService: AuthService, private route: ActivatedRoute, private userService: UserService, private dialog: MatDialog, private router: Router) { 
-    
-  }
+  constructor(
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
-    this.route.params.subscribe((params) => {
-      this.userService.getUserByPseudo(pseudo).subscribe(
-        (data: User) => {
-          this.nom = data.nom;
-          this.prenom = data.prenom;
-          this.email = data.email;
-          this.associations = data.associations;
-          this.pseudo = data.pseudo;
-          this.taille = data.taille;
-          this.vegetarian = data.vegetarian;
-        },
-        (error) => {
-          this.errorMessage = 'Erreur lors de la récupération des données de l\'utilisateur.';
-          console.error(error);
-        }
-      );
-    });
-    
-    this.userService.getUserAssociations(pseudo).subscribe(
-      (associationsObject: any) => {
-        this.associations = associationsObject.firstAssociationName;
+    const loggedInPseudo = this.authService.getLoggedInUserPseudo() ?? '';
+    this.userService.getUserRole(loggedInPseudo).subscribe((userRoleObject: any) => {
+      this.role = userRoleObject.firstRoleId;
       },
       (error) => {
-        this.errorMessage = 'Erreur lors de la récupération des associations de l\'utilisateur.';
-        console.error(error);
+        console.error('Erreur lors de la récupération du rôle de l\'utilisateur', error);
       }
     );
+    this.route.params.subscribe((params) => {
+      const requestedPseudo = params['pseudo']; // Get the username from the route params
+
+      if (requestedPseudo) {
+        // If a username is provided, fetch and display the profile for that user
+        this.userService.getUserByPseudo(requestedPseudo).subscribe(
+          (data: User) => {
+            this.updateProfileFields(data);
+          },
+          (error) => {
+            this.errorMessage = 'Erreur lors de la récupération des données de l\'utilisateur.';
+            console.error(error);
+          }
+        );
+        this.userService.getUserRole(requestedPseudo).subscribe((userRoleObject: any) => {
+          this.roleUser = userRoleObject.firstRoleId;
+          console.log(this.roleUser)
+          },
+          (error) => {
+            console.error('Erreur lors de la récupération du rôle de l\'utilisateur', error);
+          }
+        );
+      } else {
+        this.userService.getUserByPseudo(loggedInPseudo).subscribe(
+          (data: User) => {
+            this.updateProfileFields(data);
+          },
+          (error) => {
+            this.errorMessage = 'Erreur lors de la récupération des données de l\'utilisateur.';
+            console.error(error);
+          }
+        );
+        this.userService.getUserRole(loggedInPseudo).subscribe((userRoleObject: any) => {
+          this.roleUser = userRoleObject.firstRoleId;
+          },
+          (error) => {
+            console.error('Erreur lors de la récupération du rôle de l\'utilisateur', error);
+          }
+        );
+      }
+    });
   }
+
+  updateProfileFields(data: User): void {
+    this.nom = data.nom;
+    this.prenom = data.prenom;
+    this.email = data.email;
+    this.associations = data.associations;
+    this.pseudo = data.pseudo;
+    this.taille = data.taille;
+    this.vegetarian = data.vegetarian;
+   }
 
   navigateToModificationProfile(): void {
     const dialogRef = this.dialog.open(ModificationProfileComponent, {
       width: '400px', // Définissez la largeur de la modale en fonction de vos besoins
     });
-  
+
     // Gérez les événements de fermeture de la modale si nécessaire
     dialogRef.afterClosed().subscribe(result => {
       console.log('La modale a été fermée', result);
     });
   }
 
+  updateUserRole() {
+    // Vous pouvez appeler la méthode du userService pour mettre à jour le rôle
+    this.userService.updateRole(this.pseudo).subscribe(
+      (response) => {
+        console.log('Rôle de l\'utilisateur mis à jour avec succès', response);
+      },
+      (error) => {
+        console.error('Erreur lors de la mise à jour du rôle de l\'utilisateur', error);
+      }
+    );
+  }
+
+  onCheckboxChange(event: any): void {
+    if (event.target.checked) {
+      this.updateUserRole(); // Appel à la méthode correspondant à la mise à jour du rôle
+      this.roleUser = 3; // Mettez à jour roleUser selon vos besoins
+    } else {
+      this.NonReferentRole(); // Appel à la méthode correspondant à la mise à jour du rôle
+      this.roleUser = 0; // Mettez à jour roleUser selon vos besoins
+    }
+  }
+
+NonReferentRole() {
+  this.userService.nonReferentRole(this.pseudo).subscribe(
+    (response) => {
+      console.log('Rôle de l\'utilisateur mis à jour avec succès', response);
+    },
+    (error) => {
+      console.error('Erreur lors de la mise à jour du rôle de l\'utilisateur', error);
+    }
+  );
+}
 }

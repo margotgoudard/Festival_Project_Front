@@ -97,5 +97,14 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiUrl}/benevoles`)
   }
 
+  updateRole(pseudo: string): Observable<any> {
+    const url = `${this.apiUrl}/referent/${pseudo}`;
+   return this.http.put(url, null);
+  }
+
+  nonReferentRole(pseudo: string): Observable<any> {
+    const url = `${this.apiUrl}/non-referent/${pseudo}`;
+   return this.http.put(url, null);
+  }
 
 }
