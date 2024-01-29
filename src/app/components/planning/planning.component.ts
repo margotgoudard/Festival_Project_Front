@@ -93,6 +93,24 @@ private loadEspaces(): Observable<Espace[]> {
   );
 }
 
+getSortedCreneauxByJour(jour: string) {
+  // Assuming getCreneauxByJour returns an array of time slots for the given day
+  const creneaux = this.getCreneauxByJour(jour);
+
+  // Sort the time slots based on heureDebut (assuming it's in HH:mm format)
+  return creneaux.slice().sort((a, b) => {
+    const timeA = a.heureDebut.split(':').map(Number);
+    const timeB = b.heureDebut.split(':').map(Number);
+
+    // Compare hours first, then minutes
+    if (timeA[0] !== timeB[0]) {
+      return timeA[0] - timeB[0];
+    } else {
+      return timeA[1] - timeB[1];
+    }
+  });
+}
+
 private initPlacesDisponibles(): void {
   // Initialize the placesDisponibles object based on the number of creneaux and espaces
   this.creneaux.forEach((creneau) => {
@@ -122,6 +140,10 @@ private initPlacesDisponibles(): void {
       if (!existingDay) {
         this.planning.push({ jour: creneau.jourCreneau, creneaux: [creneau] });
         this.jours.push(creneau.jourCreneau);
+        this.jours.sort((a, b) => {
+          const joursOrder = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+          return joursOrder.indexOf(a) - joursOrder.indexOf(b);
+        });
       } else {
         existingDay.creneaux.push(creneau);
       }
@@ -129,9 +151,28 @@ private initPlacesDisponibles(): void {
   }
 
   getCreneauxByJour(jour: string): Creneau[] {
-    const day = this.planning.find(item => item.jour === jour);
-    return day ? day.creneaux : [];
+  const day = this.planning.find(item => item.jour === jour);
+
+  if (day) {
+    // Fonction de comparaison pour trier les créneaux par heure de début
+    const comparaison = (creneauA: Creneau, creneauB: Creneau) => {
+      const heureDebutA = this.convertirHeureEnNombre(creneauA.heureDebut);
+      const heureDebutB = this.convertirHeureEnNombre(creneauB.heureDebut);
+      return heureDebutA - heureDebutB;
+    };
+
+    // Trier les créneaux par ordre chronologique
+    return day.creneaux.sort(comparaison);
+  } else {
+    return [];
   }
+}
+
+// Fonction utilitaire pour convertir l'heure de format "10h" en nombre
+convertirHeureEnNombre(heure: string): number {
+  const heureSansH = heure.replace('h', '');
+  return parseInt(heureSansH, 10);
+}
 
   
   private getNumberOfPlaces(creneauId: number, espaceId: number): void {

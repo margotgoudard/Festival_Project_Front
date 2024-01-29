@@ -26,6 +26,8 @@ import { UserService } from 'src/app/services/user.service';
     displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'espace', 'jour', 'creneau'];
     usersLoaded = false; 
     selectedSearchField: string = 'prenom';
+    recherche: string = '';
+
   
     constructor(private planningService: InscriptionService, private userService: UserService, private router: Router) {}
   
@@ -117,10 +119,15 @@ import { UserService } from 'src/app/services/user.service';
 }
 
 applyFilterNom(event: any) {
-  const filterValue = event.target.value.trim().toLowerCase();
+  console.log("data", this.dataSource.data)
+  if (this.recherche.trim() !== '') {
   this.dataSource.data = this.dataSource.data.filter(item =>
-    item.benevoleInfo.nom.toLowerCase().includes(filterValue)
+    item.benevoleInfo.nom.toLowerCase().includes(this.recherche.toLowerCase()) ||
+    item.benevoleInfo.prenom.toLowerCase().includes(this.recherche.toLowerCase())
   );
+  } else {
+    this.dataSource.data = this.dataSource.data; 
+  }  
 }
 
 applyFilterEspace(event: any) {
