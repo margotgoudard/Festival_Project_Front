@@ -22,7 +22,7 @@ export class RegistrationComponent implements OnInit {
       prenom: ['', Validators.required],
       nom: ['', Validators.required],
       pseudo: ['', Validators.required],
-      associations: ['', Validators.required],
+      associations: [' '],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       numTel: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]], // Valider le numéro de téléphone

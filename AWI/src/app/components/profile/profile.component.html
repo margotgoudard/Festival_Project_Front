@@ -15,4 +15,7 @@
     <p><strong>Taille de T-shirt :</strong> {{ taille }}</p>
     <p><strong>Végétarien(ne) :</strong> {{ vegetarian ? 'Oui' : 'Non' }}</p>
   </div>
+
+  <button type="submit">Modifier</button>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 </div>
