@@ -10,7 +10,7 @@ import { PlanningIndividuelAdminComponent } from './components/admin/planning-in
 import { ListeBenevolesComponent } from './components/liste-benevoles/liste-benevoles.component';
 import { InscriptionAttenteComponent } from './components/admin/inscription-attente/inscription-attente.component';
 import { InscriptionAttenteBenevoleComponent } from './components/inscription-attente-benevole/inscription-attente-benevole.component';
-
+import { ImportCsvComponent } from './components/import-csv/import-csv.component';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
@@ -27,8 +27,8 @@ const routes: Routes = [
   { path: 'planning-individuel-admin/:pseudo', component: PlanningIndividuelAdminComponent },
   { path: 'inscription-attente', component: InscriptionAttenteComponent },
   { path: 'inscription-attente-benevole', component: InscriptionAttenteBenevoleComponent },
-  { path: 'liste', component: ListeBenevolesComponent } 
-
+  { path: 'liste', component: ListeBenevolesComponent },
+  { path: 'import', component: ImportCsvComponent}
 
 
 

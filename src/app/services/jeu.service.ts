@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { JeuCsv } from '../components/import-csv/Jeu';
 import { Jeu } from '../model/jeu.model';
 
 @Injectable({
@@ -18,6 +19,30 @@ export class JeuService {
   getJeuxByEspace(idEspace: number): Observable<Jeu[]> {
     const url = `${this.apiUrl}/jeux/${idEspace}`; 
     return this.http.get<Jeu[]>(url);
+  }
+
+  createJeu(jeu: JeuCsv): Observable<JeuCsv> {
+    const url = `${this.apiUrl}/jeu`;
+    return this.http.post<JeuCsv>(url, {
+      "nomJeu"          : jeu.NomDuJeu,
+      "auteur"          : jeu.Auteur,
+      "editeur"         : jeu.Éditeur,
+      "exposant"        : jeu.Exposant,
+      "nbJoueurs"       : jeu.nbJoueurs,
+      "duree"           : jeu.Durée,
+      "PAvant_Premiere" : jeu.PAvantPremière,
+      "notice"          : jeu.Notice,
+      "video"           : jeu.Vidéo,
+      "description"     : jeu.Description,
+      "recu"            : jeu.Reçu,
+      "A_Animer"        : jeu.ÀAnimer,
+      "present"         : jeu.Présent,
+      "logoJeu"         : jeu.Logo,
+      "image"           : jeu.Image,
+      "typeJeu"         : jeu.Type,
+      "themeJeu"        : jeu.Thèmes,
+      "mecanismeJeu"    : jeu.Mécanismes
+    });
   }
   
 }
