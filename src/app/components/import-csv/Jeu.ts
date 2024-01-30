@@ -1,4 +1,4 @@
-export class Jeu {
+export class JeuCsv {
     public NomDuJeu : string;
     public Auteur : string;
     public Éditeur : string;
@@ -14,9 +14,9 @@ export class Jeu {
     public Notice : string;
     public ZonePlan : string;
     public ZoneBenevole : string;
-    public Présent : string;
-    public ÀAnimer : string;	
-    public Reçu : string;	
+    public Présent : boolean;
+    public ÀAnimer : boolean;	
+    public Reçu : boolean;	
     public Mécanismes : string;
     public Thèmes : string;
     public Tags : string;
@@ -67,9 +67,9 @@ export class Jeu {
         this.Notice = Notice;
         this.ZonePlan = ZonePlan;
         this.ZoneBenevole = ZoneBenevole;
-        this.Présent = Présent;
-        this.ÀAnimer = ÀAnimer;	
-        this.Reçu = Reçu;	
+        this.Présent = (Présent == 'oui') ? true : false;
+        this.ÀAnimer = (ÀAnimer == 'oui') ? true : false;	
+        this.Reçu =  ( Reçu == 'oui') ? true : false;	
         this.Mécanismes = Mécanismes;
         this.Thèmes = Thèmes;
         this.Tags = Tags;
