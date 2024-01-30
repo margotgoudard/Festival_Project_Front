@@ -6,5 +6,6 @@
   <a routerLink="/inscription-attente" *ngIf="userRole === 1">Inscription en attente</a>
   <a routerLink="/inscription-attente-benevole" *ngIf="userRole === 2 || userRole === 3 || userRole === 4">Inscription en attente</a>
   <a routerLink="/liste" *ngIf="userRole === 1">Liste Bénévoles</a>
+  <a routerLink="/import" *ngIf="userRole === 4">Import csv</a>
   <a (click)="logout()">Déconnexion</a>
 </div>

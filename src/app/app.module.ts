@@ -42,6 +42,7 @@ import { ModifierPlacesDialogComponent } from './components/modifier-places-dial
 import { ListeBenevolesComponent } from './components/liste-benevoles/liste-benevoles.component';
 import { InscriptionAttenteComponent } from './components/admin/inscription-attente/inscription-attente.component';
 import { InscriptionAttenteBenevoleComponent } from './components/inscription-attente-benevole/inscription-attente-benevole.component';
+import { ImportCsvComponent } from './components/import-csv/import-csv.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { InscriptionAttenteBenevoleComponent } from './components/inscription-at
     ModifierPlacesDialogComponent,
     ListeBenevolesComponent,
     InscriptionAttenteComponent,
-    InscriptionAttenteBenevoleComponent
+    InscriptionAttenteBenevoleComponent,
+    ImportCsvComponent
   ],
   imports: [
     BrowserModule,
