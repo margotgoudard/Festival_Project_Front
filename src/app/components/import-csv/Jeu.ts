@@ -1,7 +1,7 @@
 export class JeuCsv {
-    public NomDuJeu : string;
-    public Auteur : string;
-    public Éditeur : string;
+    public nomJeu : string;
+    public auteur : string;
+    public editeur : string;
     public Exposant : string;
     public nbJoueurs : string;	
     public checkboxJoueurs : string;
@@ -26,9 +26,9 @@ export class JeuCsv {
     public Vidéo: string;
      
     constructor(
-        NomDuJeu : string,
-        Auteur : string,
-        Éditeur : string,
+        nomJeu : string,
+        auteur : string,
+        editeur : string,
         Exposant : string,
         nbJoueurs : string,	
         checkboxJoueurs : string,
@@ -52,9 +52,9 @@ export class JeuCsv {
         Logo : string,
         Vidéo: string
     ) {
-        this.NomDuJeu = NomDuJeu;
-        this.Auteur = Auteur;
-        this.Éditeur = Éditeur;
+        this.nomJeu = nomJeu;
+        this.auteur = auteur;
+        this.editeur = editeur;
         this.Exposant = Exposant;
         this.nbJoueurs = nbJoueurs;	
         this.checkboxJoueurs = checkboxJoueurs;
