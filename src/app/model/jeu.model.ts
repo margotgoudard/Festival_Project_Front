@@ -1,6 +1,90 @@
+// export class Jeu {
+//     id: number = 0;
+//     nomJeu: string = '';
+//     auteur: string = '';
+//     editeur: string = '';
+// }
+
 export class Jeu {
     id: number = 0;
-    nomJeu: string = '';
-    auteur: string = '';
-    editeur: string = '';
+    public nomJeu : string;
+    public auteur : string;
+    public editeur : string;
+    public Exposant : string;
+    public nbJoueurs : string;	
+    public checkboxJoueurs : string;
+    public âgeMin : string;
+    public checkboxAge : string;	
+    public Durée : string;
+    public checkboxDurée : string;
+    public Type : string;
+    public PAvantPremière : string;
+    public Notice : string;
+    public ZonePlan : string;
+    public ZoneBenevole : string;
+    public Présent : boolean;
+    public ÀAnimer : boolean;	
+    public Reçu : boolean;	
+    public Mécanismes : string;
+    public Thèmes : string;
+    public Tags : string;
+    public Description : string;
+    public Image : string;
+    public Logo : string;
+    public Vidéo: string;
+     
+    constructor(
+        nomJeu : string,
+        auteur : string,
+        editeur : string,
+        Exposant : string,
+        nbJoueurs : string,	
+        checkboxJoueurs : string,
+        âgeMin : string,
+        checkboxAge : string,	
+        Durée : string,
+        checkboxDurée : string,
+        Type : string,
+        PAvantPremière : string,
+        Notice : string,
+        ZonePlan : string,
+        ZoneBenevole : string,
+        Présent : string,
+        ÀAnimer : string,	
+        Reçu : string,	
+        Mécanismes : string,
+        Thèmes : string,
+        Tags : string,
+        Description : string,
+        Image : string,
+        Logo : string,
+        Vidéo: string
+    ) {
+        this.nomJeu = nomJeu;
+        this.auteur = auteur;
+        this.editeur = editeur;
+        this.Exposant = Exposant;
+        this.nbJoueurs = nbJoueurs;	
+        this.checkboxJoueurs = checkboxJoueurs;
+        this.âgeMin = âgeMin;
+        this.checkboxAge = checkboxAge;	
+        this.Durée = Durée;
+        this.checkboxDurée = checkboxDurée;
+        this.Type = Type;
+        this.PAvantPremière = PAvantPremière;
+        this.Notice = Notice;
+        this.ZonePlan = ZonePlan;
+        this.ZoneBenevole = ZoneBenevole;
+        this.Présent = (Présent == 'oui') ? true : false;
+        this.ÀAnimer = (ÀAnimer == 'oui') ? true : false;	
+        this.Reçu =  ( Reçu == 'oui') ? true : false;	
+        this.Mécanismes = Mécanismes;
+        this.Thèmes = Thèmes;
+        this.Tags = Tags;
+        this.Description = Description;
+        this.Image = Image;
+        this.Logo = Logo;
+        this.Vidéo = Vidéo;
+    }
+
 }

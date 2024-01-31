@@ -4,4 +4,6 @@ export interface Espace  {
   idEspace : number,
   libelleEspace : string,
   posteId: number
-  }
+
+
+}

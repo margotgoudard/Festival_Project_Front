@@ -21,27 +21,36 @@ export class JeuService {
     return this.http.get<Jeu[]>(url);
   }
 
-  createJeu(jeu: JeuCsv): Observable<JeuCsv> {
-    const url = `${this.apiUrl}/jeu`;
-    return this.http.post<JeuCsv>(url, {
-      "nomJeu"          : jeu.NomDuJeu,
-      "auteur"          : jeu.Auteur,
-      "editeur"         : jeu.Éditeur,
-      "exposant"        : jeu.Exposant,
-      "nbJoueurs"       : jeu.nbJoueurs,
-      "duree"           : jeu.Durée,
-      "PAvant_Premiere" : jeu.PAvantPremière,
-      "notice"          : jeu.Notice,
-      "video"           : jeu.Vidéo,
-      "description"     : jeu.Description,
-      "recu"            : jeu.Reçu,
-      "A_Animer"        : jeu.ÀAnimer,
-      "present"         : jeu.Présent,
-      "logoJeu"         : jeu.Logo,
-      "image"           : jeu.Image,
-      "typeJeu"         : jeu.Type,
-      "themeJeu"        : jeu.Thèmes,
-      "mecanismeJeu"    : jeu.Mécanismes
+  createJeux(jeux: Jeu[]): Observable<JeuCsv> {
+    const url = `${this.apiUrl}/jeux`;
+
+    // Transformer le tableau de jeux en tableau de jeux pour l'api
+    const arrayJeux = jeux.map(jeu => {
+      return {
+        "nomJeu"          : jeu.nomJeu,
+        "auteur"          : jeu.auteur,
+        "editeur"         : jeu.editeur,
+        "exposant"        : jeu.Exposant,
+        "nbJoueurs"       : jeu.nbJoueurs,
+        "duree"           : jeu.Durée,
+        "PAvant_Premiere" : jeu.PAvantPremière,
+        "notice"          : jeu.Notice,
+        "video"           : jeu.Vidéo,
+        "description"     : jeu.Description,
+        "recu"            : jeu.Reçu,
+        "A_Animer"        : jeu.ÀAnimer,
+        "present"         : jeu.Présent,
+        "logoJeu"         : jeu.Logo,
+        "image"           : jeu.Image,
+        "typeJeu"         : jeu.Type,
+        "themeJeu"        : jeu.Thèmes,
+        "mecanismeJeu"    : jeu.Mécanismes,
+        "ZoneBenevole"    : jeu.ZoneBenevole
+      }
+    })
+
+    return this.http.post<Jeu>(url, {
+      jeux : arrayJeux
     });
   }
   
