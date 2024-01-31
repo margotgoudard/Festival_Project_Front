@@ -63,7 +63,7 @@ export class InscriptionDialogEspacesComponent {
     if (this.data.totalPlaces > 0) {
       if (idEspace !== null && benevolePseudo !== null) {
         // Check if the user is already registered for the specified creneau and espace
-        this.userService.getUserRegistrations(benevolePseudo).subscribe(
+        this.userService.getUserRegistrations(benevolePseudo, creneau.idF).subscribe(
           (registrations) => {
             const isAlreadyRegistered = registrations.some(registration =>
               registration.Creneau.idC === creneau.idC
@@ -71,7 +71,7 @@ export class InscriptionDialogEspacesComponent {
   
             if (!isAlreadyRegistered) {
               // If not already registered, proceed with the inscription
-              this.inscriptionService.inscrire(benevolePseudo, creneau.idC, idEspace).subscribe(
+              this.inscriptionService.inscrire(benevolePseudo, creneau.idC, idEspace, creneau.idF).subscribe(
                   (response) => {
                       // Gérez la réussite de l'inscription ici
                       console.log('Inscription réussie :', response);

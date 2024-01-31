@@ -12,8 +12,8 @@ import { InscriptionService } from 'src/app/services/inscription.service';
 
 })
 export class CreneauDialogComponent {
-  selectedCreneau: Creneau = { idC: 0, heureDebut: '', heureFin: '', jourCreneau: '' };
-  newCreneau: Creneau = { idC: 0, heureDebut: '', heureFin: '', jourCreneau: '' };
+  selectedCreneau: Creneau = { idC: 0, heureDebut: '', heureFin: '', jourCreneau: '', idF: 0 };
+  newCreneau: Creneau = { idC: 0, heureDebut: '', heureFin: '', jourCreneau: '', idF: 0 };
   isEditing: boolean = false; 
 
 

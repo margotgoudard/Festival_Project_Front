@@ -1,13 +1,16 @@
 // votre-composant.component.ts
 
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSelectChange } from '@angular/material/select';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { Festival } from 'src/app/interfaces/festival.interface';
 import { Inscription } from 'src/app/interfaces/inscription.interfaces';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { User } from 'src/app/model/user.model';
+import { FestivalService } from 'src/app/services/festival.service';
 import { InscriptionService } from 'src/app/services/inscription.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -27,16 +30,17 @@ import { UserService } from 'src/app/services/user.service';
     usersLoaded = false; 
     selectedSearchField: string = 'prenom';
     recherche: string = '';
+    selectedFestival: number = 0;
+    festivals: Festival[] = []; 
 
   
-    constructor(private planningService: InscriptionService, private userService: UserService, private router: Router) {}
+    constructor(private festivalService: FestivalService, private planningService: InscriptionService, private userService: UserService, private router: Router) {}
   
-    ngOnInit() {
-      // Charge les utilisateurs uniquement si ce n'est pas déjà fait
-      if (!this.usersLoaded) {
-        this.loadUsers();
-      }
+    ngOnInit(): void {
+      this.loadFestivals();
+      this.loadUsers();
     }
+  
   
     ngAfterViewInit() {
       // Applique le tri uniquement si les utilisateurs ont été chargés
@@ -44,9 +48,44 @@ import { UserService } from 'src/app/services/user.service';
         this.dataSource.sort = this.sort;
       }
     }
+
+    loadFestivals() {
+      this.festivalService.getFestivals().subscribe(
+        (festivals: Festival[]) => {
+          this.festivals = festivals;
+    
+          // Trouver le festival dont l'année correspond à l'année actuelle
+          const currentYear = new Date().getFullYear();
+          const defaultFestival = this.festivals.find(festival => festival.annee === currentYear);
+        
+          if (defaultFestival) {
+            this.selectedFestival = defaultFestival.idF;
+          } else {
+            // Si aucun festival correspondant n'est trouvé, utilisez le premier festival de la liste (s'il y en a un)
+            this.selectedFestival = this.festivals.length > 0 ? this.festivals[0].idF : 0;
+          }
+    
+          // Charger les données pour le festival sélectionné par défaut
+          this.loadUsers();
+        },
+        (error) => {
+          console.error('Error loading festivals', error);
+        }
+      );
+    }
+  
+    onFestivalChange(event: MatSelectChange) {
+      // Réinitialiser la source de données avec un tableau vide
+      this.dataSource.data = [];
+    
+      // Reload data when the selected festival changes
+      this.selectedFestival = event.value;
+      this.loadUsers();
+    }
+  
   
     loadUsers() {
-      this.userService.getUsersRegistration().subscribe(
+      this.userService.getUsersRegistration(this.selectedFestival).subscribe(
         (userRegistrations) => {
           const mappedUsers = userRegistrations.map(registration => ({
             benevolePseudo: registration.benevolePseudo,

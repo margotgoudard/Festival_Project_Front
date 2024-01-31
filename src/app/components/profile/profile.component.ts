@@ -5,6 +5,7 @@ import { UserService } from 'src/app/services/user.service';
 import { ModificationProfileComponent } from '../modification-profile/modification-profile.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from 'src/app/services/auth.service';
+import { Festival } from 'src/app/interfaces/festival.interface';
 
 @Component({
   selector: 'app-profile',
@@ -24,6 +25,7 @@ export class ProfileComponent implements OnInit {
   vegetarian: boolean = false;
   role: number = 0;
   roleUser: number = 0;
+  festivals: Number[] = [];
 
   constructor(
     private authService: AuthService,
@@ -58,10 +60,18 @@ export class ProfileComponent implements OnInit {
         );
         this.userService.getUserRole(requestedPseudo).subscribe((userRoleObject: any) => {
           this.roleUser = userRoleObject.firstRoleId;
-          console.log(this.roleUser)
           },
           (error) => {
             console.error('Erreur lors de la récupération du rôle de l\'utilisateur', error);
+          }
+        );
+        this.userService.getUserFestivals(requestedPseudo).subscribe(
+          (festivalsResponse: any) => {
+            // Assuming festivalsResponse is an array of festivals with 'annee' property
+            this.festivals = festivalsResponse.map((festival: any) => festival.annee);
+          },
+          (error) => {
+            console.error('Erreur lors de la récupération des festivals de l\'utilisateur', error);
           }
         );
       } else {
@@ -79,6 +89,18 @@ export class ProfileComponent implements OnInit {
           },
           (error) => {
             console.error('Erreur lors de la récupération du rôle de l\'utilisateur', error);
+          }
+        );
+        this.userService.getUserFestivals(loggedInPseudo).subscribe(
+          (festiavelResponse: { festivals: Festival[] } | any) => {
+            if (festiavelResponse && Array.isArray(festiavelResponse.festivals)) {
+              this.festivals = festiavelResponse.festivals.map((festival: Festival) => festival.annee);
+            } else {
+              console.error('Invalid response format. Expected an object with a property "festivals" that is an array.');
+            }
+          },
+          (error) => {
+            console.error('Erreur lors de la récupération des festivals de l\'utilisateur', error);
           }
         );
       }

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user.model';
 import { UserRegistration } from '../interfaces/user-registration.interface';
 import { Inscription } from '../interfaces/inscription.interfaces';
+import { Festival } from '../interfaces/festival.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -32,33 +33,33 @@ export class UserService {
     return this.http.put(url, user);
   }
 
-  getUserRegistrations(pseudo: string): Observable<UserRegistration[]> {
-    const url = `${this.apiUrl}/inscriptions/${pseudo}`;
+  getUserRegistrations(pseudo: string, idF: number): Observable<UserRegistration[]> {
+    const url = `${this.apiUrl}/inscriptions/${pseudo}/${idF}`;
     return this.http.get<UserRegistration[]>(url);
   }
 
-  getUsersRegistration(): Observable<Inscription[]> {
-    const url = `${this.apiUrl}/users-registrations`;
+  getUsersRegistration(idF: number): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/users-registrations/${idF}`;
     return this.http.get<Inscription[]>(url);
   }
 
-  getUsersRegistrationByAdmin(): Observable<Inscription[]> {
-    const url = `${this.apiUrl}/users-registrations-admin`;
+  getUsersRegistrationByAdmin(idF: number): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/users-registrations-admin/${idF}`;
+    return this.http.get<any[]>(url);
+  }
+
+  getUserRegistrationWaiting(pseudo: string, idF: number): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/user-registrations-admin/${pseudo}/${idF}`;
     return this.http.get<Inscription[]>(url);
   }
 
-  getUserRegistrationWaiting(pseudo: string): Observable<Inscription[]> {
-    const url = `${this.apiUrl}/user-registrations-admin/${pseudo}`;
+  getCandidatureWaiting(pseudo: string, idF: number): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/candidature/${pseudo}/${idF}`;
     return this.http.get<Inscription[]>(url);
   }
 
-  getCandidatureWaiting(pseudo: string): Observable<Inscription[]> {
-    const url = `${this.apiUrl}/candidature/${pseudo}`;
-    return this.http.get<Inscription[]>(url);
-  }
-
-  getAllCandidaturesWainting(): Observable<Inscription[]> {
-    const url = `${this.apiUrl}/candidatures`;
+  getAllCandidaturesWainting(idF: number): Observable<Inscription[]> {
+    const url = `${this.apiUrl}/candidatures/${idF}`;
     return this.http.get<Inscription[]>(url);
   }
   
@@ -93,8 +94,8 @@ export class UserService {
     return this.http.delete(url);
   }
 
-  getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}/benevoles`)
+  getAllUsers(idF: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/benevoles/${idF}`)
   }
 
   updateRole(pseudo: string): Observable<any> {
@@ -106,5 +107,11 @@ export class UserService {
     const url = `${this.apiUrl}/non-referent/${pseudo}`;
    return this.http.put(url, null);
   }
+
+  getUserFestivals(pseudo: string): Observable<Festival[]> {
+    const url = `${this.apiUrl}/user-festivals/${pseudo}`;
+    return this.http.get<Festival[]>(url);
+  }
+
 
 }

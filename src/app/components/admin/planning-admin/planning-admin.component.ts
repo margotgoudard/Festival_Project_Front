@@ -18,6 +18,9 @@ import { CreneauDialogComponent } from '../../creneau-dialog/creneau-dialog.comp
 import { PosteDialogComponent } from '../../poste-dialog/poste-dialog.component';
 import { EspaceDialogComponent } from '../../espace-dialog/espace-dialog.component';
 import { ModifierPlacesDialogComponent } from '../../modifier-places-dialog/modifier-places-dialog.component';
+import { Festival } from 'src/app/interfaces/festival.interface';
+import { MatSelectChange } from '@angular/material/select';
+import { FestivalService } from 'src/app/services/festival.service';
 
 @Component({
   selector: 'app-planning-admin',
@@ -38,12 +41,46 @@ export class PlanningAdminComponent {
   placesInscrites: { [key: string]: number } = {};
   aPlusieursEspaces : boolean = false;
   posteId: number | null = null;
+  selectedFestival: number = 0;
+  festivals: Festival[] = []; 
 
-  constructor(private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
+  constructor(private festivalService: FestivalService,private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
   ngOnInit(): void {
+    this.loadFestivals();
     this.loadData();
   }
+
+  loadFestivals() {
+    this.festivalService.getFestivals().subscribe(
+      (festivals: Festival[]) => {
+        this.festivals = festivals;
+  
+        // Trouver le festival dont l'année correspond à l'année actuelle
+        const currentYear = new Date().getFullYear();
+        const defaultFestival = this.festivals.find(festival => festival.annee === currentYear);
+      
+        if (defaultFestival) {
+          this.selectedFestival = defaultFestival.idF;
+        } else {
+          // Si aucun festival correspondant n'est trouvé, utilisez le premier festival de la liste (s'il y en a un)
+          this.selectedFestival = this.festivals.length > 0 ? this.festivals[0].idF : 0;
+        }
+  
+        // Charger les données pour le festival sélectionné par défaut
+        this.loadData();
+      },
+      (error) => {
+        console.error('Error loading festivals', error);
+      }
+    );
+  }
+  onFestivalChange(event: MatSelectChange) {
+    // Reload data when the selected festival changes
+    this.selectedFestival = event.value;
+    this.loadData();
+  }
+
 
   private async loadData(): Promise<void> {
     this.loadPostes();
@@ -56,11 +93,10 @@ export class PlanningAdminComponent {
           espaces.forEach((espace) => {
             this.jours.forEach(jour => {
               const creneaux = this.getCreneauxByJour(jour);
-      
+  
               creneaux.forEach((creneau) => {
                 this.getNumberOfPlaces(creneau.idC, espace.idEspace);
                 this.placesDejaInscrites(creneau.idC, espace.idEspace);
-                
               });
             });
           });
@@ -69,25 +105,26 @@ export class PlanningAdminComponent {
     });
   }
 
-private loadEspaces(): Observable<Espace[]> {
-  if (this.espaces.length > 0) {
-    return of(); // Return an observable with no data if already loaded
+  private loadEspaces(): Observable<Espace[]> {
+    if (this.espaces.length > 0) {
+      return of(this.espaces); // Return an observable with already loaded data
+    }
+  
+    return this.planningService.getEspaces(this.selectedFestival).pipe(
+      tap(espaces => {
+        // Organize espaces by posteId
+        this.postes.forEach(poste => {
+          const posteEspaces = espaces.filter(espace => espace.posteId === poste.idP);
+          this.posteEspacesMapping[poste.idP] = posteEspaces;
+        });
+      }),
+      catchError(error => {
+        console.error('Error loading Espaces:', error);
+        return throwError(error);
+      })
+    );
   }
-
-  return this.planningService.getEspaces().pipe(
-    tap(espaces => {
-      // Organize espaces by posteId
-      this.postes.forEach(poste => {
-        const posteEspaces = espaces.filter(espace => espace.posteId === poste.idP);
-        this.posteEspacesMapping[poste.idP] = posteEspaces;
-      });
-    }),
-    catchError(error => {
-      console.error('Error loading Espaces:', error);
-      return throwError(error);
-    })
-  );
-}
+  
 
 private initPlacesDisponibles(): void {
   // Initialize the placesDisponibles object based on the number of creneaux and espaces
@@ -99,13 +136,13 @@ private initPlacesDisponibles(): void {
   });
 }
   private loadPostes(): void {
-    this.planningService.getPostes().subscribe(postes => {
+    this.planningService.getPostes(this.selectedFestival).subscribe(postes => {
       this.postes = postes;
     });
   }
 
   private loadCreneaux(): void {
-    this.planningService.getCreneaux().subscribe(creneaux => {
+    this.planningService.getCreneaux(this.selectedFestival).subscribe(creneaux => {
       this.organizeCreneauxByDay(creneaux);
     });
   }
@@ -219,7 +256,7 @@ placesDejaInscrites(creneauId: number, posteId: number): void {
   const idEspace = espace ? espace.idEspace : null;
   const key = `${creneauId}_${idEspace}`;
   
-  this.userService.getUsersRegistration().subscribe(userRegistrations => {
+  this.userService.getUsersRegistration(this.selectedFestival).subscribe(userRegistrations => {
     const filteredRegistrations = userRegistrations.filter(registration =>
       registration.creneauId === creneauId && registration.espaceId === idEspace
     );
@@ -231,7 +268,7 @@ placesDejaInscrites(creneauId: number, posteId: number): void {
 placesDejaInscritesEspaces(creneauId: number, espaceId: number): number {
   const key = `${creneauId}_${espaceId}`;
   
-  this.userService.getUsersRegistration().subscribe(userRegistrations => {
+  this.userService.getUsersRegistration(this.selectedFestival).subscribe(userRegistrations => {
     const filteredRegistrations = userRegistrations.filter(registration =>
       registration.creneauId === creneauId && registration.espaceId === espaceId
     );

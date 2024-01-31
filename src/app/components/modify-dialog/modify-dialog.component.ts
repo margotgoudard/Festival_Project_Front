@@ -74,7 +74,8 @@ export class ModifyDialogComponent {
         idC: this.selectedCreneau.idC,
         heureDebut: this.selectedCreneau.heureDebut || '', // Provide a default value if undefined
         heureFin: this.selectedCreneau.heureFin || '',     // Provide a default value if undefined
-        jourCreneau: this.selectedCreneau.jourCreneau             // Provide a default value if undefined
+        jourCreneau: this.selectedCreneau.jourCreneau,
+        idF: this.selectedCreneau.idF
       };
   
       this.PlanningService.updateCreneau(updatedCreneau).subscribe(
@@ -99,9 +100,10 @@ export class ModifyDialogComponent {
   onAddCreneau(): void {
     const newCreneau: Creneau = {
       idC: 0,
-      heureDebut: '', // Replace with the actual default value
-      heureFin: '',   // Replace with the actual default value
-      jourCreneau: Jour.Samedi       // Replace with the actual default value
+      heureDebut: '', 
+      heureFin: '',   
+      jourCreneau: Jour.Samedi ,
+      idF: 0    
     };
   
     this.PlanningService.addCreneau(newCreneau).subscribe(

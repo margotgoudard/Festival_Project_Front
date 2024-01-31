@@ -2,6 +2,13 @@
 
 <div class="search-fields-container">
   <mat-form-field class="search-field">
+    <mat-label>Sélectionner le festival</mat-label>
+    <mat-select [(ngModel)]="selectedFestival" (selectionChange)="onFestivalChange($event)">
+      <mat-option *ngFor="let festival of festivals" [value]="festival.idF">{{ festival.annee }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="search-field">
     <mat-label>Rechercher par nom</mat-label>
     <input matInput (keyup)="applyFilterNom($event)">
   </mat-form-field>

@@ -61,7 +61,7 @@ export class InscriptionAdminComponent {
     if (this.data.totalPlaces > 0) {
       if (idEspace !== null && benevolePseudo !== null) {
         // Check if the user is already registered for the specified creneau and espace
-        this.userService.getUserRegistrations(benevolePseudo).subscribe(
+        this.userService.getUserRegistrations(benevolePseudo, creneau.idF).subscribe(
           (registrations) => {
             const isAlreadyRegistered = registrations.some(registration =>
               registration.Creneau.idC === creneau.idC

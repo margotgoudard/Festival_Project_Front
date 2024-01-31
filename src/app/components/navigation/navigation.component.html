@@ -1,6 +1,6 @@
 <div class="horizontal-menu">
+  <a routerLink="/profile">Profil</a>
   <a routerLink="/planning-general" *ngIf="userRole === 1">Planning</a>
-  <a routerLink="/profile" *ngIf="userRole === 2 || userRole === 3 || userRole === 4">Profil</a>
   <a routerLink="/planning-individual" *ngIf="userRole === 1 || userRole === 2 || userRole === 3 || userRole === 4">Planning Individuel</a>
   <a routerLink="/planning" *ngIf="userRole === 1 || userRole === 2 || userRole === 3 || userRole === 4">Planning Inscription</a>
   <a routerLink="/inscription-attente" *ngIf="userRole === 1">Inscription en attente</a>

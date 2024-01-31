@@ -12,6 +12,10 @@
   <div class="preferences">
     <p><strong>Taille de T-shirt :</strong> {{ taille }}</p>
     <p><strong>Végétarien(ne) :</strong> {{ vegetarian ? 'Oui' : 'Non' }}</p>
+    <p><strong>Festivals :</strong></p>
+  <ul>
+    <li *ngFor="let festival of festivals">Festival du Jeu Montpellier {{ festival }}</li>
+  </ul>
   </div>
   
   <div class="referent">
@@ -21,9 +25,8 @@
     <ng-template #notReferent>
       <p>Referent : Non</p>
     </ng-template>
-    <label>
+    <label *ngIf="role === 1">
       <input type="checkbox" *ngIf="role === 1" [checked]="roleUser === 3" (change)="onCheckboxChange($event)"> Référent
     </label>
   </div>
-
 </div>

@@ -9,6 +9,9 @@ import { InscriptionService } from 'src/app/services/inscription.service';
 import { UserService } from 'src/app/services/user.service';
 import { InscriptionReussiDialogComponent } from '../inscription-reussi-dialog/inscription-reussi-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Festival } from 'src/app/interfaces/festival.interface';
+import { FestivalService } from 'src/app/services/festival.service';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-inscription-attente-benevole',
@@ -25,10 +28,13 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
     usersLoaded = false; 
     selectedSearchField: string = 'prenom';
     pseudo: string ='';
+    selectedFestival: number = 0;
+    festivals: Festival[] = []; 
   
-    constructor(private dialog: MatDialog, private authService: AuthService, private planningService: InscriptionService, private userService: UserService, private router: Router) {}
+    constructor(private festivalService: FestivalService, private dialog: MatDialog, private authService: AuthService, private planningService: InscriptionService, private userService: UserService, private router: Router) {}
 
     ngOnInit() {
+      this.loadFestivals();
       const loggedInUserPseudo = this.authService.getLoggedInUserPseudo();
       this.pseudo = loggedInUserPseudo !== null ? loggedInUserPseudo : '';
       this.loadData();
@@ -36,8 +42,10 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
   
   
     loadData() {
-      const userRegistrations$ = this.userService.getUserRegistrationWaiting(this.pseudo);
-      const candidatureWaiting$ = this.userService.getCandidatureWaiting(this.pseudo);
+      const userRegistrations$ = this.userService.getUserRegistrationWaiting(this.pseudo, this.selectedFestival);
+      console.log(this.pseudo)
+      console.log(this.userService.getUserRegistrationWaiting(this.pseudo, this.selectedFestival))
+      const candidatureWaiting$ = this.userService.getCandidatureWaiting(this.pseudo, this.selectedFestival);
   
       forkJoin({
         userRegistrations: userRegistrations$,
@@ -100,6 +108,36 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
           console.error('Error loading data', error);
         }
       );
+    }
+
+    loadFestivals() {
+      this.festivalService.getFestivals().subscribe(
+        (festivals: Festival[]) => {
+          this.festivals = festivals;
+    
+          // Trouver le festival dont l'année correspond à l'année actuelle
+          const currentYear = new Date().getFullYear();
+          const defaultFestival = this.festivals.find(festival => festival.annee === currentYear);
+        
+          if (defaultFestival) {
+            this.selectedFestival = defaultFestival.idF;
+          } else {
+            // Si aucun festival correspondant n'est trouvé, utilisez le premier festival de la liste (s'il y en a un)
+            this.selectedFestival = this.festivals.length > 0 ? this.festivals[0].idF : 0;
+          }
+    
+          // Charger les données pour le festival sélectionné par défaut
+          this.loadData();
+        },
+        (error) => {
+          console.error('Error loading festivals', error);
+        }
+      );
+    }
+  
+    onFestivalChange(event: MatSelectChange) {
+      this.selectedFestival = event.value;
+      this.loadData();
     }
   
     

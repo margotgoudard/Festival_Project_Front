@@ -12,3 +12,13 @@ div {
     padding-bottom : 20px;
     margin-top: 50px
   } 
+
+  .search-field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px; /* Ajustez la largeur maximale selon vos besoins */
+    margin: 0 auto;
+  }
+  

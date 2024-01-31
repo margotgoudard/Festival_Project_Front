@@ -4,7 +4,6 @@ import { EMPTY, Observable, map, switchMap } from 'rxjs';
 import { Poste } from '../interfaces/poste.interface';
 import { Creneau } from '../interfaces/creaneau.interface';
 import { PosteDialogComponent } from '../components/poste-dialog/poste-dialog.component';
-import { CreneauDialogComponent } from '../components/creneau-dialog/creneau-dialog.component';
 import { Espace } from '../interfaces/espace.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from '../model/user.model';
@@ -19,8 +18,8 @@ export class InscriptionService {
   
   constructor(private dialog: MatDialog, private http: HttpClient) { }
 
-  inscrire(benevolePseudo: string, creneauId: number, espaceId: number) {
-    const url = `${this.apiUrl}/inscription/${benevolePseudo}/${creneauId}/${espaceId}`;
+  inscrire(benevolePseudo: string, creneauId: number, espaceId: number, idF: number) {
+    const url = `${this.apiUrl}/inscription/${benevolePseudo}/${creneauId}/${espaceId}/${idF}`;
     return this.http.post(url, {});
 }
 
@@ -53,17 +52,17 @@ export class InscriptionService {
     return this.http.get(`${this.apiUrl}/planningInscription`);
   }
 
-  getPostes(): Observable<Poste[]> {
-    return this.http.get<Poste[]>(`${this.apiUrl}/postes`);
+  getPostes(idF: number): Observable<Poste[]> {
+    return this.http.get<Poste[]>(`${this.apiUrl}/postes/${idF}`);
   }
 
 
-  getEspaces(): Observable<Espace[]> {
-    return this.http.get<Espace[]>(`${this.apiUrl}/espaces`);
+  getEspaces(idF: number): Observable<Espace[]> {
+    return this.http.get<Espace[]>(`${this.apiUrl}/espaces/${idF}`);
   }
 
-  getCreneaux(): Observable<Creneau[]> {
-    return this.http.get<Creneau[]>(`${this.apiUrl}/creneaux`);
+  getCreneaux(idF: number): Observable<Creneau[]> {
+    return this.http.get<Creneau[]>(`${this.apiUrl}/creneaux/${idF}`);
   }
   
   // Function to add a new creneau
