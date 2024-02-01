@@ -6,6 +6,8 @@ import { ModificationProfileComponent } from '../modification-profile/modificati
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from 'src/app/services/auth.service';
 import { Festival } from 'src/app/interfaces/festival.interface';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-profile',
@@ -15,6 +17,10 @@ import { Festival } from 'src/app/interfaces/festival.interface';
 export class ProfileComponent implements OnInit {
   successMessage: string = '';
   errorMessage: string = '';
+  isEditMode: boolean = false;
+  editedNom: string = '';
+  editedPrenom: string = '';
+
 
   nom: string = '';
   prenom: string = '';
@@ -150,14 +156,23 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-NonReferentRole() {
-  this.userService.nonReferentRole(this.pseudo).subscribe(
-    (response) => {
-      console.log('Rôle de l\'utilisateur mis à jour avec succès', response);
-    },
-    (error) => {
-      console.error('Erreur lors de la mise à jour du rôle de l\'utilisateur', error);
+  NonReferentRole() {
+    this.userService.nonReferentRole(this.pseudo).subscribe(
+      (response) => {
+        console.log('Rôle de l\'utilisateur mis à jour avec succès', response);
+      },
+      (error) => {
+        console.error('Erreur lors de la mise à jour du rôle de l\'utilisateur', error);
+      }
+    );
+  }
+
+  toggleEditMode(): void {
+    this.isEditMode = !this.isEditMode;
+    // Réinitialisez les valeurs éditées lorsque vous basculez vers le mode d'édition
+    if (this.isEditMode) {
+      this.editedNom = this.nom;
+      this.editedPrenom = this.prenom;
     }
-  );
-}
+  }
 }

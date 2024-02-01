@@ -1,8 +1,22 @@
 <div class="profil-benevole">
   <h2>Profil Bénévole</h2>
   <div class="informations-personnelles">
-    <p><strong>Nom :</strong> {{ nom }}</p>
-    <p><strong>Prénom :</strong> {{ prenom }}</p>
+    <p><strong>Nom :</strong>
+      <ng-container *ngIf="!isEditMode; else editMode">
+        {{ nom }}
+      </ng-container>
+      <ng-template #editMode>
+        <input [(ngModel)]="editedNom" placeholder="Entrez votre nom" />
+      </ng-template>
+    </p>
+    <p><strong>Prénom :</strong>
+      <ng-container *ngIf="!isEditMode; else editMode">
+        {{ prenom }}
+      </ng-container>
+      <ng-template #editMode>
+        <input [(ngModel)]="editedPrenom" placeholder="Entrez votre prénom" />
+      </ng-template>
+    </p>
     <p><strong>Pseudo :</strong> {{ pseudo }}</p>
     <p><strong>Mail :</strong> {{ email }}</p>
     <p><strong>Association(s) :</strong> {{ associations }} </p>
@@ -29,4 +43,7 @@
       <input type="checkbox" *ngIf="role === 1" [checked]="roleUser === 3" (change)="onCheckboxChange($event)"> Référent
     </label>
   </div>
+
+  <button type="button" (click)="toggleEditMode()">Modifier</button>
+
 </div>
