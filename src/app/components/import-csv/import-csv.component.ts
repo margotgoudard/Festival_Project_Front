@@ -8,29 +8,45 @@ import { Jeu } from 'src/app/model/jeu.model';
   styleUrls: ['./import-csv.component.scss']
 })
 export class ImportCsvComponent {
-  constructor(private jeuService: JeuService) {}
+  constructor(private jeuService: JeuService) { }
+  
+  // On mettra les jeux dans cette variable
+  public jeux: Jeu[] = [];
 
-  public previewImage(event: any) {
+  // Methode executée lorsqu'on importe un csv
+  public onImportCsv(event: any) {
     const reader = new FileReader();
     reader.onload = (e: any) => { //définition d'une méthode à exécuter qd le fichier est chargé
-      var jeux: Jeu[] = this.convertCsvToJeux(e.target.result);
-
-      var jeuxBundle = this.chunkArray(jeux, 50);
-
-      jeuxBundle.forEach(jeuxBundle => {
-        var contin = false;
-        this.jeuService.createJeux(jeuxBundle).subscribe((response) => {
-          console.log('Jeux créés avec succès', response);
-          contin = true;
-        })
-        while (!contin) {
-          // on attend que la requete est fini pour passer à a suivante.
-        }
-      });
-      
+      this.jeux = this.convertCsvToJeux(e.target.result);
     };
     reader.readAsText(event.target.files[0], 'UTF-8'); //ici le chargement du fichier
   }
+
+  // Methode executée lorsqu'on clique sur le bouton "importer"
+  public onClickImport() {
+    // On découpe les jeux en paquets de 50, cela permet de ne pas faire 10000 requetes
+    // si il y a 10000 lignes dans le csv par exemple.
+    var jeuxBundle = this.chunkArray(this.jeux, 50);
+
+    this.SendJeuxBundle(jeuxBundle);
+  }
+
+  // Methode récursive pour envoyer les requetes les une après les autres.
+  // On envoie le premier "paquet" de jeux, et on appelle cette méthodes avec les autres paquets.
+  // Cela jusqu'a ce qu'il n'y est plus de paquets.
+  private SendJeuxBundle(jeuxBundle: Jeu[][]) {
+    if (jeuxBundle.length == 0)
+      return;
+
+    var jeux = jeuxBundle[0];
+    var others = jeuxBundle.slice(1);
+    this.jeuService.createJeux(jeux).subscribe((response) => {
+      console.log(`${jeux.length} jeux créés avec succès`, response);
+      this.SendJeuxBundle(others);
+    })
+  }
+
+
 
   // Function écrite par chatgpt pour découper un tableau en plusieurs tableaux.
   private chunkArray(array: Jeu[], chunkSize: number) {

@@ -1,4 +1,5 @@
 <div style="margin:20px">
-    <input id="preview" type="file" accept=".csv" (change)="previewImage($event)" />
-    <button>Envoyer</button>
+    <input id="preview" type="file" accept=".csv" (change)="onImportCsv($event)" />
+    <button (click)="onClickImport()">Envoyer</button>
 </div>
+<p>{{ jeux.length }} jeux chargés</p>
