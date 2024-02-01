@@ -372,6 +372,7 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
       width: '600px', 
       data: {
         creneaux: this.creneaux,
+        selectedFestival: this.selectedFestival,
       },
     });
   
@@ -382,9 +383,16 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
     });
   }
   
-  openPosteDialog() {
-   this.dialog.open(PosteDialogComponent, { 
-    
+  openPosteDialog(): void {
+   const dialogRef = this.dialog.open(PosteDialogComponent, { 
+    width: '600px',
+    data: {
+      postes: this.postes,
+      espaces: this.espaces
+    },
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('Modification dialog closed with result:', result);
     });
   }
   

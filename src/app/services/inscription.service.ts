@@ -66,10 +66,9 @@ export class InscriptionService {
   }
   
   // Function to add a new creneau
-  addCreneau(creneau: Creneau): Observable<Creneau> {
-          const url = `${this.apiUrl}/creneau`;
-          console.log("creneau", creneau)
-          return this.http.post<Creneau>(url, creneau);
+  addCreneau(creneau: Creneau, idF: number): Observable<Creneau> {
+          const url = `${this.apiUrl}/creneau/${creneau.heureDebut}/${creneau.heureFin}/${creneau.jourCreneau}/${idF}`;
+          return this.http.post<Creneau>(url, {});
   }
 
   // Function to remove a creneau
@@ -80,35 +79,38 @@ export class InscriptionService {
 
   // Function to add a new poste
   addPoste(poste: Poste): Observable<Poste> {
-    // Open a dialog to get new information for the poste
-    const dialogRef = this.dialog.open(PosteDialogComponent, {
-      width: '400px',
-      data: { poste: { ...poste } } // Pass the current poste data to the dialog
-    });
-
-    return dialogRef.afterClosed().pipe(
-      switchMap(newPoste => {
-        if (newPoste) {
-          // Send the newPoste to the backend
-          const url = `${this.apiUrl}/postes`;
-          return this.http.post<Poste>(url, newPoste);
-        } else {
-          return EMPTY;; // Return an empty observable if the user cancels the operation
-        }
-      })
-    );
-  }
-
-  // Function to remove a poste
-  removePoste(poste: Poste): Observable<void> {
-    const url = `${this.apiUrl}/postes/${poste.idP}`;
-    return this.http.delete<void>(url);
+    const url = `${this.apiUrl}/postes`;
+    return this.http.post<Poste>(url, poste);
   }
 
   // Function to update a poste
-  updatePoste(poste: Poste): Observable<Poste> {
-    const url = `${this.apiUrl}/postes/${poste.idP}`;
-    return this.http.put<Poste>(url, poste);
+  updatePoste(poste: Poste | null): Observable<any> {
+    if (poste) {
+      const url = `${this.apiUrl}/poste/${poste.idP}`;
+      return this.http.put<any>(url, poste);
+    } else {
+      return new Observable(); 
+    }
+  }
+
+  deletePoste(poste: Poste): Observable<void> {
+    const url = `${this.apiUrl}/poste/${poste.idP}`;
+    return this.http.delete<void>(url);
+  }
+
+  deleteEspace(espace: Espace): Observable<void> {
+    const url = `${this.apiUrl}/espace/${espace.idEspace}`;
+    return this.http.delete<void>(url);
+  }
+
+  updateEspace(espace: Espace): Observable<Espace> {
+    const url = `${this.apiUrl}/poste/${espace.idEspace}`;
+    return this.http.put<Espace>(url, espace);
+  }
+
+  addEspace(espace: Espace): Observable<Espace> {
+    const url = `${this.apiUrl}/espace`;
+    return this.http.post<Espace>(url, espace);
   }
 
   // Function to update a creneau

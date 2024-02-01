@@ -19,7 +19,7 @@ export class CreneauDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<CreneauDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { creneaux: Creneau[] },
+    @Inject(MAT_DIALOG_DATA) public data: { creneaux: Creneau[], selectedFestival: number },
     private inscriptionService: InscriptionService
   ) {}
 
@@ -30,7 +30,8 @@ export class CreneauDialogComponent {
 
   onSaveClick(creneau: Creneau): void {
     console.log("newcreneau",creneau)
-      this.inscriptionService.addCreneau(creneau).subscribe(() => {
+    creneau.idF = this.data.selectedFestival;
+      this.inscriptionService.addCreneau(creneau, creneau.idF).subscribe(() => {
         this.dialogRef.close();
       });
   } 

@@ -106,7 +106,7 @@ export class ModifyDialogComponent {
       idF: 0    
     };
   
-    this.PlanningService.addCreneau(newCreneau).subscribe(
+    this.PlanningService.addCreneau(newCreneau, newCreneau.idF).subscribe(
       (addedCreneau) => {
         // Update the local creneaux array after a successful addition
         this.creneaux.push(addedCreneau);
@@ -164,7 +164,7 @@ onAddPoste(): void {
 // Function to handle removing a poste
 onRemovePoste(poste: Poste): void {
   // Placeholder logic to remove the selected poste
-  this.PlanningService.removePoste(poste).subscribe(
+  this.PlanningService.deletePoste(poste).subscribe(
     () => {
       // Update the local postes array after a successful removal
       this.postes = this.postes.filter(p => p !== poste);

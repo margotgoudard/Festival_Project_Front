@@ -1,6 +1,40 @@
-<!-- poste-dialog.component.html -->
-<h2>Edit Poste</h2>
+<h2>Gestion Poste</h2>
+<span class="close-button" (click)="onCancelClick()">&times;</span>
 <form>
-  <button mat-button (click)="onSaveClick()">Save Changes</button>
-  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <label>
+    <h4 *ngIf="!isEditingPoste">Selectionner un Poste:</h4>
+    <select *ngIf="!isEditingPoste" [(ngModel)]="selectedPoste" [ngModelOptions]="{ standalone: true }">
+      <option *ngFor="let poste of data.postes" [ngValue]="poste">{{ poste.libellePoste }}</option>
+    </select>
+    <button *ngIf="selectedPoste && !isEditingPoste" (click)="onEditPosteClick(selectedPoste)">✏️</button>
+    <ng-container *ngIf="isEditingPoste">
+      <input [(ngModel)]="newPoste.libellePoste" placeholder="Nouveau libelle" name="libellePoste" />
+      <button (click)="onSavePosteClick(newPoste)">Save</button>
+      <button (click)="onCancelEditPosteClick()">Cancel</button>
+    </ng-container>
+    <button *ngIf="selectedPoste" (click)="onDeletePosteClick(selectedPoste)">Supprimer Poste</button>
+  </label>
+  <ng-container *ngIf="selectedPoste">
+    <label>Liste des Espaces:</label>
+    <ul>
+      <li *ngFor="let espace of getEspacesForSelectedPoste()">
+        <ng-container *ngIf="selectedEspace !== espace; else editMode">
+          {{ espace.libelleEspace }}
+          <button (click)="onEditEspaceClick(espace)">✏️</button>
+          <button (click)="onDeleteEspaceClick(espace)">❌</button>
+        </ng-container>
+        <ng-template #editMode>
+          <input [(ngModel)]="selectedEspace.libelleEspace" placeholder="Nouveau libelle" name="libelleEspace" />
+          <button (click)="onSaveEspaceClick(selectedEspace)">Save</button>
+          <button (click)="onCancelEditEspaceClick(selectedEspace)">Cancel</button>
+        </ng-template>
+      </li>
+    </ul>
+    <button (click)="onAddEspaceClick()">Ajouter Espace</button>
+    <ng-container *ngIf="addingEspace">
+      <input [(ngModel)]="newEspaceLibelle" placeholder="Nouveau Espace Libellé" />
+      <button (click)="onSaveNewEspaceClick()">Save</button>
+      <button (click)="onCancelAddEspaceClick()">Cancel</button>
+    </ng-container>
+  </ng-container>
 </form>
