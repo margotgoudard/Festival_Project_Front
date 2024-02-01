@@ -28,6 +28,19 @@ export class InscriptionAttenteComponent implements OnInit {
   selectedSearchField: string = 'prenom';
   selectedFestival: number = 0;
   festivals: Festival[] = []; 
+  selectedEspace: number = 0;
+  selectedJour: string = '';
+  selectedCreneau: number = 0;
+  espaces: any[] = [];
+  jours: any[] = []; 
+  creneaux: any[] = [];
+  recherche: any = {
+    festival: 0,
+    espace: 0,
+    jour: '',
+    creneau: 0,
+    nom: '',
+  };
 
   constructor(private dialog: MatDialog, private festivalService: FestivalService, private candidatureService: CandidaterService, private planningService: InscriptionService, private userService: UserService, private router: Router) {}
 
@@ -60,12 +73,6 @@ export class InscriptionAttenteComponent implements OnInit {
         console.error('Error loading festivals', error);
       }
     );
-  }
-
-  onFestivalChange(event: MatSelectChange) {
-    this.selectedFestival = event.value;
-    this.dataSource.data = [];
-    this.loadData();
   }
 
   loadData() {
@@ -107,22 +114,34 @@ export class InscriptionAttenteComponent implements OnInit {
           )
         ).subscribe(
           (results) => {
-            this.dataSource.data = results.map((result, index) => {
-              const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
+            this.creneaux = results.map(result => result.creneauInfo);
+
+            // Éliminer les doublons de créneaux
+            this.creneaux = this.creneaux.filter((creneau, index, self) =>
+              index === self.findIndex((c) => c.id === creneau.id)
+            );            this.jours = this.creneaux.map(creneau => creneau.jourCreneau);
+            this.jours = Array.from(new Set(this.jours)); // Pour obtenir des jours distincts
+            this.espaces = results.map(result => result.espaceInfo);
   
-              return {
-                benevoleInfo: result.benevoleInfo,
-                creneauInfo: result.creneauInfo,
-                espaceInfo: result.espaceInfo,
-                posteInfo: posteInfo,
-                inscriptionId: candidatureWaiting[index]?.id,
-                inscriptionEspaceId: candidatureWaiting[index]?.espaceId,
-                inscriptionCreneauId: candidatureWaiting[index]?.creneauId,
-                ...mappedCandidatureWaiting[index],
-                // Add properties for candidatureWaiting as needed
-              };
-            });
+            const filteredUsers = results
+              .map((result, index) => {
+                const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
   
+                return {
+                  benevoleInfo: result.benevoleInfo,
+                  creneauInfo: result.creneauInfo,
+                  espaceInfo: result.espaceInfo,
+                  posteInfo: posteInfo,
+                  inscriptionId: candidatureWaiting[index]?.id,
+                  inscriptionEspaceId: candidatureWaiting[index]?.espaceId,
+                  inscriptionCreneauId: candidatureWaiting[index]?.creneauId,
+                  ...mappedCandidatureWaiting[index],
+                  // Add properties for candidatureWaiting as needed
+                };
+              })
+              .filter(registration => this.filterUser(registration));
+  
+            this.dataSource.data = filteredUsers;
           },
           (error) => {
             console.error('Error loading additional user info', error);
@@ -134,6 +153,7 @@ export class InscriptionAttenteComponent implements OnInit {
       }
     );
   }
+  
   
   validerCandidature(benevolePseudo: string, creneauId: number, espaceId: number): void {
     this.candidatureService.updateCandidature(benevolePseudo, creneauId, espaceId, this.selectedFestival).subscribe(
@@ -199,35 +219,38 @@ afficherPlanningIndividuel(pseudo: string) {
   this.router.navigate(['planning-individuel-admin', pseudo]);
 }
 
-applyFilterNom(event: any) {
-const filterValue = event.target.value.trim().toLowerCase();
-this.dataSource.data = this.dataSource.data.filter(item =>
-  item.benevoleInfo.nom.toLowerCase().includes(filterValue)
-);
+filterUser(registration: any): boolean {
+  console.log('Filtering:', registration);
+  const result =
+    (this.recherche.espace === 0 || registration.espaceId === this.recherche.espace) &&
+    (!this.recherche.jour || this.recherche.jour === registration.creneauInfo?.jourCreneau) &&
+    (this.recherche.creneau === 0 || registration.creneauId === this.recherche.creneau);
+
+  console.log('Filter Result:', result);
+  return result;
 }
 
-applyFilterEspace(event: any) {
-const filterValue = event.target.value.trim().toLowerCase();
-this.dataSource.data = this.dataSource.data.filter(item =>
-  item.espaceInfo.libelleEspace.toLowerCase().includes(filterValue)
-);
+onFestivalChange(event: MatSelectChange) {
+  this.selectedFestival = event.value;
+  this.dataSource.data = [];
+  this.loadData();
 }
 
-applyFilterJour(event: any) {
-const filterValue = event.target.value.trim().toLowerCase();
-// Filtrer dans le champ 'jour' si nécessaire
-this.dataSource.data = this.dataSource.data.filter(item =>
-  item.creneauInfo.jourCreneau.toLowerCase().includes(filterValue)
-);
+onCreneauChange(event: MatSelectChange) {
+  this.recherche.creneau = event.value;
+  this.loadData();
 }
 
-applyFilterCreneau(event: any) {
-const filterValue = event.target.value.trim().toLowerCase();
-// Filtrer dans le champ 'creneau' si nécessaire
-this.dataSource.data = this.dataSource.data.filter(item =>
-  item.creneau.heureDebut.toLowerCase().includes(filterValue)
-);
+onJourChange(event: MatSelectChange) {
+  this.recherche.jour = event.value;
+  this.loadData();
 }
+
+onEspaceChange(event: MatSelectChange) {
+  this.recherche.espace = event.value;
+  this.loadData();
+}
+
 
 
 }

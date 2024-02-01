@@ -70,7 +70,7 @@
           <td>{{ espace.libelleEspace }}</td>
           <ng-container *ngFor="let jour of jours">
             <td *ngFor="let creneau of getCreneauxByJour(jour)">
-              <button (click)="onButtonClickEspace(creneau, espace)" [disabled]="placesRestantes(creneau.idC, espace.idEspace) <= 0">
+              <button (click)="onButtonClickEspace(creneau, espace)" [disabled]="placesRestantes(creneau.idC, espace.idEspace) > 0">
                 {{ placesRestantesEspaces(creneau.idC, espace.idEspace) }}
               </button>
             </td>
@@ -88,9 +88,6 @@
 
   <!-- Poste actions -->
   <button (click)="openPosteDialog()">Gestion Postes</button>
-
-  <!-- Espace actions -->
-  <button (click)="openEspaceDialog()">Gestion Espaces</button>
 
   <!-- Modifier le nombre de places -->
   <button (click)="openModifierPlacesDialog()">Gestion Places</button>

@@ -28,8 +28,8 @@ export class InscriptionService {
     return this.http.put<void>(url, {});
   }
 
-  inscrireByAdmin(benevolePseudo: string, creneauId: number, espaceId: number) {
-    const url = `${this.apiUrl}/inscriptionByAdmin/${benevolePseudo}/${creneauId}/${espaceId}`;
+  inscrireByAdmin(benevolePseudo: string, creneauId: number, espaceId: number, idF: number) {
+    const url = `${this.apiUrl}/inscriptionByAdmin/${benevolePseudo}/${creneauId}/${espaceId}/${idF}`;
     return this.http.post(url, {});
   }
 

@@ -293,7 +293,13 @@ placesDejaInscrites(creneauId: number, posteId: number): void {
 
 placesDejaInscritesEspaces(creneauId: number, espaceId: number): number {
   const key = `${creneauId}_${espaceId}`;
-  
+
+  // Check if placesInscrites already has the information
+  if (this.placesInscrites[key] !== undefined) {
+    return this.placesInscrites[key];
+  }
+
+  // Make the API call only if the information is not available
   this.userService.getUsersRegistration(this.selectedFestival).subscribe(userRegistrations => {
     const filteredRegistrations = userRegistrations.filter(registration =>
       registration.creneauId === creneauId && registration.espaceId === espaceId
@@ -304,6 +310,7 @@ placesDejaInscritesEspaces(creneauId: number, espaceId: number): number {
 
   return this.placesInscrites[key];
 }
+
 
 
 placesRestantes(creneauId: number, posteId: number): number  {
@@ -350,6 +357,7 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
           jour: creneau.jourCreneau,
           heureDebut: creneau.heureDebut,
           heureFin: creneau.heureFin,
+          idF: creneau.idF
         },
         espace: {
           idEspace: espace.idEspace,
@@ -375,12 +383,11 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
   }
   
   openPosteDialog() {
-   this.dialog.open(PosteDialogComponent, { /* dialog configuration */ });
+   this.dialog.open(PosteDialogComponent, { 
+    
+    });
   }
   
-  openEspaceDialog() {
-    this.dialog.open(EspaceDialogComponent, { /* dialog configuration */ });
-  }
   
   openModifierPlacesDialog(): void {
       const dialogRef = this.dialog.open(ModifierPlacesDialogComponent, {

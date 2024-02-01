@@ -1,6 +1,6 @@
 // user.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user.model';
 import { UserRegistration } from '../interfaces/user-registration.interface';
@@ -111,6 +111,10 @@ export class UserService {
   getUserFestivals(pseudo: string): Observable<Festival[]> {
     const url = `${this.apiUrl}/user-festivals/${pseudo}`;
     return this.http.get<Festival[]>(url);
+  }
+
+  getUsersRegistrationWithFilters(idF: number, idC : number, idEspace: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/usersRegistrationWithFilters/${idF}/${idC}/${idEspace}`);
   }
 
 
