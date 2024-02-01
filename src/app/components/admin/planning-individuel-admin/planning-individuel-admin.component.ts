@@ -8,6 +8,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/app/model/user.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { Location } from '@angular/common';
+import { Festival } from 'src/app/interfaces/festival.interface';
+import { MatSelectChange } from '@angular/material/select';
+import { FestivalService } from 'src/app/services/festival.service';
 
 @Component({
   selector: 'planning-individuel-admin',
@@ -21,16 +24,57 @@ export class PlanningIndividuelAdminComponent implements OnInit {
   userName: string = '';
   user: User | undefined; 
   dataSource = new MatTableDataSource<any>([]);
+  selectedFestival: number = 0;
+  festivals: Festival[] = []; 
 
   displayedColumns: string[] = ['poste', 'jour', 'creneau', 'actions'];
 
-  constructor(private location: Location, private router: Router, private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
+  constructor(private festivalService: FestivalService,private location: Location, private router: Router, private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
 
   ngOnInit() {
+    this.loadFestivals();
     this.route.paramMap.subscribe(params => {
       const pseudo = params.get('pseudo') || '';
       this.fetchUser(pseudo);
     });
+  }
+  
+  loadFestivals() {
+    this.festivalService.getFestivals().subscribe(
+      (festivals: Festival[]) => {
+        this.festivals = festivals;
+  
+        // Trouver le festival dont l'année correspond à l'année actuelle
+        const currentYear = new Date().getFullYear();
+        const defaultFestival = this.festivals.find(festival => festival.annee === currentYear);
+      
+        if (defaultFestival) {
+          this.selectedFestival = defaultFestival.idF;
+        } else {
+          // Si aucun festival correspondant n'est trouvé, utilisez le premier festival de la liste (s'il y en a un)
+          this.selectedFestival = this.festivals.length > 0 ? this.festivals[0].idF : 0;
+        }
+
+      },
+      (error) => {
+        console.error('Error loading festivals', error);
+      }
+    );
+  }
+
+  onFestivalChange(event: MatSelectChange) {
+    this.selectedFestival = event.value;
+    this.fetchUserRegistrationsForSelectedFestival(); 
+  }
+
+  fetchUserRegistrationsForSelectedFestival() {
+    if (this.user && this.selectedFestival) {
+      // Clear existing user registrations
+      this.userRegistrations = [];
+      
+      // Fetch user registrations for the selected festival
+      this.fetchUserRegistrations(this.user.pseudo, this.selectedFestival);
+    }
   }
 
   fetchUser(pseudo: string) {
@@ -41,7 +85,7 @@ export class PlanningIndividuelAdminComponent implements OnInit {
         console.log('Fetched user data:', this.user);
         console.log (this.userName);
         // Once user data is fetched, trigger fetching user registrations
-        this.fetchUserRegistrations(pseudo);
+        this.fetchUserRegistrations(pseudo, this.selectedFestival);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -49,8 +93,8 @@ export class PlanningIndividuelAdminComponent implements OnInit {
     );
   }
   
-  fetchUserRegistrations(pseudo : string) {
-    this.userService.getUserRegistrations(pseudo).subscribe(
+  fetchUserRegistrations(pseudo : string, idF: number) {
+    this.userService.getUserRegistrations(pseudo, idF).subscribe(
       (data) => {
         this.userRegistrations = data.filter(registration => registration.isAccepted && registration.isAffected);
         console.log('Fetched user registrations:', this.userRegistrations);

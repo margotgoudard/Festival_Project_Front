@@ -2,25 +2,34 @@
 <!-- Structure du composant Angular -->
 <h2>Planning Général</h2>
 
+<mat-form-field class="search-field">
+  <mat-label>Sélectionner le festival</mat-label>
+  <mat-select [(ngModel)]="selectedFestival" (selectionChange)="onFestivalChange($event)">
+    <mat-option *ngFor="let festival of festivals" [value]="festival.idF">{{ festival.annee }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+
 <div class="search-fields-container">
   <mat-form-field class="search-field">
-    <mat-label>Rechercher par nom</mat-label>
-    <input matInput (keyup)="applyFilterNom($event)">
-  </mat-form-field>
-
-  <mat-form-field class="search-field">
     <mat-label>Rechercher par espace</mat-label>
-    <input matInput (keyup)="applyFilterEspace($event)">
+    <mat-select [(ngModel)]="selectedEspace" (selectionChange)="onEspaceChange($event)">
+      <mat-option *ngFor="let espace of espaces" [value]="espace.idEspace">{{ espace.libelleEspace }}</mat-option>
+    </mat-select>
   </mat-form-field>
-
+  
   <mat-form-field class="search-field">
     <mat-label>Rechercher par jour</mat-label>
-    <input matInput (keyup)="applyFilterJour($event)">
+    <mat-select [(ngModel)]="selectedJour" (selectionChange)="onJourChange($event)">
+      <mat-option *ngFor="let jour of jours" [value]="jour">{{ jour }}</mat-option>
+    </mat-select>
   </mat-form-field>
-
+  
   <mat-form-field class="search-field">
     <mat-label>Rechercher par créneau</mat-label>
-    <input matInput (keyup)="applyFilterCreneau($event)">
+    <mat-select [(ngModel)]="selectedCreneau" (selectionChange)="onCreneauChange($event)">
+      <mat-option *ngFor="let creneau of creneaux" [value]="creneau.idC">{{ creneau.heureDebut }} - {{ creneau.heureFin }}</mat-option>
+    </mat-select>
   </mat-form-field>
 </div>
 

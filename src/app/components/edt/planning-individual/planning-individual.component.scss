@@ -3,3 +3,13 @@ h2 {
     margin-left: 30px;
     text-align: center;
   }
+  
+  .search-field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px; /* Ajustez la largeur maximale selon vos besoins */
+    margin: 0 auto;
+  }
+  

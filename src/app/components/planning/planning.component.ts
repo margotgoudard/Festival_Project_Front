@@ -15,9 +15,12 @@ import { InscriptionDialogEspacesComponent } from '../inscription-dialog-espaces
 import { PosteDialogComponent } from '../poste-dialog/poste-dialog.component';
 import { EspaceDialogComponent } from '../espace-dialog/espace-dialog.component';
 import { ModifierPlacesDialogComponent } from '../modifier-places-dialog/modifier-places-dialog.component';
-import { CreneauDialogComponent } from '../creneau-dialog/creneau-dialog.component';
 import { CandidaterService } from 'src/app/services/candidater.service';
 import { InscriptionReussiDialogComponent } from '../inscription-reussi-dialog/inscription-reussi-dialog.component';
+import { Festival } from 'src/app/interfaces/festival.interface';
+import { MatSelectChange } from '@angular/material/select';
+import { FestivalService } from 'src/app/services/festival.service';
+import { CreneauDialogComponent } from '../creneau-dialog/creneau-dialog.component';
 
 @Component({
   selector: 'app-planning',
@@ -39,11 +42,14 @@ export class PlanningComponent implements OnInit {
   posteId: number | null = null;
   admin : boolean = false;
   userRole: number = 0; 
+  selectedFestival: number = 0;
+  festivals: Festival[] = []; 
 
 
-  constructor(private candidaterService: CandidaterService, private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
+  constructor(private festivalService: FestivalService, private candidaterService: CandidaterService, private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
   ngOnInit(): void {
+    this.loadFestivals();
     this.loadData();
     this.estAdmin();
   }
@@ -72,12 +78,42 @@ export class PlanningComponent implements OnInit {
     });
   }
 
+  loadFestivals() {
+    this.festivalService.getFestivals().subscribe(
+      (festivals: Festival[]) => {
+        this.festivals = festivals;
+  
+        // Trouver le festival dont l'année correspond à l'année actuelle
+        const currentYear = new Date().getFullYear();
+        const defaultFestival = this.festivals.find(festival => festival.annee === currentYear);
+      
+        if (defaultFestival) {
+          this.selectedFestival = defaultFestival.idF;
+        } else {
+          // Si aucun festival correspondant n'est trouvé, utilisez le premier festival de la liste (s'il y en a un)
+          this.selectedFestival = this.festivals.length > 0 ? this.festivals[0].idF : 0;
+        }
+  
+        this.loadData();
+      },
+      (error) => {
+        console.error('Error loading festivals', error);
+      }
+    );
+  }
+
+  onFestivalChange(event: MatSelectChange) {
+    this.selectedFestival = event.value;
+    this.loadData();
+  }
+
+
 private loadEspaces(): Observable<Espace[]> {
   if (this.espaces.length > 0) {
     return of(); // Return an observable with no data if already loaded
   }
 
-  return this.planningService.getEspaces().pipe(
+  return this.planningService.getEspaces(this.selectedFestival).pipe(
     tap(espaces => {
       // Organize espaces by posteId
       this.postes.forEach(poste => {
@@ -121,13 +157,13 @@ private initPlacesDisponibles(): void {
   });
 }
   private loadPostes(): void {
-    this.planningService.getPostes().subscribe(postes => {
+    this.planningService.getPostes(this.selectedFestival).subscribe(postes => {
       this.postes = postes;
     });
   }
 
   private loadCreneaux(): void {
-    this.planningService.getCreneaux().subscribe(creneaux => {
+    this.planningService.getCreneaux(this.selectedFestival).subscribe(creneaux => {
       this.organizeCreneauxByDay(creneaux);
       this.creneaux.push(...creneaux);
     });
@@ -229,6 +265,7 @@ openInscriptionDialog(totalPlaces: number, creneau: Creneau, poste: Poste) {
         jour: creneau.jourCreneau,
         heureDebut: creneau.heureDebut,
         heureFin: creneau.heureFin,
+        idF: creneau.idF,
       },
       poste: {
         idP: poste.idP,
@@ -245,7 +282,7 @@ placesDejaInscrites(creneauId: number, posteId: number): void {
   const idEspace = espace ? espace.idEspace : null;
   const key = `${creneauId}_${idEspace}`;
   
-  this.userService.getUsersRegistration().subscribe(userRegistrations => {
+  this.userService.getUsersRegistration(this.selectedFestival).subscribe(userRegistrations => {
     const filteredRegistrations = userRegistrations.filter(registration =>
       registration.creneauId === creneauId && registration.espaceId === idEspace
     );
@@ -256,8 +293,14 @@ placesDejaInscrites(creneauId: number, posteId: number): void {
 
 placesDejaInscritesEspaces(creneauId: number, espaceId: number): number {
   const key = `${creneauId}_${espaceId}`;
-  
-  this.userService.getUsersRegistration().subscribe(userRegistrations => {
+
+  // Check if placesInscrites already has the information
+  if (this.placesInscrites[key] !== undefined) {
+    return this.placesInscrites[key];
+  }
+
+  // Make the API call only if the information is not available
+  this.userService.getUsersRegistration(this.selectedFestival).subscribe(userRegistrations => {
     const filteredRegistrations = userRegistrations.filter(registration =>
       registration.creneauId === creneauId && registration.espaceId === espaceId
     );
@@ -267,6 +310,7 @@ placesDejaInscritesEspaces(creneauId: number, espaceId: number): number {
 
   return this.placesInscrites[key];
 }
+
 
 
 placesRestantes(creneauId: number, posteId: number): number  {
@@ -313,6 +357,7 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
           jour: creneau.jourCreneau,
           heureDebut: creneau.heureDebut,
           heureFin: creneau.heureFin,
+          idF: creneau.idF
         },
         espace: {
           idEspace: espace.idEspace,
@@ -338,12 +383,11 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
   }
   
   openPosteDialog() {
-   this.dialog.open(PosteDialogComponent, { /* dialog configuration */ });
+   this.dialog.open(PosteDialogComponent, { 
+    
+    });
   }
   
-  openEspaceDialog() {
-    this.dialog.open(EspaceDialogComponent, { /* dialog configuration */ });
-  }
   
   openModifierPlacesDialog(): void {
       const dialogRef = this.dialog.open(ModifierPlacesDialogComponent, {
@@ -397,9 +441,10 @@ candidaterVolunteers(): void {
   const benevolePseudo = this.authService.getLoggedInUserPseudo() || '';
   this.selectedCreneaux.forEach(creneau => {
     // Assuming candidaterService.candidaterVolunteer method exists
-    this.candidaterService.candidaterVolunteer(benevolePseudo, creneau.idC).subscribe(
+    this.candidaterService.candidaterVolunteer(benevolePseudo, creneau.idC, creneau.idF).subscribe(
       () => {
         console.log('Volunteer candidated successfully for creneau', creneau);
+        console.log(creneau.idF)
 
         // Open the existing MatDialog with your component after successful candidature
         this.openInscriptionReussiDialog(creneau);

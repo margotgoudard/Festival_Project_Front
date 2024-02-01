@@ -11,6 +11,9 @@ import { CreneauDialogComponent } from '../../creneau-dialog/creneau-dialog.comp
 import { PosteDialogComponent } from '../../poste-dialog/poste-dialog.component';
 import { EspaceDialogComponent } from '../../espace-dialog/espace-dialog.component';
 import { ModifierPlacesDialogComponent } from '../../modifier-places-dialog/modifier-places-dialog.component';
+import { Festival } from 'src/app/interfaces/festival.interface';
+import { FestivalService } from 'src/app/services/festival.service';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'planning-individual',
@@ -24,24 +27,65 @@ export class PlanningIndividualComponent implements OnInit {
 
   userName: string = '';
   dataSource = new MatTableDataSource<any>([]);
+  selectedFestival: number = 0;
+  festivals: Festival[] = []; 
 
   displayedColumns: string[] = ['poste', 'jour', 'creneau', 'actions'];
 
-  constructor(private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
+  constructor(private festivalService: FestivalService,private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    // Check if the user input is provided
+    this.loadFestivals();
     if (this.user) {
       this.userName = `${this.user?.nom} ${this.user?.prenom}`;
       console.log('User input:', this.user);
       // Once user data is available, trigger fetching user registrations
-      this.fetchUserRegistrations(this.user.pseudo); // Assuming 'pseudo' is the property in the User model
+      this.fetchUserRegistrations(this.user.pseudo, this.selectedFestival); // Assuming 'pseudo' is the property in the User model
     } else {
       // If user input is not provided, use the logged-in user's pseudo
       const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
       this.fetchUser(pseudo);
     }
+
   }
+
+  loadFestivals() {
+    this.festivalService.getFestivals().subscribe(
+      (festivals: Festival[]) => {
+        this.festivals = festivals;
+  
+        // Trouver le festival dont l'année correspond à l'année actuelle
+        const currentYear = new Date().getFullYear();
+        const defaultFestival = this.festivals.find(festival => festival.annee === currentYear);
+      
+        if (defaultFestival) {
+          this.selectedFestival = defaultFestival.idF;
+        } else {
+          // Si aucun festival correspondant n'est trouvé, utilisez le premier festival de la liste (s'il y en a un)
+          this.selectedFestival = this.festivals.length > 0 ? this.festivals[0].idF : 0;
+        }
+      },
+      (error) => {
+        console.error('Error loading festivals', error);
+      }
+    );
+  }
+
+  onFestivalChange(event: MatSelectChange) {
+    this.selectedFestival = event.value;
+    this.fetchUserRegistrationsForSelectedFestival(); 
+  }
+
+  fetchUserRegistrationsForSelectedFestival() {
+    if (this.user && this.selectedFestival) {
+      // Clear existing user registrations
+      this.userRegistrations = [];
+      
+      // Fetch user registrations for the selected festival
+      this.fetchUserRegistrations(this.user.pseudo, this.selectedFestival);
+    }
+  }
+
 
   fetchUser(pseudo: string) {
     this.userService.getUserByPseudo(pseudo).subscribe(
@@ -51,7 +95,7 @@ export class PlanningIndividualComponent implements OnInit {
         console.log('Fetched user data:', this.user);
         console.log(this.userName);
         // Once user data is fetched, trigger fetching user registrations
-        this.fetchUserRegistrations(pseudo);
+        this.fetchUserRegistrations(pseudo, this.selectedFestival);
       },
       (error) => {
         console.error('Error fetching user data:', error);
@@ -59,8 +103,8 @@ export class PlanningIndividualComponent implements OnInit {
     );
   }
   
-  fetchUserRegistrations(pseudo: string) {
-    this.userService.getUserRegistrations(pseudo).subscribe(
+  fetchUserRegistrations(pseudo: string, idF: number) {
+    this.userService.getUserRegistrations(pseudo, idF).subscribe(
       (data) => {
         this.userRegistrations = data.filter(registration => registration.isAccepted && registration.isAffected);
         console.log('Fetched user registrations:', this.userRegistrations);
