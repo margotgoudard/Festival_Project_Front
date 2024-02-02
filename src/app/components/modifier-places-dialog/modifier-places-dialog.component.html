@@ -1,18 +1,19 @@
-<h1>Modifier le Nombre de Places</h1>
+<h2>Modifier le Nombre de Places</h2>
 
-<div>
-  <label for="selectEspace">Sélectionner un Espace:</label>
-  <select id="selectEspace" [(ngModel)]="selectedEspace" required>
-    <option *ngFor="let espace of data.espaces" [ngValue]="espace">{{ espace.libelleEspace }}</option>
-  </select>
-</div>
+<div class="container">
+<mat-form-field class="search-field">
+  <mat-label>Sélectionner un espace</mat-label>
+  <mat-select [(ngModel)]="selectedEspace" [ngModelOptions]="{ standalone: true }">
+    <mat-option *ngFor="let espace of data.espaces" [value]="espace">{{ espace.libelleEspace }} </mat-option>    
+  </mat-select>
+</mat-form-field>
 
-<div>
-  <label for="selectCreneau">Sélectionner un Créneau:</label>
-  <select id="selectCreneau" [(ngModel)]="selectedCreneau" required>
-    <option *ngFor="let creneau of data.creneaux" [ngValue]="creneau">{{ creneau.heureDebut }} - {{ creneau.heureFin }}</option>
-  </select>
-</div>
+<mat-form-field class="search-field">
+  <mat-label>Sélectionner un créneau</mat-label>
+  <mat-select [(ngModel)]="selectedCreneau" [ngModelOptions]="{ standalone: true }">
+    <mat-option *ngFor="let creneau of data.creneaux" [value]="creneau">{{ creneau.heureDebut }} - {{ creneau.heureFin }} ({{ creneau.jourCreneau }})</mat-option>    
+  </mat-select>
+</mat-form-field>
 
 <div>
   <label for="inputNombrePlaces">Nouveau Nombre de Places:</label>
@@ -22,4 +23,6 @@
 <div class="dialog-buttons">
   <button mat-button (click)="onNoClick()">Annuler</button>
   <button mat-button (click)="onSaveClick()">Enregistrer</button>
+</div>
+
 </div>

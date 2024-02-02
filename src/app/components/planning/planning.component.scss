@@ -39,12 +39,12 @@ h2 {
 
 .action-buttons {
   display: flex;
-  flex-direction: column; /* Stack buttons vertically */
-  margin-top: 10px; /* Adjust the top margin as needed */
+  justify-content: center; /* Centre les boutons horizontalement */
+  margin-top: 10px; /* Ajustez la marge supérieure selon vos besoins */
 }
 
 .action-buttons button {
-  /* Styles for individual buttons */
-  margin-bottom: 5px; /* Adjust the bottom margin as needed */
-  padding: 5px 10px; /* Adjust padding as needed */
+  /* Styles pour les boutons individuels */
+  margin: 0 5px; /* Espace autour de chaque bouton, ajustez selon vos préférences */
+  padding: 5px 10px; /* Ajustez le rembourrage selon vos besoins */
 }

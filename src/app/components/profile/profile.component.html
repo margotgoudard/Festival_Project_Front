@@ -28,5 +28,16 @@
     <label *ngIf="role === 1">
       <input type="checkbox" *ngIf="role === 1" [checked]="roleUser === 3" (change)="onCheckboxChange($event)"> Référent
     </label>
+    <ng-container *ngIf="roleUser === 4; else notGestionnaire">
+      <p>Gestionnaire : Oui</p>
+    </ng-container>
+    <ng-template #notGestionnaire>
+      <p>Gestionnaire : Non</p>
+    </ng-template>
+    <label *ngIf="role === 1">
+      <input type="checkbox" *ngIf="role === 1" [checked]="roleUser === 4" (change)="onCheckboxChange($event)"> Gestionnaire
+    </label>
+    
+    
   </div>
 </div>

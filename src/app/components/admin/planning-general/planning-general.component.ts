@@ -175,29 +175,6 @@ import { UserService } from 'src/app/services/user.service';
         }
       );
     }
-    
-  /*onSortAttributeChange(event: any) {
-    // Update the current sorting attribute
-    this.currentSortAttribute = event.value;
-
-    // Apply sorting based on the selected attribute
-    this.applySorting();
-  }*/
-
-  /*
-  applySorting() {
-    // Check if dataSource and sort are defined
-    if (this.dataSource && this.dataSource.sort) {
-      // Sort the data based on the current attribute and direction
-      this.dataSource.sort.sort({
-        id: this.currentSortAttribute,
-        start: 'asc', // Initial direction or 'asc' as needed
-        disableClear: false,
-      });
-    } else {
-      console.error('dataSource or sort is null');
-    }
-  }*/
 
   afficherPlanningIndividuel(pseudo: string) {
     console.log("pseudo", pseudo)
@@ -205,7 +182,6 @@ import { UserService } from 'src/app/services/user.service';
 }
 
 filterUser(registration: any): boolean {
-  console.log('Filtering:', registration);
   const result =
     (this.recherche.espace === 0 || registration.espaceId === this.recherche.espace) &&
     (!this.recherche.jour || this.recherche.jour === registration.creneauInfo?.jourCreneau) &&
@@ -213,6 +189,10 @@ filterUser(registration: any): boolean {
 
   console.log('Filter Result:', result);
   return result;
+}
+
+onEditClick() {
+
 }
 
 

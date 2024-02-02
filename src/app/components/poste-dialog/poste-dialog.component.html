@@ -1,6 +1,71 @@
-<!-- poste-dialog.component.html -->
-<h2>Edit Poste</h2>
+<h2>Gestion Poste</h2>
+<span class="close-button" (click)="onCancelClick()">&times;</span>
+
 <form>
-  <button mat-button (click)="onSaveClick()">Save Changes</button>
-  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button (click)="onAjouterPosteClick()">Ajouter Poste</button>
+  <mat-form-field>
+      <mat-label>Sélectionner un poste</mat-label>
+      <mat-select [(ngModel)]="selectedPoste" (selectionChange)="onPosteChange($event)" ngModel [ngModelOptions]="{standalone: true}">
+        <mat-option *ngFor="let poste of data.postes" [value]="poste">{{ poste.libellePoste }}</mat-option>
+      </mat-select> 
+  </mat-form-field>
+  <button *ngIf="selectedPoste.idP !== 0" (click)="onEditPosteClick(selectedPoste)">✏️</button>
+  <ng-container *ngIf="isEditingPoste">
+      <input [(ngModel)]="newPoste.libellePoste" placeholder="Nouveau libelle" name="libellePoste" />
+      <button (click)="onSavePosteClick(newPoste)">Enregistrer</button>
+      <button (click)="onCancelEditPosteClick()">Retour</button>
+  </ng-container>
+  <button  *ngIf="selectedPoste.idP !== 0" (click)="onDeletePosteClick(selectedPoste)">❌</button>
+    <ng-container *ngIf="selectedPoste.idP !== 0">
+    <label>Liste des Espaces:</label>
+    <ul>
+      <li *ngFor="let espace of getEspacesForSelectedPoste()">
+        <ng-container *ngIf="selectedEspace !== espace">
+          {{ espace.libelleEspace }}
+          <button *ngIf="isEditingPoste" (click)="onEditEspaceClick(espace)">✏️</button>
+          <button *ngIf="isEditingPoste" (click)="onDeleteEspaceClick(espace)">❌</button>
+        </ng-container>
+        <ng-container *ngIf="isEditing">
+          <input [(ngModel)]="espace.libelleEspace" placeholder="Nouveau libelle" name="libelleEspace" />
+          <button (click)="onSaveEspaceClick(espace)">Enregistrer</button>
+          <button (click)="onCancelEditEspaceClick()">Retour</button>
+      </ng-container>
+      </li>
+    </ul>
+    <button *ngIf="isEditingPoste" (click)="onAddEspaceClick()">Ajouter Nouvel Espace</button>
+    <ng-container *ngIf="isAddingEspace">
+      <input [(ngModel)]="newEspace.libelleEspace" placeholder="Nouveau Espace Libellé" name="libelleEspace"/>
+      <mat-form-field>
+        <mat-label>Sélectionner un espace</mat-label>
+        <mat-select [(ngModel)]="selectedEspace" (selectionChange)="onEspaceChange($event)" [ngModelOptions]="{standalone: true}">
+          <ng-container *ngFor="let espace of data.espaces">
+            <ng-container *ngIf="espace.posteId === null || espace.posteId === undefined">
+          <mat-option *ngFor="let espace of data.espaces" [value]="espace">{{ espace.libelleEspace }}</mat-option>
+        </ng-container>
+      </ng-container>
+        </mat-select>
+    </mat-form-field>
+    </ng-container>
+  </ng-container>
+    <ng-container *ngIf="isAddingPoste">
+      <h4>Nouveau Poste:</h4>
+      <input [(ngModel)]="newPoste.libellePoste" placeholder="Nouveau Poste Libellé" name="libellePoste" />
+      <mat-form-field>
+        <mat-label>Sélectionner un espace</mat-label>
+        <mat-select [(ngModel)]="selectedEspace" (selectionChange)="onEspaceChange($event)" [ngModelOptions]="{standalone: true}">
+          <ng-container *ngFor="let espace of data.espaces">
+            <ng-container *ngIf="espace.posteId === null || espace.posteId === undefined">
+          <mat-option *ngFor="let espace of data.espaces" [value]="espace">{{ espace.libelleEspace }}</mat-option>
+        </ng-container>
+      </ng-container>
+        </mat-select>
+    </mat-form-field>
+      <button (click)="onAddEspaceClick()">Ajouter Nouvel Espace</button>
+      <ng-container *ngIf="isAddingEspace">
+        <input [(ngModel)]="newEspace.libelleEspace" placeholder="Nouveau Espace Libellé" name="libelleEspace"/>
+      </ng-container>
+    <button (click)="onSaveNewPosteClick()">Enregistrer Nouveau Poste</button>
+    </ng-container>
+    <button *ngIf="isEditingPoste" (click)="onSaveNewEspaceClick()">Enregistrer Nouveau Poste</button>
+
 </form>

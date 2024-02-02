@@ -14,7 +14,17 @@ export class FestivalService {
     constructor(private http: HttpClient) {}
 
     getFestivals(): Observable<Festival[]> {
-      const url = `${this.apiUrl}/festivals/`;
+      const url = `${this.apiUrl}/festivals`;
       return this.http.get<Festival[]>(url);
+    }
+
+    deleteFestival(idF: number): Observable<void> {
+      const url = `${this.apiUrl}/festival/${idF}`;
+      return this.http.delete<void>(url);
+    }
+
+    addFestival(festival: Festival): Observable<Festival> {
+      const url = `${this.apiUrl}/creer-festival`;
+      return this.http.post<Festival>(url, festival);
     }
 }

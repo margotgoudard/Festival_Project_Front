@@ -19,6 +19,7 @@
   button {
     width: 150px; /* Ajuster la largeur des boutons selon vos besoins */
     padding: 10px;
+    margin-top: 10px;
     text-align: center;
     background-color: #4CAF50; /* Couleur de fond du bouton */
     color: white; /* Couleur du texte à l'intérieur du bouton */
@@ -63,5 +64,12 @@
   
   .close-button:hover {
     color: red; /* Changez la couleur au survol si nécessaire */
+  }
+
+  .search-field {
+    width: 250px;
+    height: 80px;
+    margin-left : 15px;
+    flex: 1;
   }
   

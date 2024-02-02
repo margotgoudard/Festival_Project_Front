@@ -108,6 +108,12 @@ export class UserService {
    return this.http.put(url, null);
   }
 
+  nonGestionnaireRole(pseudo: string): Observable<any> {
+    const url = `${this.apiUrl}/non-gestionnaire/${pseudo}`;
+   return this.http.put(url, null);
+  }
+
+
   getUserFestivals(pseudo: string): Observable<Festival[]> {
     const url = `${this.apiUrl}/user-festivals/${pseudo}`;
     return this.http.get<Festival[]>(url);

@@ -4,22 +4,17 @@ h2 {
   }
 
   .search-field {
-    width: 200px;
+    width: 250px;
     height: 80px;
     margin-left : 15px;
     flex: 1;
   }
   
-  /* Ajustez la hauteur de la barre de recherche */
-  .mat-form-field {
-    height: 20px; /* Ajustez la hauteur selon vos besoins */
+  
+  .mat-select {
+    height: 10px; 
   }
   
-  /* Ajustez la hauteur du texte dans la barre de recherche */
-  .mat-form-field-wrapper {
-    line-height: 24px; /* Ajustez la hauteur selon vos besoins */
-  }
-
   .search-fields-container {
     display: flex;
     justify-content: space-between;
@@ -27,3 +22,13 @@ h2 {
     margin : auto;
   }
   
+  .mat-elevation-z8 {
+    overflow-x: hidden;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Si vous souhaitez également centrer horizontalement les cellules de la table */
+  .mat-table {
+    width: 100%;
+  }
