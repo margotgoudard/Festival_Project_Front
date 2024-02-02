@@ -1,0 +1,48 @@
+.form-container {
+    margin: 20px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    font-size: 20px;
+  }
+  
+  label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  .custom-select,
+  .custom-input,
+  .custom-button {
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .custom-button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .custom-button:hover {
+    background-color: #45a049;
+  }
+  
+  h2 {
+    margin-top: 10px;
+    margin-left: 10px;
+  }

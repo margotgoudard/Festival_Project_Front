@@ -21,4 +21,22 @@ div {
     max-width: 400px; /* Ajustez la largeur maximale selon vos besoins */
     margin: 0 auto;
   }
+
+  .table-mat {
+    width: 80%; /* Adjust the width as needed, it can be a percentage or a fixed value */
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow-x: hidden;
+    justify-content: center;
+    align-items: center;
+    margin : auto
+}
+
+.mat-cell {
+  width: 50px; /* Set a specific width for the cells, adjust as needed */
+  overflow: hidden; /* Hide overflow content if the text is longer than the cell width */
+}
+
+  
   

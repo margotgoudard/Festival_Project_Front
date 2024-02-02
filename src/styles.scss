@@ -1,7 +1,7 @@
-body {
+html, body {
     background-color: #99C1EB; /* Fond bleu pour la page */
     font-family: "Poppins", sans-serif;
-    height: 100vh;
+    height: 100%;
     margin: 0; /* Supprimer les marges par défaut du corps */
   }
 
@@ -15,15 +15,21 @@ body {
     flex-direction: column; 
     max-width: 400px;
     margin: auto;
-    margin-top: 100px;
+    margin-top: 80px;
     padding: 10px;
     font-family: "Poppins", sans-serif;
     background-color: #fff;
     border: 2px solid #000;
     border-radius: 8px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-    height: 60vh;
+    height: 75vh;
     z-index: 1; /* Set a z-index for the form container */
+}
+
+.logo-image {
+  margin-top: 20px;
+  width: 200px; /* Spécifiez la largeur souhaitée */
+  height: auto; /* La hauteur sera ajustée de manière proportionnelle en fonction de la largeur */
 }
   
   /* Style pour le titre du formulaire */
@@ -43,7 +49,7 @@ body {
     display: flex;
     flex-direction: column; /* Display buttons in a column */
     align-items: center; /* Center buttons horizontally */
-    margin-top: 10px; /* Add margin at the top */
+    margin-top: 0px; 
   }
   
   /* Style for the submit button */
@@ -56,7 +62,7 @@ body {
     border: none; /* No border */
     border-radius: 4px; /* Rounded corners */
     cursor: pointer; /* Cursor on hover */
-    font-size: 16px; /* Font size */
+    font-size: 15px; /* Font size */
     transition: background-color 0.3s; /* Smooth transition for background color */
   }
   
@@ -258,3 +264,9 @@ td.mat-cell {
     display: inline-block;
 }
       
+
+.mat-elevation-z8 {
+  overflow-x: hidden;
+  justify-content: center;
+  align-items: center;
+}

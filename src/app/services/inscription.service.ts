@@ -78,8 +78,8 @@ export class InscriptionService {
   }
 
   // Function to add a new poste
-  addPoste(poste: Poste): Observable<Poste> {
-    const url = `${this.apiUrl}/postes`;
+  addPoste(poste: Poste, idF: number): Observable<Poste> {
+    const url = `${this.apiUrl}/creer-poste/${poste.libellePoste}/${idF}`;
     return this.http.post<Poste>(url, poste);
   }
 
@@ -104,13 +104,13 @@ export class InscriptionService {
   }
 
   updateEspace(espace: Espace): Observable<Espace> {
-    const url = `${this.apiUrl}/poste/${espace.idEspace}`;
+    const url = `${this.apiUrl}/update-espace/${espace.idEspace}`;
     return this.http.put<Espace>(url, espace);
   }
 
-  addEspace(espace: Espace): Observable<Espace> {
-    const url = `${this.apiUrl}/espace`;
-    return this.http.post<Espace>(url, espace);
+  addEspace(espace: Espace, idF: number): Observable<Espace> {
+    const url = `${this.apiUrl}/creer-espace/${idF}`;
+    return this.http.post<Espace>(url, {espace});
   }
 
   // Function to update a creneau
@@ -135,5 +135,10 @@ export class InscriptionService {
   deleteCreneau(creneauId: number): Observable<void> {
     const url = `${this.apiUrl}/creneau/${creneauId}`;
     return this.http.delete<void>(url);
+  }
+
+  getPosteByLibelle(poste: Poste, idF: number): Observable<Poste> {
+    const url = `${this.apiUrl}/poste/${poste.libellePoste}/${idF}`;
+    return this.http.get<Poste>(url);
   }
 }

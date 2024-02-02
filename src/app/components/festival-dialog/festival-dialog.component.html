@@ -1,0 +1,23 @@
+<h2>Gestion Festival</h2>
+<div class="form-container">
+  <span class="close-button" (click)="onCancelClick()">&times;</span>
+  <form>
+        <mat-form-field>
+            <mat-label>Sélectionner le festival</mat-label>
+            <mat-select [(ngModel)]="selectedfestival" (selectionChange)="onFestivalChange($event)">
+              <mat-option *ngFor="let festival of data.festivals" [value]="festival.idF">{{ festival.annee }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+      <button class="custom-button" *ngIf="selectedfestival" (click)="onDeleteFestivalClick(selectedfestival)">Supprimer Festival</button>
+      <button class="custom-button" (click)="onAddFestivalClick()">Ajouter Festival</button>
+    <ng-container *ngIf="isAddingFestival">
+      <label *ngIf="isAddingFestival">
+        <h4>Nouveau Festival:</h4>
+        <input class="custom-input" [(ngModel)]="newFestival.annee" placeholder="Année" name="année" />
+      </label>
+      <ng-container *ngIf="isAddingFestival">
+        <button class="custom-button" (click)="onSaveNewFestivalClick()">Enregistrer Nouveau Festival</button>
+      </ng-container>
+    </ng-container>
+  </form>
+</div>

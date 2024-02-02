@@ -150,7 +150,7 @@ onAddPoste(): void {
     libellePoste: ''
   };
 
-  this.PlanningService.addPoste(newPoste).subscribe(
+  this.PlanningService.addPoste(newPoste, this.data.idF).subscribe(
     (addedPoste) => {
       // Update the local postes array after a successful addition
       this.postes.push(addedPoste);

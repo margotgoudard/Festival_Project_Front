@@ -1,4 +1,5 @@
 <div class="horizontal-menu">
+  <img src="assets/images/logo.png" alt="logo" class="logo-image" />
   <a routerLink="/profile">Profil</a>
   <a routerLink="/planning-general" *ngIf="userRole === 1">Planning</a>
   <a routerLink="/planning-individual" *ngIf="userRole === 1 || userRole === 2 || userRole === 3 || userRole === 4">Planning Individuel</a>

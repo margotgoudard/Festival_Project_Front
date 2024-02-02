@@ -3,11 +3,13 @@
 <span class="close-button" (click)="onCancelClick()">&times;</span>
 <form>
   <!-- Dropdown for selecting a creneau -->
-  <label>Selectionner un Créneau:
-    <select [(ngModel)]="selectedCreneau" [ngModelOptions]="{ standalone: true }">
-      <option *ngFor="let creneau of data.creneaux" [ngValue]="creneau">{{ creneau.heureDebut }} - {{ creneau.heureFin }} ({{ creneau.jourCreneau }})</option>
-    </select>
-  </label>
+  <mat-form-field class="search-field">
+    <mat-label>Sélectionner un créneau</mat-label>
+    <mat-select [(ngModel)]="selectedCreneau" [ngModelOptions]="{ standalone: true }">
+      <mat-option *ngFor="let creneau of data.creneaux" [value]="creneau">{{ creneau.heureDebut }} - {{ creneau.heureFin }} ({{ creneau.jourCreneau }})</mat-option>    
+    </mat-select>
+  </mat-form-field>
+
 
   <!-- Buttons for editing or deleting the selected creneau -->
   <button mat-button (click)="onEditClick()" [disabled]="selectedCreneau.idC === 0">Modifier</button>
