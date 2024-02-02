@@ -99,7 +99,7 @@ export class InscriptionService {
   }
 
   deleteEspace(espace: Espace): Observable<void> {
-    const url = `${this.apiUrl}/espace/${espace.idEspace}`;
+    const url = `${this.apiUrl}/delete-espace/${espace.idEspace}`;
     return this.http.delete<void>(url);
   }
 

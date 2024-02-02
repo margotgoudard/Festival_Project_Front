@@ -1,15 +1,69 @@
-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .label-container {
-    display: flex;
-    align-items: center;
-  }
+/* Style pour la croix en haut à droite */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
 
-  
-  .mat-select {
-    margin-right: 10px; /* Add space between the select and the button */
-  }
-  
+/* Style pour les boutons et les marges */
+button {
+    margin: 0 0 10px 20px; /* Ajout de marges pour les boutons */
+    font-size: 14px; /* Taille de police plus petite */
+    padding: 8px 12px; /* Ajout de padding pour une meilleure apparence */
+}
+
+/* Style pour les champs de saisie */
+input {
+    margin: 0 0 10px 20px; /* Ajout de marges pour les champs de saisie */
+    padding: 8px; /* Ajout de padding pour une meilleure apparence */
+}
+
+/* Style pour les listes à puces */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Style pour les éléments de liste */
+li {
+    margin-bottom: 10px; /* Espace entre les éléments de liste */
+}
+
+/* Style pour le formulaire */
+form {
+    margin: 0 20px; /* Marge à gauche et à droite du formulaire */
+}
+
+/* Style pour les libellés */
+mat-label {
+    font-size: 16px; /* Taille de police pour les libellés */
+}
+
+/* Style pour les options du select */
+mat-option {
+    font-size: 14px; /* Taille de police pour les options du select */
+}
+
+/* Style pour les icônes de modification et suppression */
+button[aria-label="edit"], button[aria-label="delete"] {
+    font-size: 18px;
+    margin-left: 5px;
+}
+
+/* Style pour les boutons d'édition et d'annulation dans le mode édition */
+button.edit-mode {
+    margin-left: 0;
+}
+
+/* Style pour le libellé "Nouveau Poste" */
+h4 {
+    margin: 10px 0; /* Ajout de marges autour du libellé "Nouveau Poste" */
+    font-size: 18px;
+}
+
+/* Style pour les boutons dans le mode ajout de poste */
+button.add-espace-button {
+    margin-top: 10px;
+}
