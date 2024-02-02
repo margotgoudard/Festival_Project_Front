@@ -5,7 +5,7 @@
   <button (click)="onAjouterPosteClick()">Ajouter Poste</button>
   <mat-form-field>
       <mat-label>Sélectionner un poste</mat-label>
-      <mat-select [(ngModel)]="selectedPoste" (selectionChange)="onPosteChange($event)">
+      <mat-select [(ngModel)]="selectedPoste" (selectionChange)="onPosteChange($event)" ngModel [ngModelOptions]="{standalone: true}">
         <mat-option *ngFor="let poste of data.postes" [value]="poste">{{ poste.libellePoste }}</mat-option>
       </mat-select> 
   </mat-form-field>
@@ -37,7 +37,7 @@
       <input [(ngModel)]="newEspace.libelleEspace" placeholder="Nouveau Espace Libellé" name="libelleEspace"/>
       <mat-form-field>
         <mat-label>Sélectionner un espace</mat-label>
-        <mat-select [(ngModel)]="selectedEspace" (selectionChange)="onEspaceChange($event)">
+        <mat-select [(ngModel)]="selectedEspace" (selectionChange)="onEspaceChange($event)" [ngModelOptions]="{standalone: true}">
           <ng-container *ngFor="let espace of data.espaces">
             <ng-container *ngIf="espace.posteId === null || espace.posteId === undefined">
           <mat-option *ngFor="let espace of data.espaces" [value]="espace">{{ espace.libelleEspace }}</mat-option>
@@ -52,7 +52,7 @@
       <input [(ngModel)]="newPoste.libellePoste" placeholder="Nouveau Poste Libellé" name="libellePoste" />
       <mat-form-field>
         <mat-label>Sélectionner un espace</mat-label>
-        <mat-select [(ngModel)]="selectedEspace" (selectionChange)="onEspaceChange($event)">
+        <mat-select [(ngModel)]="selectedEspace" (selectionChange)="onEspaceChange($event)" [ngModelOptions]="{standalone: true}">
           <ng-container *ngFor="let espace of data.espaces">
             <ng-container *ngIf="espace.posteId === null || espace.posteId === undefined">
           <mat-option *ngFor="let espace of data.espaces" [value]="espace">{{ espace.libelleEspace }}</mat-option>
