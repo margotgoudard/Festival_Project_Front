@@ -20,7 +20,8 @@ export class EspaceService {
     const url = `${this.apiUrl}/espace`;
     return this.http.post<Espace>(url, {
       "idEspace"          : espace.idEspace,
-      "libelle"          : espace.libelleEspace
+      "libelle": espace.libelleEspace,
+      "isAnimation" : espace.isAnimation
     });
   }
   
