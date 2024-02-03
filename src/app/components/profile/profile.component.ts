@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
   isNomEditMode: boolean = false;
   isPrenomEditMode: boolean = false;
   isEditMode: boolean = false;
+  isEmailEditMode: boolean = false;
 
 
 
@@ -184,6 +185,11 @@ export class ProfileComponent implements OnInit {
   togglePrenomEditMode(): void {
     this.isPrenomEditMode = !this.isPrenomEditMode;
   }
+
+  toggleEmailEditMode(): void {
+    this.isEmailEditMode = !this.isEmailEditMode;
+  }
+
   toggleEditMode(): void {
     this.isEditMode = !this.isEditMode;
     this.toggleNomEditMode(); 

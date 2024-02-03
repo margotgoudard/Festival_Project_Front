@@ -9,6 +9,7 @@
         <input [(ngModel)]="nom" placeholder="Entrez votre nom" name="editNom"/>
       </ng-template>
     </p>
+
     <p><strong>Prénom :</strong>
       <ng-container *ngIf="!isPrenomEditMode; else editPrenomMode">
         {{ prenom }}
@@ -17,8 +18,18 @@
         <input [(ngModel)]="prenom" placeholder="Entrez votre prénom" name="editPrenom" />
       </ng-template>
     </p>
+
     <p><strong>Pseudo :</strong> {{ pseudo }}</p>
-    <p><strong>Mail :</strong> {{ email }}</p>
+
+    <p><strong>Mail :</strong>
+      <ng-container *ngIf="!isEmailEditMode; else editEmailMode">
+        {{ email }}
+      </ng-container>
+      <ng-template #editEmailMode>
+        <input [(ngModel)]="email" placeholder="Entrez votre email" name="editemail" />
+      </ng-template>
+    </p>
+
     <p><strong>Association(s) :</strong> {{ associations }} </p>
   </div>
 
