@@ -6,22 +6,27 @@ h2 {
   .search-field {
     width: 250px;
     height: 80px;
-    margin-left : 15px;
     flex: 1;
+    margin-right: 5px; 
+    margin-left: 5px;
   }
   
+  .search-field-festival {
+    width: 250px;
+    height: 80px;
+    margin-left : 15px;
+  }
   
   .mat-select {
     height: 10px; 
   }
   
-  .search-fields-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    margin : auto;
-  }
-  
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
   .mat-elevation-z8 {
     overflow-x: hidden;
     justify-content: center;

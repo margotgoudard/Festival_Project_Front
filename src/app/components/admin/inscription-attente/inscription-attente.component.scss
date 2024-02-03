@@ -4,11 +4,24 @@ h2 {
   }
 
   .search-field {
-    width: 200px;
+    width: 250px;
+    height: 80px;
+    flex: 1;
+    margin-right: 5px; 
+    margin-left: 5px;
+  }
+  
+  .search-field-festival {
+    width: 250px;
     height: 80px;
     margin-left : 15px;
-    flex: 1;
   }
+  
+
+.container {
+  display: flex;
+  justify-content: center;
+}
   
   /* Ajustez la hauteur de la barre de recherche */
   .mat-form-field {
@@ -20,10 +33,4 @@ h2 {
     line-height: 24px; /* Ajustez la hauteur selon vos besoins */
   }
 
-  .search-fields-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    margin : auto;
-  }
   
