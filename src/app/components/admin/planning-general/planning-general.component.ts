@@ -50,7 +50,6 @@ import { UserService } from 'src/app/services/user.service';
   
     ngOnInit(): void {
       this.loadFestivals();
-      this.loadData();
     }
   
 
@@ -127,7 +126,7 @@ import { UserService } from 'src/app/services/user.service';
     }
   
     loadData() {
-      this.userService.getUsersRegistration(this.recherche.festival).subscribe(
+      this.userService.getUsersRegistration(this.selectedFestival).subscribe(
         (userRegistrations) => {
           const mappedUsers = userRegistrations.map((registration) => ({
             benevolePseudo: registration.benevolePseudo,
