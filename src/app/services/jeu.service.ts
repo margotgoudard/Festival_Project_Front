@@ -53,5 +53,11 @@ export class JeuService {
       jeux : arrayJeux
     });
   }
+
+  deleteJeux(): Observable<boolean> {
+    const url = `${this.apiUrl}/jeux`;
+    
+    return this.http.delete<boolean>(url);
+  }
   
 }
