@@ -15,13 +15,13 @@ export class PlacerService {
 
   // Fonction pour récupérer le nombre de places dans la table Placer pour chaque espace et créneau
   getNombrePlacesPourEspaces(espaceId: number, creneauId: number): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/nombre-places?espaceId=${espaceId}&creneauId=${creneauId}`);
+    return this.http.get<number>(`${this.apiUrl}/places?espaceId=${espaceId}&creneauId=${creneauId}`);
   }
 
   updatePlaces(espaceId: number, creneauId: number, newNumberOfPlaces: number): Observable<any> {
     const payload = { espaceId, creneauId, newNumberOfPlaces };
 
-    return this.http.put(`${this.apiUrl}/update-places`, payload);
+    return this.http.put(`${this.apiUrl}/places`, payload);
   }
  
 

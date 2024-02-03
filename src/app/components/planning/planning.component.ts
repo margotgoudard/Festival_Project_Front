@@ -451,9 +451,6 @@ candidaterVolunteers(): void {
     // Assuming candidaterService.candidaterVolunteer method exists
     this.candidaterService.candidaterVolunteer(benevolePseudo, creneau.idC, creneau.idF).subscribe(
       () => {
-        console.log('Volunteer candidated successfully for creneau', creneau);
-        console.log(creneau.idF)
-
         // Open the existing MatDialog with your component after successful candidature
         this.openInscriptionReussiDialog(creneau);
       },
