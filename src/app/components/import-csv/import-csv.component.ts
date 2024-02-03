@@ -18,7 +18,9 @@ export class ImportCsvComponent {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       //définition d'une méthode à exécuter qd le fichier est chargé
+      console.log('ok');
       this.jeux = this.convertCsvToJeux(e.target.result);
+      console.log(this.jeux.length);
     };
     reader.readAsText(event.target.files[0], 'UTF-8'); //ici le chargement du fichier
   }
