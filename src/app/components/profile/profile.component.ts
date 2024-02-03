@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from 'src/app/services/auth.service';
 import { Festival } from 'src/app/interfaces/festival.interface';
 import { FormsModule } from '@angular/forms';
+import { Role } from 'src/app/model/role.model';
 
 
 @Component({
@@ -17,9 +18,10 @@ import { FormsModule } from '@angular/forms';
 export class ProfileComponent implements OnInit {
   successMessage: string = '';
   errorMessage: string = '';
+  isNomEditMode: boolean = false;
+  isPrenomEditMode: boolean = false;
   isEditMode: boolean = false;
-  editedNom: string = '';
-  editedPrenom: string = '';
+
 
 
   nom: string = '';
@@ -27,11 +29,16 @@ export class ProfileComponent implements OnInit {
   email: string = '';
   associations: string = '';
   pseudo: string = '';
+  password: string = '';
   taille: string = '';
+  numTel: number = 0;
+  chercheLogement: boolean = false;
+  photoDeProfil:string = '';
   vegetarian: boolean = false;
   role: number = 0;
   roleUser: number = 0;
   festivals: Number[] = [];
+
 
   constructor(
     private authService: AuthService,
@@ -55,9 +62,8 @@ export class ProfileComponent implements OnInit {
 
       if (requestedPseudo) {
         // If a username is provided, fetch and display the profile for that user
-        this.userService.getUserByPseudo(requestedPseudo).subscribe(
-          (data: User) => {
-            this.updateProfileFields(data);
+        this.userService.getUserByPseudo(requestedPseudo).subscribe((data: User) => {
+            this.updateLocalProfileFields(data);
           },
           (error) => {
             this.errorMessage = 'Erreur lors de la récupération des données de l\'utilisateur.';
@@ -83,7 +89,7 @@ export class ProfileComponent implements OnInit {
       } else {
         this.userService.getUserByPseudo(loggedInPseudo).subscribe(
           (data: User) => {
-            this.updateProfileFields(data);
+            this.updateLocalProfileFields(data);
           },
           (error) => {
             this.errorMessage = 'Erreur lors de la récupération des données de l\'utilisateur.';
@@ -113,7 +119,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  updateProfileFields(data: User): void {
+  updateLocalProfileFields(data: User): void {
     this.nom = data.nom;
     this.prenom = data.prenom;
     this.email = data.email;
@@ -121,7 +127,11 @@ export class ProfileComponent implements OnInit {
     this.pseudo = data.pseudo;
     this.taille = data.taille;
     this.vegetarian = data.vegetarian;
-   }
+    this.password = data.password;
+    this.numTel = data.numTel;
+    this.chercheLogement = data.chercheLogement;
+    this.photoDeProfil = data.photoDeProfil;
+  }
 
   navigateToModificationProfile(): void {
     const dialogRef = this.dialog.open(ModificationProfileComponent, {
@@ -167,12 +177,71 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  toggleNomEditMode(): void {
+    this.isNomEditMode = !this.isNomEditMode;
+  }
+
+  togglePrenomEditMode(): void {
+    this.isPrenomEditMode = !this.isPrenomEditMode;
+  }
   toggleEditMode(): void {
     this.isEditMode = !this.isEditMode;
-    // Réinitialisez les valeurs éditées lorsque vous basculez vers le mode d'édition
-    if (this.isEditMode) {
-      this.editedNom = this.nom;
-      this.editedPrenom = this.prenom;
-    }
+    this.toggleNomEditMode(); 
+    this.togglePrenomEditMode();
+
   }
+
+  onConfirmClick(): void {
+    // Mettez à jour les données dans la base de données ou effectuez d'autres actions nécessaires
+    // Assurez-vous que vous avez une méthode dans votre service pour mettre à jour le profil.
+    // Exemple:
+    //this.userService.updateUserProfile({ id: userId, nom: this.nom, prenom: this.prenom })
+    //  .subscribe(
+    //    (response) => {
+    //      console.log('Profil mis à jour avec succès', response);
+    //      this.isEditMode = false; // Désactivez le mode d'édition après confirmation
+    //    },
+    //    (error) => {
+    //      console.error('Erreur lors de la mise à jour du profil', error);
+    //      // Gérez les erreurs si nécessaire
+    //    }
+    //  );
+
+     // Créez un objet avec les propriétés mises à jour
+    const updatedUserData: User = new User(
+      this.prenom,
+      this.nom,
+      this.pseudo,
+      this.associations,
+      this.email,
+      this.password,
+      this.numTel,
+      this.chercheLogement,
+      this.taille,
+      this.vegetarian,
+      this.photoDeProfil,
+      new Role(this.role),
+    );
+
+    // Envoyez les données mises à jour au service pour la mise à jour
+  this.userService.updateUserProfile(updatedUserData).subscribe(
+    (response) => {
+      console.log('Profil mis à jour avec succès', response);
+      this.isEditMode = false; // Désactiver le mode d'édition après confirmation
+    },
+    (error) => {
+      console.error('Erreur lors de la mise à jour du profil', error);
+      // Gérez les erreurs si nécessaire
+    }
+  );
+    
+  }
+
+  onCancelClick(): void {
+    // Réinitialisez les valeurs éditées et désactivez le mode d'édition
+    this.isEditMode = false; // Désactivez le mode d'édition après annulation
+  }
+
+
+
 }

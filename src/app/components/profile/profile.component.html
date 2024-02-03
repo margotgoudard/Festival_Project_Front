@@ -2,19 +2,19 @@
   <h2>Profil Bénévole</h2>
   <div class="informations-personnelles">
     <p><strong>Nom :</strong>
-      <ng-container *ngIf="!isEditMode; else editMode">
+      <ng-container *ngIf="!isNomEditMode; else editNomMode">
         {{ nom }}
       </ng-container>
-      <ng-template #editMode>
-        <input [(ngModel)]="editedNom" placeholder="Entrez votre nom" />
+      <ng-template #editNomMode>
+        <input [(ngModel)]="nom" placeholder="Entrez votre nom" name="editNom"/>
       </ng-template>
     </p>
     <p><strong>Prénom :</strong>
-      <ng-container *ngIf="!isEditMode; else editMode">
+      <ng-container *ngIf="!isPrenomEditMode; else editPrenomMode">
         {{ prenom }}
       </ng-container>
-      <ng-template #editMode>
-        <input [(ngModel)]="editedPrenom" placeholder="Entrez votre prénom" />
+      <ng-template #editPrenomMode>
+        <input [(ngModel)]="prenom" placeholder="Entrez votre prénom" name="editPrenom" />
       </ng-template>
     </p>
     <p><strong>Pseudo :</strong> {{ pseudo }}</p>
@@ -44,6 +44,14 @@
     </label>
   </div>
 
-  <button type="button" (click)="toggleEditMode()">Modifier</button>
+  <!-- Bouton "Modifier" -->
+  <button type="button" (click)="toggleEditMode()" *ngIf="!isEditMode">Modifier</button>
+  
+  <!-- Boutons "Confirmer" et "Annuler" -->
+  <div *ngIf="isEditMode" class="edit-buttons">
+    <button type="button" (click)="onConfirmClick()" class="confirm-button">Confirmer</button>
+    <button type="button" (click)="onCancelClick()" class="cancel-button">Annuler</button>
+  </div>
+
 
 </div>

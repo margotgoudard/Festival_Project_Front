@@ -55,3 +55,20 @@ input[type="checkbox"] {
   margin-right: 5px;
 }
 
+.edit-buttons {
+  margin-top: 10px;
+  /* Espacement entre les boutons */
+}
+
+.confirm-button {
+  margin-right: 10px;
+  /* Espacement à droite du bouton "Confirmer" */
+}
+
+.cancel-button {
+  background-color: red;
+  /* Couleur de fond rouge pour le bouton "Annuler" */
+  color: white;
+  /* Couleur du texte blanc pour une meilleure lisibilité */
+}
+
