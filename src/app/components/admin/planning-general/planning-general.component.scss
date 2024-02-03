@@ -33,7 +33,13 @@ h2 {
     align-items: center;
   }
   
-  /* Si vous souhaitez également centrer horizontalement les cellules de la table */
-  .mat-table {
-    width: 100%;
+ 
+  .mat-column-prenom,
+  .mat-column-nom,
+  .mat-column-email,
+  .mat-column-tel,
+  .mat-column-espace,
+  .mat-column-jour,
+  .mat-column-creneau {
+    width: 14,28%; 
   }

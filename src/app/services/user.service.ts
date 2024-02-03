@@ -29,7 +29,7 @@ export class UserService {
   }  
 
   updateUserProfile(user: User): Observable<any> {
-    const url = `${this.apiUrl}/benevole/${user.pseudo}`;
+    const url = `${this.apiUrl}/benevole/${user}`;
     return this.http.put(url, user);
   }
 

@@ -1,6 +1,7 @@
-<div class="profil-benevole">
-  <h2>Profil Bénévole</h2>
+<div class="profile-container" [ngClass]="{'three-columns': proposeLogement, 'two-columns': !proposeLogement}">
+  <div class="left-column">
   <div class="informations-personnelles">
+    <h2>Profil Bénévole</h2>
     <p><strong>Nom :</strong>
       <ng-container *ngIf="!isNomEditMode; else editNomMode">
         {{ nom }}
@@ -29,18 +30,50 @@
         <input [(ngModel)]="email" placeholder="Entrez votre email" name="editemail" />
       </ng-template>
     </p>
-    
-    <p><strong>Association(s) :</strong>
-      <ng-container *ngIf="!isAssociationEditMode; else editAssociationMode">
-        {{ associations }}
+
+    <p><strong>Téléphone :</strong>
+      <ng-container *ngIf="!isTelEditMode; else editTelMode">
+        {{ numTel }}
       </ng-container>
-      <ng-template #editAssociationMode>
-        <input [(ngModel)]="associations" placeholder="Entrez votre association" name="editAssociation" />
+      <ng-template #editTelMode>
+        <input [(ngModel)]="numTel" placeholder="Entrez votre numéro" name="edittel" />
       </ng-template>
     </p>
+
+      <!-- Bouton "Modifier" -->
+  <button type="button" *ngIf="loggedInPseudo === pseudo && !isEditMode" (click)="toggleEditMode()" >Modifier</button>
+  
+  <!-- Boutons "Confirmer" et "Annuler" -->
+  <div *ngIf="isEditMode" class="edit-buttons">
+    <button type="button" (click)="onConfirmClick()" class="confirm-button">Confirmer</button>
+    <button type="button" (click)="onCancelClick()" class="cancel-button">Annuler</button>
   </div>
 
+  </div>
+    <div class="referent">
+      <ng-container *ngIf="roleUser === 3; else notReferent">
+        <p>Referent : Oui</p>
+      </ng-container>
+      <ng-template #notReferent>
+        <p>Referent : Non</p>
+      </ng-template>
+      <label *ngIf="role === 1">
+        <input type="checkbox" *ngIf="role === 1" [checked]="roleUser === 3" (change)="onCheckboxChange($event)"> Référent
+      </label>
+      <ng-container *ngIf="roleUser === 4; else notGestionnaire">
+        <p>Gestionnaire : Oui</p>
+      </ng-container>
+      <ng-template #notGestionnaire>
+        <p>Gestionnaire : Non</p>
+      </ng-template>
+      <label *ngIf="role === 1">
+        <input type="checkbox" *ngIf="role === 1" [checked]="roleUser === 4" (change)="onCheckboxChangeGestionnaire($event)"> Gestionnaire
+      </label>
+      
+    </div>
+  </div>
 
+ <div class="right-column">
   <div class="preferences">
     <p><strong>Taille de T-shirt :</strong>
       <ng-container *ngIf="!isTailleEditMode; else editTailleMode">
@@ -57,45 +90,84 @@
       </ng-template>
     </p>
 
-    <p><strong>Végétarien(ne) :</strong> {{ vegetarian ? 'Oui' : 'Non' }}</p>
+    <p><strong>Végétarien(ne) :</strong>
+      <ng-container *ngIf="!isVegetarianEditMode; else editVegetarianMode">
+        <ng-container *ngIf="vegetarian === true; else notVegetarian">
+          <p>Vegetarian Oui</p>
+        </ng-container>
+        <ng-template #notVegetarian>
+          <p>Vegetarian : Non</p>
+        </ng-template>
+      </ng-container>
+      <ng-template #editVegetarianMode>
+        <label>
+          <input type="checkbox" [(ngModel)]="vegetarian" value="vegetarian" (change)="toggleVegetarian($event)" > Oui
+        </label>
+      </ng-template>
+    </p>
+  </div>
+
+
+  <div class="festivals">
     
+    <p><strong>Association(s) :</strong>
+      <ng-container *ngIf="!isAssociationEditMode; else editAssociationMode">
+        {{ associations.nomAssociation }}
+      </ng-container>
+      <ng-template #editAssociationMode>
+        <input [(ngModel)]="associations.nomAssociation" placeholder="Entrez votre association" name="editAssociation" />
+      </ng-template>
+    </p>
     <p><strong>Festivals :</strong></p>
   <ul>
     <li *ngFor="let festival of festivals">Festival du Jeu Montpellier {{ festival }}</li>
   </ul>
   </div>
-  
-  <div class="referent">
-    <ng-container *ngIf="roleUser === 3; else notReferent">
-      <p>Referent : Oui</p>
-    </ng-container>
-    <ng-template #notReferent>
-      <p>Referent : Non</p>
-    </ng-template>
-    <label *ngIf="role === 1">
-      <input type="checkbox" *ngIf="role === 1" [checked]="roleUser === 3" (change)="onCheckboxChange($event)"> Référent
-    </label>
-    <ng-container *ngIf="roleUser === 4; else notGestionnaire">
-      <p>Gestionnaire : Oui</p>
-    </ng-container>
-    <ng-template #notGestionnaire>
-      <p>Gestionnaire : Non</p>
-    </ng-template>
-    <label *ngIf="role === 1">
-      <input type="checkbox" *ngIf="role === 1" [checked]="roleUser === 4" (change)="onCheckboxChangeGestionnaire($event)"> Gestionnaire
-    </label>
-    
-    
-  </div>
 
-  <!-- Bouton "Modifier" -->
-  <button type="button" (click)="toggleEditMode()" *ngIf="!isEditMode">Modifier</button>
-  
-  <!-- Boutons "Confirmer" et "Annuler" -->
-  <div *ngIf="isEditMode" class="edit-buttons">
-    <button type="button" (click)="onConfirmClick()" class="confirm-button">Confirmer</button>
-    <button type="button" (click)="onCancelClick()" class="cancel-button">Annuler</button>
-  </div>
+  <div class="logement">
+    <p><strong>En recherche de logement :</strong>
+      <ng-container *ngIf="!isChercheLogementEditMode; else editChercheLogementMode">
+        <ng-container *ngIf="chercheLogement === true; else notChercheLogement">
+          <p>Recherche de Logement : Oui</p>
+        </ng-container>
+        <ng-template #notChercheLogement>
+          <p>Recherche de Logement : Non</p>
+        </ng-template>
+      </ng-container>
+      <ng-template #editChercheLogementMode>
+        <label>
+          <input type="checkbox" [(ngModel)]="chercheLogement" value="chercheLogement" (change)="toggleChercheLogement($event)"> Oui
+        </label>
+      </ng-template>
+    </p>
 
+    <p><strong>Propose un logement :</strong>
+      <ng-container *ngIf="!isProposeLogementEditMode; else editProposeLogementMode">
+        <ng-container *ngIf="proposeLogement === true; else notProposeLogement">
+          <p>Propose Logement : Oui</p>
+        </ng-container>
+        <ng-template #notProposeLogement>
+          <p>Propose de Logement : Non</p>
+        </ng-template>
+      </ng-container>
+      <ng-template #editProposeLogementMode>
+        <label>
+          <input type="checkbox" [(ngModel)]="proposeLogement" value="proposeLogement" (change)="toggleProposeLogement($event)"> Oui
+        </label>
+      </ng-template>
+    </p>
+    <button type="button" (click)="openAddLogementDialog()" *ngIf="proposeLogement">Ajouter un logement</button>
+  </div>
+</div>
+
+<div class="logements-proposes" *ngIf="proposeLogement">
+  <h3>Logements Proposés</h3>
+  <div *ngFor="let logement of logementsProposes" class="logements">
+    <button type="button" class="delete-button" (click)="deleteLogement(logement)">×</button>
+    <p><strong>Adresse :</strong> {{ logement.adresseHebergement }}</p>
+    <p><strong>Nombre de places :</strong> {{ logement.nbPlaces }}</p>
+  </div>
+</div>
 
 </div>
+

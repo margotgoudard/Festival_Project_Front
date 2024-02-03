@@ -11,6 +11,7 @@ import { ListeBenevolesComponent } from './components/liste-benevoles/liste-bene
 import { InscriptionAttenteComponent } from './components/admin/inscription-attente/inscription-attente.component';
 import { InscriptionAttenteBenevoleComponent } from './components/inscription-attente-benevole/inscription-attente-benevole.component';
 import { ImportCsvComponent } from './components/import-csv/import-csv.component';
+import { ListeHebergementsComponent } from './components/liste-hebergements/liste-hebergements.component';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
@@ -28,10 +29,8 @@ const routes: Routes = [
   { path: 'inscription-attente', component: InscriptionAttenteComponent },
   { path: 'inscription-attente-benevole', component: InscriptionAttenteBenevoleComponent },
   { path: 'liste', component: ListeBenevolesComponent },
-  { path: 'import', component: ImportCsvComponent}
-
-
-
+  { path: 'import', component: ImportCsvComponent},
+  { path: 'hebergements', component: ListeHebergementsComponent}
 ];
 
 @NgModule({

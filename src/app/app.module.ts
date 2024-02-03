@@ -44,6 +44,9 @@ import { InscriptionAttenteComponent } from './components/admin/inscription-atte
 import { InscriptionAttenteBenevoleComponent } from './components/inscription-attente-benevole/inscription-attente-benevole.component';
 import { ImportCsvComponent } from './components/import-csv/import-csv.component';
 import { FestivalDialogComponent } from './components/festival-dialog/festival-dialog.component';
+import { AddLogementDialogComponent } from './components/add-logement-dialog/add-logement-dialog.component';
+import { HebergementService } from './services/hebergement.service';
+import { ListeHebergementsComponent } from './components/liste-hebergements/liste-hebergements.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +76,9 @@ import { FestivalDialogComponent } from './components/festival-dialog/festival-d
     InscriptionAttenteComponent,
     InscriptionAttenteBenevoleComponent,
     ImportCsvComponent,
-    FestivalDialogComponent
+    FestivalDialogComponent,
+    AddLogementDialogComponent,
+    ListeHebergementsComponent
   ],
   imports: [
     BrowserModule,
@@ -96,6 +101,7 @@ import { FestivalDialogComponent } from './components/festival-dialog/festival-d
     UserService,
     InscriptionService,
     RegistrationPopupService,
+    HebergementService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,12 @@
+<h2>Ajouter un logement</h2>
+<div class="container">
+<form (ngSubmit)="onSubmit()">
+  <label for="address">Adresse :</label>
+  <input [(ngModel)]="addresseHebergement" name="address" required>
+  
+  <label for="capacity">Nombre de places :</label>
+  <input type="number" [(ngModel)]="nbPlaces" name="capacity" required>
+  
+  <button type="submit">Ajouter</button>
+</form>
+</div>

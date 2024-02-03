@@ -25,14 +25,6 @@ body {
   height: 100vh;
 }
 
-.profil-benevole {
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 400px;
-  text-align: center; /* Ajout de cette ligne pour centrer les paragraphes */
-}
 
 h2 {
   color: #333333;
@@ -71,4 +63,64 @@ input[type="checkbox"] {
   color: white;
   /* Couleur du texte blanc pour une meilleure lisibilité */
 }
+
+.profile-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.two-columns .left-column,
+.two-columns .right-column {
+  width: 48%;
+}
+
+.three-columns .left-column,
+.three-columns .right-column,
+.three-columns .logements-proposes {
+  width: 32%;
+}
+
+
+.informations-personnelles,
+.preferences,
+.logement,
+.referent,
+.logements-proposes,
+.festivals {
+  width: 100%; /* Adjust the width as needed */
+  margin-top: 20px !important;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  margin: auto;
+}
+
+
+.edit-buttons {
+  margin-top: 20px;
+}
+
+.logements {
+  position: relative; /* Set the position to relative for absolute positioning of the delete button */
+  border: 1px solid black;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: red; /* Change color as desired */
+}
+
+
 
