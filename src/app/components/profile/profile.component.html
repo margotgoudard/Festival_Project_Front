@@ -29,14 +29,36 @@
         <input [(ngModel)]="email" placeholder="Entrez votre email" name="editemail" />
       </ng-template>
     </p>
-
-    <p><strong>Association(s) :</strong> {{ associations }} </p>
+    
+    <p><strong>Association(s) :</strong>
+      <ng-container *ngIf="!isAssociationEditMode; else editAssociationMode">
+        {{ associations }}
+      </ng-container>
+      <ng-template #editAssociationMode>
+        <input [(ngModel)]="associations" placeholder="Entrez votre association" name="editAssociation" />
+      </ng-template>
+    </p>
   </div>
 
 
   <div class="preferences">
-    <p><strong>Taille de T-shirt :</strong> {{ taille }}</p>
+    <p><strong>Taille de T-shirt :</strong>
+      <ng-container *ngIf="!isTailleEditMode; else editTailleMode">
+        {{ taille }}
+      </ng-container>
+      <ng-template #editTailleMode>
+        <ng-container *ngIf="isEditMode"> <!-- Affichez seulement en mode édition -->
+          <select [(ngModel)]="taille" name="editTaille">
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+          </select>
+        </ng-container>
+      </ng-template>
+    </p>
+
     <p><strong>Végétarien(ne) :</strong> {{ vegetarian ? 'Oui' : 'Non' }}</p>
+    
     <p><strong>Festivals :</strong></p>
   <ul>
     <li *ngFor="let festival of festivals">Festival du Jeu Montpellier {{ festival }}</li>

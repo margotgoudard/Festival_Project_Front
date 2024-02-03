@@ -22,6 +22,9 @@ export class ProfileComponent implements OnInit {
   isPrenomEditMode: boolean = false;
   isEditMode: boolean = false;
   isEmailEditMode: boolean = false;
+  isAssociationEditMode: boolean = false;
+  isTailleEditMode: boolean = false;
+
 
 
 
@@ -190,30 +193,27 @@ export class ProfileComponent implements OnInit {
     this.isEmailEditMode = !this.isEmailEditMode;
   }
 
+  toggleAssociationEditMode(): void {
+    this.isAssociationEditMode = !this.isAssociationEditMode;
+  }
+
+  toggleTailleEditMode(): void {
+    this.isTailleEditMode = !this.isTailleEditMode;
+  }
+
   toggleEditMode(): void {
     this.isEditMode = !this.isEditMode;
     this.toggleNomEditMode(); 
     this.togglePrenomEditMode();
+    this.toggleEmailEditMode();
+    this.toggleAssociationEditMode();
+    this.toggleTailleEditMode();
 
   }
 
   onConfirmClick(): void {
-    // Mettez à jour les données dans la base de données ou effectuez d'autres actions nécessaires
-    // Assurez-vous que vous avez une méthode dans votre service pour mettre à jour le profil.
-    // Exemple:
-    //this.userService.updateUserProfile({ id: userId, nom: this.nom, prenom: this.prenom })
-    //  .subscribe(
-    //    (response) => {
-    //      console.log('Profil mis à jour avec succès', response);
-    //      this.isEditMode = false; // Désactivez le mode d'édition après confirmation
-    //    },
-    //    (error) => {
-    //      console.error('Erreur lors de la mise à jour du profil', error);
-    //      // Gérez les erreurs si nécessaire
-    //    }
-    //  );
 
-     // Créez un objet avec les propriétés mises à jour
+    // Créez un objet avec les propriétés mises à jour
     const updatedUserData: User = new User(
       this.prenom,
       this.nom,
@@ -230,22 +230,32 @@ export class ProfileComponent implements OnInit {
     );
 
     // Envoyez les données mises à jour au service pour la mise à jour
-  this.userService.updateUserProfile(updatedUserData).subscribe(
-    (response) => {
-      console.log('Profil mis à jour avec succès', response);
-      this.isEditMode = false; // Désactiver le mode d'édition après confirmation
-    },
-    (error) => {
-      console.error('Erreur lors de la mise à jour du profil', error);
-      // Gérez les erreurs si nécessaire
-    }
-  );
+    this.userService.updateUserProfile(updatedUserData).subscribe(
+      (response) => {
+        console.log('Profil mis à jour avec succès', response);
+        this.isEditMode = false; // Désactiver le mode d'édition après confirmation
+        this.isNomEditMode = false; 
+        this.isPrenomEditMode = false;
+        this.isEmailEditMode = false;
+        this.isAssociationEditMode = false;
+        this.isTailleEditMode = false;
+      },
+      (error) => {
+        console.error('Erreur lors de la mise à jour du profil', error);
+        // Gérez les erreurs si nécessaire
+      }
+    );
     
   }
 
   onCancelClick(): void {
     // Réinitialisez les valeurs éditées et désactivez le mode d'édition
     this.isEditMode = false; // Désactivez le mode d'édition après annulation
+    this.isNomEditMode = false;
+    this.isPrenomEditMode = false;
+    this.isEmailEditMode = false;
+    this.isAssociationEditMode = false;
+    this.isTailleEditMode = false;
   }
 
 
