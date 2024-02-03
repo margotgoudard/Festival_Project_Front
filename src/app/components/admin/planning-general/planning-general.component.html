@@ -2,14 +2,14 @@
 <!-- Structure du composant Angular -->
 <h2>Planning Général</h2>
 
-<mat-form-field class="search-field">
+<mat-form-field class="search-field-festival">
   <mat-label>Sélectionner le festival</mat-label>
   <mat-select [(ngModel)]="selectedFestival" (selectionChange)="onFestivalChange($event)">
     <mat-option *ngFor="let festival of festivals" [value]="festival.idF">{{ festival.annee }}</mat-option>
   </mat-select>
 </mat-form-field>
 
-
+<div class="container">
 <div class="search-fields-container">
   <mat-form-field class="search-field">
     <mat-label>Rechercher par espace</mat-label>
@@ -32,7 +32,7 @@
     </mat-select>
   </mat-form-field>
 </div>
-
+</div>
 
 
 <div class="mat-elevation-z8">
