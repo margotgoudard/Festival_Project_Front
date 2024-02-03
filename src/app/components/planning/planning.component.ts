@@ -21,6 +21,7 @@ import { Festival } from 'src/app/interfaces/festival.interface';
 import { MatSelectChange } from '@angular/material/select';
 import { FestivalService } from 'src/app/services/festival.service';
 import { CreneauDialogComponent } from '../creneau-dialog/creneau-dialog.component';
+import { FestivalDialogComponent } from '../festival-dialog/festival-dialog.component';
 
 @Component({
   selector: 'app-planning',
@@ -215,6 +216,7 @@ convertirHeureEnNombre(heure: string): number {
     const key = `${creneauId}_${espaceId}`;
     this.placerService.getNombrePlacesPourEspaces(espaceId, creneauId).subscribe(nbPlaces => {
       this.placesDisponibles[key] = nbPlaces;
+      console.log(nbPlaces)
     });
   }
   
@@ -276,15 +278,12 @@ openInscriptionDialog(totalPlaces: number, creneau: Creneau, poste: Poste) {
   });
 }
 
-placesDejaInscrites(creneauId: number, posteId: number): void {
-  const posteEspaces = this.posteEspacesMapping[posteId];
-  const espace = posteEspaces ? posteEspaces[0] : null;
-  const idEspace = espace ? espace.idEspace : null;
-  const key = `${creneauId}_${idEspace}`;
+placesDejaInscrites(creneauId: number, espaceId: number): void {
+  const key = `${creneauId}_${espaceId}`;
   
   this.userService.getUsersRegistration(this.selectedFestival).subscribe(userRegistrations => {
     const filteredRegistrations = userRegistrations.filter(registration =>
-      registration.creneauId === creneauId && registration.espaceId === idEspace
+      registration.creneauId === creneauId && registration.espaceId === espaceId
     );
 
     this.placesInscrites[key] = filteredRegistrations.length;
@@ -372,6 +371,7 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
       width: '600px', 
       data: {
         creneaux: this.creneaux,
+        selectedFestival: this.selectedFestival,
       },
     });
   
@@ -382,9 +382,17 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
     });
   }
   
-  openPosteDialog() {
-   this.dialog.open(PosteDialogComponent, { 
-    
+  openPosteDialog(): void {
+   const dialogRef = this.dialog.open(PosteDialogComponent, { 
+    width: '600px',
+    data: {
+      postes: this.postes,
+      espaces: this.espaces,
+      idF: this.selectedFestival
+    },
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('Modification dialog closed with result:', result);
     });
   }
   
@@ -443,9 +451,6 @@ candidaterVolunteers(): void {
     // Assuming candidaterService.candidaterVolunteer method exists
     this.candidaterService.candidaterVolunteer(benevolePseudo, creneau.idC, creneau.idF).subscribe(
       () => {
-        console.log('Volunteer candidated successfully for creneau', creneau);
-        console.log(creneau.idF)
-
         // Open the existing MatDialog with your component after successful candidature
         this.openInscriptionReussiDialog(creneau);
       },
@@ -472,42 +477,19 @@ openInscriptionReussiDialog(creneau: Creneau): void {
     // Handle any logic after the dialog is closed
   });
 }
+
+openFestivalDialog(): void {
+  const dialogRef = this.dialog.open(FestivalDialogComponent, { 
+   width: '600px',
+   data: {
+     festivals: this.festivals,
+   },
+     });
+     dialogRef.afterClosed().subscribe(result => {
+       console.log('Modification dialog closed with result:', result);
+   });
+ }
+ 
+
 }
-/*inscrireATousLesPostes() {
 
-  if (this.selectedButtons.length === 0) {
-    // Affichez une alerte si aucun poste n'est sélectionné
-    alert('Aucun poste sélectionné');
-    return;
-  }
-  // Logique pour inscrire à tous les postes sélectionnés
-  console.log("Inscription à tous les postes :", this.selectedButtons);
-}*/
-
-/*setUserRole() {
-  // Subscribe to the observable to get the user information
-  this.authService.getCurrentUser().subscribe(
-    (user) => {
-      // Handle the user information here
-      this.userRole = user ? user.role : '';
-    },
-    (error) => {
-      console.error('Error fetching user information:', error);
-    }
-  );
-}*/
-
-/*openModificationDialog() {
-  const dialogRef = this.dialog.open(ModifyDialogComponent, {
-    width: '600px', // Adjust the width as needed
-    data: {
-      creneaux: this.creneaux, // Pass your current creneaux and postes data to the dialog
-      postes: this.postes
-    }
-  });
-
-  dialogRef.afterClosed().subscribe(result => {
-    // Handle the result from the modification dialog if needed
-    console.log('Modification dialog closed with result:', result);
-  });
-}*/

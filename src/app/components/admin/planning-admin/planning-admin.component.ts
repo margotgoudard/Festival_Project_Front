@@ -239,6 +239,7 @@ openInscriptionDialog(totalPlaces: number, creneau: Creneau, poste: Poste) {
         jour: creneau.jourCreneau,
         heureDebut: creneau.heureDebut,
         heureFin: creneau.heureFin,
+        idF: creneau.idF
       },
       poste: {
         idP: poste.idP,
@@ -250,15 +251,12 @@ openInscriptionDialog(totalPlaces: number, creneau: Creneau, poste: Poste) {
   });
 }
 
-placesDejaInscrites(creneauId: number, posteId: number): void {
-  const posteEspaces = this.posteEspacesMapping[posteId];
-  const espace = posteEspaces ? posteEspaces[0] : null;
-  const idEspace = espace ? espace.idEspace : null;
-  const key = `${creneauId}_${idEspace}`;
+placesDejaInscrites(creneauId: number, espaceId: number): void {
+  const key = `${creneauId}_${espaceId}`;
   
   this.userService.getUsersRegistration(this.selectedFestival).subscribe(userRegistrations => {
     const filteredRegistrations = userRegistrations.filter(registration =>
-      registration.creneauId === creneauId && registration.espaceId === idEspace
+      registration.creneauId === creneauId && registration.espaceId === espaceId
     );
 
     this.placesInscrites[key] = filteredRegistrations.length;
@@ -267,6 +265,10 @@ placesDejaInscrites(creneauId: number, posteId: number): void {
 
 placesDejaInscritesEspaces(creneauId: number, espaceId: number): number {
   const key = `${creneauId}_${espaceId}`;
+
+  if (this.placesInscrites[key] !== undefined) {
+    return this.placesInscrites[key];
+  }
   
   this.userService.getUsersRegistration(this.selectedFestival).subscribe(userRegistrations => {
     const filteredRegistrations = userRegistrations.filter(registration =>
@@ -324,6 +326,7 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
           jour: creneau.jourCreneau,
           heureDebut: creneau.heureDebut,
           heureFin: creneau.heureFin,
+          idF: creneau.idF
         },
         espace: {
           idEspace: espace.idEspace,
@@ -361,30 +364,6 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
      this.dialog.open(ModifierPlacesDialogComponent, { /* dialog configuration */ });
   }
 }
-
-/*inscrireATousLesPostes() {
-
-  if (this.selectedButtons.length === 0) {
-    // Affichez une alerte si aucun poste n'est sélectionné
-    alert('Aucun poste sélectionné');
-    return;
-  }
-  // Logique pour inscrire à tous les postes sélectionnés
-  console.log("Inscription à tous les postes :", this.selectedButtons);
-}*/
-
-/*setUserRole() {
-  // Subscribe to the observable to get the user information
-  this.authService.getCurrentUser().subscribe(
-    (user) => {
-      // Handle the user information here
-      this.userRole = user ? user.role : '';
-    },
-    (error) => {
-      console.error('Error fetching user information:', error);
-    }
-  );
-}*/
 
 
 

@@ -8,8 +8,9 @@
       <mat-option *ngFor="let festival of festivals" [value]="festival.idF">{{ festival.annee }}</mat-option>
     </mat-select>
   </mat-form-field>
-  
-  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <div class="table-mat">  
+  <mat-table [dataSource]="dataSource" class="mat-elevation">
     <ng-container matColumnDef="nom">
       <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
       <mat-cell *matCellDef="let benevole" (click)="afficherPlanningIndividuel(benevole.pseudo)">{{ benevole.nom }}</mat-cell>
@@ -33,4 +34,5 @@
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
+</div>
   

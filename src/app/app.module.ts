@@ -43,6 +43,7 @@ import { ListeBenevolesComponent } from './components/liste-benevoles/liste-bene
 import { InscriptionAttenteComponent } from './components/admin/inscription-attente/inscription-attente.component';
 import { InscriptionAttenteBenevoleComponent } from './components/inscription-attente-benevole/inscription-attente-benevole.component';
 import { ImportCsvComponent } from './components/import-csv/import-csv.component';
+import { FestivalDialogComponent } from './components/festival-dialog/festival-dialog.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { ImportCsvComponent } from './components/import-csv/import-csv.component
     ListeBenevolesComponent,
     InscriptionAttenteComponent,
     InscriptionAttenteBenevoleComponent,
-    ImportCsvComponent
+    ImportCsvComponent,
+    FestivalDialogComponent
   ],
   imports: [
     BrowserModule,

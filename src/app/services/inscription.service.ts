@@ -24,7 +24,7 @@ export class InscriptionService {
 }
 
   updateRegistration(benevolePseudo: string, creneauId: number, espaceId: number): Observable<void> {
-    const url = `${this.apiUrl}/inscription-update/${benevolePseudo}/${creneauId}/${espaceId}`;
+    const url = `${this.apiUrl}/inscription/${benevolePseudo}/${creneauId}/${espaceId}`;
     return this.http.put<void>(url, {});
   }
 
@@ -34,7 +34,7 @@ export class InscriptionService {
   }
 
   getPosteReferent(espaceId: number): Observable<User[]> {
-    const url = `${this.apiUrl}/getPosteReferent/${espaceId}`; 
+    const url = `${this.apiUrl}/posteReferent/${espaceId}`; 
     return this.http.get<User[]>(url);
 
   }
@@ -48,9 +48,6 @@ export class InscriptionService {
     return this.http.get<User[]>(url);
   }
 
-  getPlanningInscription(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/planningInscription`);
-  }
 
   getPostes(idF: number): Observable<Poste[]> {
     return this.http.get<Poste[]>(`${this.apiUrl}/postes/${idF}`);
@@ -66,10 +63,9 @@ export class InscriptionService {
   }
   
   // Function to add a new creneau
-  addCreneau(creneau: Creneau): Observable<Creneau> {
-          const url = `${this.apiUrl}/creneau`;
-          console.log("creneau", creneau)
-          return this.http.post<Creneau>(url, creneau);
+  addCreneau(creneau: Creneau, idF: number): Observable<Creneau> {
+          const url = `${this.apiUrl}/creneau/${creneau.heureDebut}/${creneau.heureFin}/${creneau.jourCreneau}/${idF}`;
+          return this.http.post<Creneau>(url, {});
   }
 
   // Function to remove a creneau
@@ -79,36 +75,39 @@ export class InscriptionService {
   }
 
   // Function to add a new poste
-  addPoste(poste: Poste): Observable<Poste> {
-    // Open a dialog to get new information for the poste
-    const dialogRef = this.dialog.open(PosteDialogComponent, {
-      width: '400px',
-      data: { poste: { ...poste } } // Pass the current poste data to the dialog
-    });
-
-    return dialogRef.afterClosed().pipe(
-      switchMap(newPoste => {
-        if (newPoste) {
-          // Send the newPoste to the backend
-          const url = `${this.apiUrl}/postes`;
-          return this.http.post<Poste>(url, newPoste);
-        } else {
-          return EMPTY;; // Return an empty observable if the user cancels the operation
-        }
-      })
-    );
-  }
-
-  // Function to remove a poste
-  removePoste(poste: Poste): Observable<void> {
-    const url = `${this.apiUrl}/postes/${poste.idP}`;
-    return this.http.delete<void>(url);
+  addPoste(poste: Poste, idF: number): Observable<Poste> {
+    const url = `${this.apiUrl}/poste/${poste.libellePoste}/${idF}`;
+    return this.http.post<Poste>(url, poste);
   }
 
   // Function to update a poste
-  updatePoste(poste: Poste): Observable<Poste> {
-    const url = `${this.apiUrl}/postes/${poste.idP}`;
-    return this.http.put<Poste>(url, poste);
+  updatePoste(poste: Poste | null): Observable<any> {
+    if (poste) {
+      const url = `${this.apiUrl}/poste/${poste.idP}`;
+      return this.http.put<any>(url, poste);
+    } else {
+      return new Observable(); 
+    }
+  }
+
+  deletePoste(poste: Poste): Observable<void> {
+    const url = `${this.apiUrl}/poste/${poste.idP}`;
+    return this.http.delete<void>(url);
+  }
+
+  deleteEspace(espace: Espace): Observable<void> {
+    const url = `${this.apiUrl}/espace/${espace.idEspace}`;
+    return this.http.delete<void>(url);
+  }
+
+  updateEspace(espace: Espace): Observable<Espace> {
+    const url = `${this.apiUrl}/espace/${espace.idEspace}`;
+    return this.http.put<Espace>(url, espace);
+  }
+
+  addEspace(espace: Espace, idF: number): Observable<Espace> {
+    const url = `${this.apiUrl}/espace/${idF}`;
+    return this.http.post<Espace>(url, {espace});
   }
 
   // Function to update a creneau
@@ -133,5 +132,10 @@ export class InscriptionService {
   deleteCreneau(creneauId: number): Observable<void> {
     const url = `${this.apiUrl}/creneau/${creneauId}`;
     return this.http.delete<void>(url);
+  }
+
+  getPosteByLibelle(poste: Poste, idF: number): Observable<Poste> {
+    const url = `${this.apiUrl}/poste/${poste.libellePoste}/${idF}`;
+    return this.http.get<Poste>(url);
   }
 }

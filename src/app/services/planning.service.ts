@@ -19,11 +19,6 @@ export class PlanningService {
   private baseUrl = 'your-backend-api-url'; // Replace with your actual backend API URL
 
   constructor(private http: HttpClient, private dialog: MatDialog) {}
-
-  getPlanningInscription(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/planningInscription`);
-  }
-
   
   getPostes(): Observable<Poste[]> {
     return this.http.get<Poste[]>(`${this.baseUrl}/postes`);

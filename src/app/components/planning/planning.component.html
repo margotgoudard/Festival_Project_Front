@@ -5,6 +5,19 @@
       <mat-option *ngFor="let festival of festivals" [value]="festival.idF">{{ festival.annee }}</mat-option>
     </mat-select>
   </mat-form-field>
+  <div class="action-buttons" *ngIf="admin">
+
+    <button (click)="openFestivalDialog()">Gestion Festival</button>
+  
+    <!-- Creneau actions -->
+    <button (click)="openCreneauDialog()">Gestion Creneaux</button>
+  
+    <!-- Poste actions -->
+    <button (click)="openPosteDialog()">Gestion Postes</button>
+  
+    <!-- Modifier le nombre de places -->
+    <button (click)="openModifierPlacesDialog()">Gestion Places</button>
+  </div>
   <table>
     <thead>
       <tr>
@@ -43,7 +56,7 @@
     </tbody>
   </table>
   <div *ngIf="aPlusieursEspaces == true">
-    Veuillez sélectionner un espace
+    <h4>Veuillez sélectionner un espace</h4>
   <table>
     <thead>
       <tr>
@@ -82,13 +95,3 @@
   </div>
 </div>
 
-<div class="action-buttons" *ngIf="admin">
-  <!-- Creneau actions -->
-  <button (click)="openCreneauDialog()">Gestion Creneaux</button>
-
-  <!-- Poste actions -->
-  <button (click)="openPosteDialog()">Gestion Postes</button>
-
-  <!-- Modifier le nombre de places -->
-  <button (click)="openModifierPlacesDialog()">Gestion Places</button>
-</div>

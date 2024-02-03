@@ -64,4 +64,50 @@
   .close-button:hover {
     color: red;
   }
+
+  // Ajoute une marge à gauche de 15px à tout le contenu
+.container {
+  margin-left: 15px;
+}
+
+// Ajoute une marge en bas de 15px aux boutons
+.dialog-buttons {
+  margin-bottom: 15px;
+}
+
+// Ajoute un espace entre les boutons
+.dialog-buttons button {
+  margin-right: 10px;
+}
+
+// Ajoute un espace entre les matform fields
+.search-field {
+  margin-bottom: 10px;
+}
+
+// Gère la largeur de l'input
+#inputNombrePlaces {
+  width: 200px; // Ajustez la largeur selon vos besoins
+}
+
+/* Ajoute une marge en bas de 10px au premier mat-form-field */
+.search-field:first-child {
+  margin-bottom: 10px;
+}
+
+// Ajoute une marge en bas de 15px aux boutons
+.dialog-buttons {
+  margin-bottom: 15px;
+}
+
+// Ajoute un espace entre les boutons
+.dialog-buttons button {
+  margin-right: 10px;
+}
+
+// Gère la largeur de l'input
+#inputNombrePlaces {
+  width: 200px; // Ajustez la largeur selon vos besoins
+}
+
   
