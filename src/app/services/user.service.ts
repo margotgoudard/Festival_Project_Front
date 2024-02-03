@@ -98,8 +98,13 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiUrl}/benevoles/${idF}`)
   }
 
-  updateRole(pseudo: string): Observable<any> {
+  updateRoleReferent(pseudo: string): Observable<any> {
     const url = `${this.apiUrl}/referent/${pseudo}`;
+   return this.http.put(url, null);
+  }
+
+  updateRoleGestionnaire(pseudo: string): Observable<any> {
+    const url = `${this.apiUrl}/gestionnaire/${pseudo}`;
    return this.http.put(url, null);
   }
 
