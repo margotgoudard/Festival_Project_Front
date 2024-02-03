@@ -128,9 +128,21 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  updateUserRole() {
+  updateUserRoleReferent() {
     // Vous pouvez appeler la méthode du userService pour mettre à jour le rôle
-    this.userService.updateRole(this.pseudo).subscribe(
+    this.userService.updateRoleReferent(this.pseudo).subscribe(
+      (response) => {
+        console.log('Rôle de l\'utilisateur mis à jour avec succès', response);
+      },
+      (error) => {
+        console.error('Erreur lors de la mise à jour du rôle de l\'utilisateur', error);
+      }
+    );
+  }
+
+  updateUserRoleGestionnaire() {
+    // Vous pouvez appeler la méthode du userService pour mettre à jour le rôle
+    this.userService.updateRoleGestionnaire(this.pseudo).subscribe(
       (response) => {
         console.log('Rôle de l\'utilisateur mis à jour avec succès', response);
       },
@@ -142,7 +154,7 @@ export class ProfileComponent implements OnInit {
 
   onCheckboxChange(event: any): void {
     if (event.target.checked) {
-      this.updateUserRole(); // Appel à la méthode correspondant à la mise à jour du rôle
+      this.updateUserRoleReferent(); // Appel à la méthode correspondant à la mise à jour du rôle
       this.roleUser = 3; // Mettez à jour roleUser selon vos besoins
     } else {
       this.NonReferentRole(); // Appel à la méthode correspondant à la mise à jour du rôle
@@ -152,7 +164,7 @@ export class ProfileComponent implements OnInit {
 
   onCheckboxChangeGestionnaire(event: any): void {
     if (event.target.checked) {
-      this.updateUserRole(); // Appel à la méthode correspondant à la mise à jour du rôle
+      this.updateUserRoleGestionnaire(); // Appel à la méthode correspondant à la mise à jour du rôle
       this.roleUser = 4; // Mettez à jour roleUser selon vos besoins
     } else {
       this.NonGestionnaireRole(); // Appel à la méthode correspondant à la mise à jour du rôle

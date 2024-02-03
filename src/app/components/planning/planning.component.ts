@@ -216,6 +216,7 @@ convertirHeureEnNombre(heure: string): number {
     const key = `${creneauId}_${espaceId}`;
     this.placerService.getNombrePlacesPourEspaces(espaceId, creneauId).subscribe(nbPlaces => {
       this.placesDisponibles[key] = nbPlaces;
+      console.log(nbPlaces)
     });
   }
   
@@ -277,15 +278,12 @@ openInscriptionDialog(totalPlaces: number, creneau: Creneau, poste: Poste) {
   });
 }
 
-placesDejaInscrites(creneauId: number, posteId: number): void {
-  const posteEspaces = this.posteEspacesMapping[posteId];
-  const espace = posteEspaces ? posteEspaces[0] : null;
-  const idEspace = espace ? espace.idEspace : null;
-  const key = `${creneauId}_${idEspace}`;
+placesDejaInscrites(creneauId: number, espaceId: number): void {
+  const key = `${creneauId}_${espaceId}`;
   
   this.userService.getUsersRegistration(this.selectedFestival).subscribe(userRegistrations => {
     const filteredRegistrations = userRegistrations.filter(registration =>
-      registration.creneauId === creneauId && registration.espaceId === idEspace
+      registration.creneauId === creneauId && registration.espaceId === espaceId
     );
 
     this.placesInscrites[key] = filteredRegistrations.length;
