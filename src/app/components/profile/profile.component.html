@@ -1,17 +1,64 @@
 <div class="profil-benevole">
   <h2>Profil Bénévole</h2>
   <div class="informations-personnelles">
-    <p><strong>Nom :</strong> {{ nom }}</p>
-    <p><strong>Prénom :</strong> {{ prenom }}</p>
+    <p><strong>Nom :</strong>
+      <ng-container *ngIf="!isNomEditMode; else editNomMode">
+        {{ nom }}
+      </ng-container>
+      <ng-template #editNomMode>
+        <input [(ngModel)]="nom" placeholder="Entrez votre nom" name="editNom"/>
+      </ng-template>
+    </p>
+
+    <p><strong>Prénom :</strong>
+      <ng-container *ngIf="!isPrenomEditMode; else editPrenomMode">
+        {{ prenom }}
+      </ng-container>
+      <ng-template #editPrenomMode>
+        <input [(ngModel)]="prenom" placeholder="Entrez votre prénom" name="editPrenom" />
+      </ng-template>
+    </p>
+
     <p><strong>Pseudo :</strong> {{ pseudo }}</p>
-    <p><strong>Mail :</strong> {{ email }}</p>
-    <p><strong>Association(s) :</strong> {{ associations }} </p>
+
+    <p><strong>Mail :</strong>
+      <ng-container *ngIf="!isEmailEditMode; else editEmailMode">
+        {{ email }}
+      </ng-container>
+      <ng-template #editEmailMode>
+        <input [(ngModel)]="email" placeholder="Entrez votre email" name="editemail" />
+      </ng-template>
+    </p>
+    
+    <p><strong>Association(s) :</strong>
+      <ng-container *ngIf="!isAssociationEditMode; else editAssociationMode">
+        {{ associations }}
+      </ng-container>
+      <ng-template #editAssociationMode>
+        <input [(ngModel)]="associations" placeholder="Entrez votre association" name="editAssociation" />
+      </ng-template>
+    </p>
   </div>
 
 
   <div class="preferences">
-    <p><strong>Taille de T-shirt :</strong> {{ taille }}</p>
+    <p><strong>Taille de T-shirt :</strong>
+      <ng-container *ngIf="!isTailleEditMode; else editTailleMode">
+        {{ taille }}
+      </ng-container>
+      <ng-template #editTailleMode>
+        <ng-container *ngIf="isEditMode"> <!-- Affichez seulement en mode édition -->
+          <select [(ngModel)]="taille" name="editTaille">
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+          </select>
+        </ng-container>
+      </ng-template>
+    </p>
+
     <p><strong>Végétarien(ne) :</strong> {{ vegetarian ? 'Oui' : 'Non' }}</p>
+    
     <p><strong>Festivals :</strong></p>
   <ul>
     <li *ngFor="let festival of festivals">Festival du Jeu Montpellier {{ festival }}</li>
@@ -40,4 +87,15 @@
     
     
   </div>
+
+  <!-- Bouton "Modifier" -->
+  <button type="button" (click)="toggleEditMode()" *ngIf="!isEditMode">Modifier</button>
+  
+  <!-- Boutons "Confirmer" et "Annuler" -->
+  <div *ngIf="isEditMode" class="edit-buttons">
+    <button type="button" (click)="onConfirmClick()" class="confirm-button">Confirmer</button>
+    <button type="button" (click)="onCancelClick()" class="cancel-button">Annuler</button>
+  </div>
+
+
 </div>

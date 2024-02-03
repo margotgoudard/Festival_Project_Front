@@ -2,7 +2,7 @@ import { Role } from "./role.model";
 
 export class User {
   constructor(
-    public id: number = 0,
+    //public id: number = 0,
     public prenom: string = '',
     public nom: string = '',
     public pseudo: string = '',
