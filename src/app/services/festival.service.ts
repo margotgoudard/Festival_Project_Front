@@ -24,7 +24,7 @@ export class FestivalService {
     }
 
     addFestival(festival: Festival): Observable<Festival> {
-      const url = `${this.apiUrl}/creer-festival`;
+      const url = `${this.apiUrl}/festival`;
       return this.http.post<Festival>(url, festival);
     }
 }

@@ -24,7 +24,7 @@ export class InscriptionService {
 }
 
   updateRegistration(benevolePseudo: string, creneauId: number, espaceId: number): Observable<void> {
-    const url = `${this.apiUrl}/inscription-update/${benevolePseudo}/${creneauId}/${espaceId}`;
+    const url = `${this.apiUrl}/inscription/${benevolePseudo}/${creneauId}/${espaceId}`;
     return this.http.put<void>(url, {});
   }
 
@@ -34,7 +34,7 @@ export class InscriptionService {
   }
 
   getPosteReferent(espaceId: number): Observable<User[]> {
-    const url = `${this.apiUrl}/getPosteReferent/${espaceId}`; 
+    const url = `${this.apiUrl}/posteReferent/${espaceId}`; 
     return this.http.get<User[]>(url);
 
   }
@@ -48,9 +48,6 @@ export class InscriptionService {
     return this.http.get<User[]>(url);
   }
 
-  getPlanningInscription(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/planningInscription`);
-  }
 
   getPostes(idF: number): Observable<Poste[]> {
     return this.http.get<Poste[]>(`${this.apiUrl}/postes/${idF}`);
@@ -79,7 +76,7 @@ export class InscriptionService {
 
   // Function to add a new poste
   addPoste(poste: Poste, idF: number): Observable<Poste> {
-    const url = `${this.apiUrl}/creer-poste/${poste.libellePoste}/${idF}`;
+    const url = `${this.apiUrl}/poste/${poste.libellePoste}/${idF}`;
     return this.http.post<Poste>(url, poste);
   }
 
@@ -99,17 +96,17 @@ export class InscriptionService {
   }
 
   deleteEspace(espace: Espace): Observable<void> {
-    const url = `${this.apiUrl}/delete-espace/${espace.idEspace}`;
+    const url = `${this.apiUrl}/espace/${espace.idEspace}`;
     return this.http.delete<void>(url);
   }
 
   updateEspace(espace: Espace): Observable<Espace> {
-    const url = `${this.apiUrl}/update-espace/${espace.idEspace}`;
+    const url = `${this.apiUrl}/espace/${espace.idEspace}`;
     return this.http.put<Espace>(url, espace);
   }
 
   addEspace(espace: Espace, idF: number): Observable<Espace> {
-    const url = `${this.apiUrl}/creer-espace/${idF}`;
+    const url = `${this.apiUrl}/espace/${idF}`;
     return this.http.post<Espace>(url, {espace});
   }
 
