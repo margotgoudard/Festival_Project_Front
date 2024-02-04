@@ -1,12 +1,13 @@
+import { Association } from "./association.model";
 import { Role } from "./role.model";
 
 export class User {
   constructor(
-    public id: number = 0,
+    //public id: number = 0,
     public prenom: string = '',
     public nom: string = '',
     public pseudo: string = '',
-    public associations: string = '',
+    public associations: Association = {idA: 0, nomAssociation: ''},
     public email: string = '',
     public password: string = '',
     public numTel: number = 0,

@@ -13,4 +13,12 @@ h2 {
     max-width: 400px; /* Ajustez la largeur maximale selon vos besoins */
     margin: 0 auto;
   }
+
+  .mat-column-poste,
+  .mat-column-jour,
+  .mat-column-creneau,
+  .mat-column-actions
+  {
+    width: 25%; 
+  }
   

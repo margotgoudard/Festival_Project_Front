@@ -8,6 +8,7 @@
   </mat-select>
 </mat-form-field>
 
+<div class="mat-elevation-z9">
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
@@ -44,4 +45,5 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+</div>
 </div>

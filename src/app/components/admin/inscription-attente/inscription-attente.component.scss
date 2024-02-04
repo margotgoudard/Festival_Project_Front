@@ -33,4 +33,15 @@ h2 {
     line-height: 24px; /* Ajustez la hauteur selon vos besoins */
   }
 
+
+.mat-column-prenom,
+.mat-column-nom,
+.mat-column-email,
+.mat-column-tel,
+.mat-column-espace,
+.mat-column-jour,
+.mat-column-creneau,
+.mat-column-action {
+  width: 12.5%;
+}
   

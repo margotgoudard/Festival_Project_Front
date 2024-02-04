@@ -21,6 +21,10 @@ h2 {
   line-height: 24px; /* Ajustez la hauteur selon vos besoins */
 }
 
-.mat-elevation-z8 {
-  margin-top: 10px;
-}
+.mat-column-poste,
+  .mat-column-jour,
+  .mat-column-creneau,
+  .mat-column-actions
+  {
+    width: 25%; 
+  }
