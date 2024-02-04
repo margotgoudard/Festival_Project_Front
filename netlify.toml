@@ -2,4 +2,4 @@
   publish = "dist/awi"
   command = "npm run build"  # Utilisez npm run build au lieu de ng build --prod
   [build.bundle]
-    maxSize = 1500000
+    maxSize = 2000000
