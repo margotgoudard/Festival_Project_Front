@@ -396,7 +396,6 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
         if (result) {
         this.postes = result.postes;
         this.espaces = result.espaces;
-        this.ngOnInit();
         }
     });
   }
@@ -413,7 +412,6 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
 
       dialogRef.afterClosed().subscribe(result => {
         this.espaces = result;
-        this.ngOnInit();
 
       });
     }
