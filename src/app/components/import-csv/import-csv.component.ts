@@ -1,17 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { JeuService } from 'src/app/services/jeu.service';
 import { Jeu } from 'src/app/model/jeu.model';
+import { FestivalService } from 'src/app/services/festival.service';
+import { Festival } from 'src/app/interfaces/festival.interface';
+import { MatSelectChange } from '@angular/material/select';
+import { InscriptionReussiDialogComponent } from '../inscription-reussi-dialog/inscription-reussi-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-import-csv',
   templateUrl: './import-csv.component.html',
   styleUrls: ['./import-csv.component.scss'],
 })
-export class ImportCsvComponent {
-  constructor(private jeuService: JeuService) {}
+export class ImportCsvComponent implements OnInit {
 
-  // On mettra les jeux dans cette variable
   public jeux: Jeu[] = [];
+  selectedFestival: number = 0;
+  festivals: Festival[] = []; 
+
+  constructor(private dialog: MatDialog, private jeuService: JeuService, private festivalService: FestivalService) {}
+
+  ngOnInit(): void {
+    this.loadFestivals();
+  }
 
   // Methode executée lorsqu'on importe un csv
   public onImportCsv(event: any) {
@@ -33,6 +44,9 @@ export class ImportCsvComponent {
 
     return this.jeuService.deleteJeux().subscribe((success) => {
       if (success) this.SendJeuxBundle(jeuxBundle);
+
+      this.openSuccessDialog("Insertion Réussie !")
+    
     });
 
     // this.SendJeuxBundle(jeuxBundle);
@@ -46,7 +60,7 @@ export class ImportCsvComponent {
 
     var jeux = jeuxBundle[0];
     var others = jeuxBundle.slice(1);
-    return this.jeuService.createJeux(jeux).subscribe((response) => {
+    return this.jeuService.createJeux(jeux, this.selectedFestival).subscribe((response) => {
       console.log(`${jeux.length} jeux créés avec succès`, response);
       this.SendJeuxBundle(others);
     });
@@ -140,4 +154,39 @@ export class ImportCsvComponent {
     // console.log(jeux);
     return jeux;
   }
+
+  loadFestivals() {
+    this.festivalService.getFestivals().subscribe(
+      (festivals: Festival[]) => {
+        this.festivals = festivals;
+  
+        // Trouver le festival dont l'année correspond à l'année actuelle
+        const currentYear = new Date().getFullYear();
+        const defaultFestival = this.festivals.find(festival => festival.annee === currentYear);
+      
+        if (defaultFestival) {
+          this.selectedFestival = defaultFestival.idF;
+        } else {
+          // Si aucun festival correspondant n'est trouvé, utilisez le premier festival de la liste (s'il y en a un)
+          this.selectedFestival = this.festivals.length > 0 ? this.festivals[0].idF : 0;
+        }
+      },
+      (error) => {
+        console.error('Error loading festivals', error);
+      }
+    );
+  }
+
+  onFestivalChange(event: MatSelectChange) {
+    this.selectedFestival = event.value;
+  }
+
+  openSuccessDialog(message: string): void {
+    const dialogRef = this.dialog.open(InscriptionReussiDialogComponent, {
+      data: { message: `${message} - ${this.jeux.length} jeux chargés` }    });
+
+    dialogRef.afterClosed().subscribe(() => {
+        // Handle actions after the dialog is closed, if needed
+    });
+}
 }

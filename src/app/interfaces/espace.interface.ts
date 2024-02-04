@@ -5,6 +5,4 @@ export interface Espace  {
   libelleEspace : string,
   posteId: number,
   isAnimation : boolean
-
-
 }
