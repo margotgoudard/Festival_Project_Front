@@ -21,11 +21,13 @@
           <td></td>
           <ng-container *ngFor="let jour of jours">
             <td *ngFor="let creneau of getCreneauxByJour(jour)">
-              {{ creneau.heureDebut }} - {{ creneau.heureFin }}
+              <div class="creneau-container">
+                {{ creneau.heureDebut }} - {{ creneau.heureFin }}
+              </div>
             </td>
           </ng-container>
         </tr>
-        
+      
         <!-- Data rows for each poste and their available spaces -->
         <ng-container *ngFor="let poste of postes">
           <tr>
@@ -58,7 +60,9 @@
           <td></td>
           <ng-container *ngFor="let jour of jours">
             <td *ngFor="let creneau of getCreneauxByJour(jour)">
+              <div class="creneau-container">
               {{ creneau.heureDebut }} - {{ creneau.heureFin }}
+              </div>
             </td>
           </ng-container>
         </tr>
