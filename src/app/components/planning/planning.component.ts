@@ -366,7 +366,7 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
     });
   }
 
-  openCreneauDialog() {
+  openCreneauDialog(): void {
     const dialogRef = this.dialog.open(CreneauDialogComponent, {
       width: '600px', 
       data: {
@@ -377,7 +377,8 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Creneau dialog closed with result:', result);
+        this.creneaux = result;
+        this.ngOnInit();
       }
     });
   }
@@ -392,7 +393,11 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
     },
       });
       dialogRef.afterClosed().subscribe(result => {
-        console.log('Modification dialog closed with result:', result);
+        if (result) {
+        this.postes = result.postes;
+        this.espaces = result.espaces;
+        this.ngOnInit();
+        }
     });
   }
   
@@ -405,11 +410,11 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
           creneaux: this.creneaux
         }
       });
-      console.log("creneaux", this.creneaux);
-      console.log("espaces", this.espaces);
 
       dialogRef.afterClosed().subscribe(result => {
-        console.log('Modification dialog closed with result:', result);
+        this.espaces = result;
+        this.ngOnInit();
+
       });
     }
 

@@ -28,31 +28,51 @@ export class CreneauDialogComponent {
     this.dialogRef.close(); 
   }
 
-  onSaveClick(creneau: Creneau): void {
-    console.log("newcreneau",creneau)
-    creneau.idF = this.data.selectedFestival;
-      this.inscriptionService.addCreneau(creneau, creneau.idF).subscribe(() => {
-        this.dialogRef.close();
-      });
-  } 
-
 
   onEditClick(): void {
     this.isEditing = true;
     this.newCreneau = { ...this.selectedCreneau };
   }
 
+
+ 
+  onSaveClick(creneau: Creneau): void {
+    creneau.idF = this.data.selectedFestival;
+    
+    // Add the new creneau to the creneaux array
+    this.data.creneaux.push(creneau);
+    
+    this.inscriptionService.addCreneau(creneau, creneau.idF).subscribe(() => {
+      this.dialogRef.close(this.data.creneaux);
+    });
+  } 
+
+  // ...
+
   onDeleteClick(): void {
     if (this.selectedCreneau) {
+      const index = this.data.creneaux.findIndex(c => c.idC === this.selectedCreneau.idC);
+      if (index !== -1) {
+        this.data.creneaux.splice(index, 1);
+      }
+
       this.inscriptionService.deleteCreneau(this.selectedCreneau.idC).subscribe(() => {
-        this.dialogRef.close();
+        this.dialogRef.close(this.data.creneaux);
       });
     }
   }
 
+  // ...
+
   onModifClick(creneau : Creneau): void {
     this.inscriptionService.updateCreneau(creneau).subscribe(() => {
-      this.dialogRef.close();
+      // Update the creneau in the creneaux array
+      const index = this.data.creneaux.findIndex(c => c.idC === creneau.idC);
+      if (index !== -1) {
+        this.data.creneaux[index] = { ...creneau };
+      }
+      
+      this.dialogRef.close(this.data.creneaux);
     });
   }
 
