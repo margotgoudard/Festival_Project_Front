@@ -35,4 +35,15 @@ h2 {
   .close-button:hover {
     color: red; /* Changez la couleur au survol si nécessaire */
   }
+
+  .jeux {
+    border: 1px solid black; /* Border color */
+    border-radius: 10px; /* Border radius for rounded corners */
+    padding: 10px; /* Optional padding for content inside the div */
+  }
+  
+  /* Style for dialog-header to shift it to the left by 15px */
+  .dialog {
+    margin-left: 15px;
+  }
  

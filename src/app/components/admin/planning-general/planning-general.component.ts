@@ -8,11 +8,14 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Festival } from 'src/app/interfaces/festival.interface';
 import { Inscription } from 'src/app/interfaces/inscription.interfaces';
+import { Poste } from 'src/app/interfaces/poste.interface';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { User } from 'src/app/model/user.model';
 import { FestivalService } from 'src/app/services/festival.service';
 import { InscriptionService } from 'src/app/services/inscription.service';
 import { UserService } from 'src/app/services/user.service';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 
 @Component({
@@ -26,13 +29,16 @@ import { UserService } from 'src/app/services/user.service';
     dataSource = new MatTableDataSource<any>([]);
     @ViewChild(MatSort) sort!: MatSort;
   
-    displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'espace', 'jour', 'creneau'];
+    displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel','poste', 'espace', 'jour', 'creneau'];
     selectedSearchField: string = 'prenom';
     selectedFestival: number = 0;
     festivals: Festival[] = []; 
     selectedEspace: number = 0;
+    selectedPoste: number = 0;
     selectedJour: string = '';
     selectedCreneau: number = 0;
+    poste: Poste = {idP: 0, libellePoste:'', espaces:[]}
+    postes: any[] = [];
     espaces: any[] = [];
     jours: any[] = []; 
     creneaux: any[] = [];
@@ -92,6 +98,17 @@ import { UserService } from 'src/app/services/user.service';
                   console.error('Error loading espaces', error);
                 }
               );
+              this.planningService.getPostes(this.selectedFestival).subscribe(
+                (postes: any[]) => {
+                  this.postes = postes;
+    
+                  // Charger les données pour le festival sélectionné par défaut
+                  this.loadData();
+                },
+                (error) => {
+                  console.error('Error loading espaces', error);
+                }
+              );
             },
             (error) => {
               console.error('Error loading creneaux', error);
@@ -107,6 +124,11 @@ import { UserService } from 'src/app/services/user.service';
   
     onFestivalChange(event: MatSelectChange) {
       this.recherche.festival = event.value;
+      this.loadData(); 
+    }
+
+    onPosteChange(event: MatSelectChange) {
+      this.recherche.poste = event.value;
       this.loadData(); 
     }
   
@@ -152,17 +174,32 @@ import { UserService } from 'src/app/services/user.service';
                 ...mappedUsers[index]
               }));
     
-              // Update the dataSource.data with filtered users
               this.dataSource.data = filteredUsers.map((result, index) => {
-                const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
+                this.planningService.getPosteById(result.espaceInfo.posteId).subscribe(
+                  (poste) => {
+                    this.poste = poste;
+              
+                    // Move the assignment here to ensure it runs after the asynchronous operation is complete
+                    this.dataSource.data = filteredUsers.map((result, index) => ({
+                      benevoleInfo: result.benevoleInfo,
+                      creneauInfo: result.creneauInfo,
+                      espaceInfo: result.espaceInfo,
+                      posteInfo: this.poste,
+                      ...mappedUsers[index],
+                    }));
+                  }
+                );
+              
+                // You can leave this return statement here if needed for the map function
                 return {
                   benevoleInfo: result.benevoleInfo,
                   creneauInfo: result.creneauInfo,
                   espaceInfo: result.espaceInfo,
-                  posteInfo: posteInfo,
+                  posteInfo: this.poste,  // This will be updated asynchronously inside the subscribe block
                   ...mappedUsers[index],
                 };
               });
+              
             },
             (error) => {
               console.error('Error loading additional user info', error);
@@ -184,14 +221,30 @@ filterUser(registration: any): boolean {
   const result =
     (this.recherche.espace === 0 || registration.espaceId === this.recherche.espace) &&
     (!this.recherche.jour || this.recherche.jour === registration.creneauInfo?.jourCreneau) &&
+    (this.recherche.poste === 0 || this.recherche.poste === registration.posteId) &&
     (this.recherche.creneau === 0 || registration.creneauId === this.recherche.creneau);
 
   console.log('Filter Result:', result);
   return result;
 }
 
-onEditClick() {
+generatePDF() {
+  const element = document.getElementById('table-to-pdf');
+  
+  html2canvas(element!).then((canvas) => {
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF();
+    
+    // Adjust the scale factor (e.g., 1.0 for no scaling, 0.75 for 75% scaling, etc.)
+    const scaleFactor = 0.12;
+    
+    // Calculate the width and height based on the scale factor
+    const imgWidth = canvas.width * scaleFactor;
+    const imgHeight = canvas.height * scaleFactor;
 
+    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+    pdf.save('planning.pdf');
+  });
 }
 
 

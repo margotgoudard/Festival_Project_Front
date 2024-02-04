@@ -14,6 +14,7 @@ import { ModifierPlacesDialogComponent } from '../../modifier-places-dialog/modi
 import { Festival } from 'src/app/interfaces/festival.interface';
 import { FestivalService } from 'src/app/services/festival.service';
 import { MatSelectChange } from '@angular/material/select';
+import { InscriptionService } from 'src/app/services/inscription.service';
 
 @Component({
   selector: 'planning-individual',
@@ -22,17 +23,18 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class PlanningIndividualComponent implements OnInit {
   @Input() user: User | undefined;
-  userRegistrations: UserRegistration[] = [];
+  userRegistrations: any[] = [];
   postes: Poste[] = []; 
 
   userName: string = '';
   dataSource = new MatTableDataSource<any>([]);
   selectedFestival: number = 0;
   festivals: Festival[] = []; 
+  referents: User[] = [];
 
-  displayedColumns: string[] = ['poste', 'jour', 'creneau', 'actions'];
+  displayedColumns: string[] = ['poste','espace', 'jour', 'creneau', 'referent', 'actions'];
 
-  constructor(private festivalService: FestivalService,private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
+  constructor(private inscriptionService: InscriptionService, private festivalService: FestivalService,private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.loadFestivals();
@@ -40,7 +42,7 @@ export class PlanningIndividualComponent implements OnInit {
       this.userName = `${this.user?.nom} ${this.user?.prenom}`;
       console.log('User input:', this.user);
       // Once user data is available, trigger fetching user registrations
-      this.fetchUserRegistrations(this.user.pseudo, this.selectedFestival); // Assuming 'pseudo' is the property in the User model
+      this.fetchUserRegistrations(this.user.pseudo, this.selectedFestival); 
     } else {
       // If user input is not provided, use the logged-in user's pseudo
       const pseudo = this.authService.getLoggedInUserPseudo() ?? '';
@@ -110,12 +112,28 @@ export class PlanningIndividualComponent implements OnInit {
         console.log('Fetched user registrations:', this.userRegistrations);
         // After fetching user registrations, update the data source for the table
         this.dataSource.data = this.userRegistrations;
+  
+        // Iterate over each user registration to get referents
+        this.userRegistrations.forEach(userRegistration => {
+          this.inscriptionService.getPosteReferent(userRegistration.espaceId).subscribe(
+            (referents) => {
+              // Assign referents to the specific user registration
+              this.referents = referents;
+            }
+          );
+          this.inscriptionService.getEspaceById(userRegistration.espaceId).subscribe(
+            (espace) => {  
+              userRegistration.Espace.libelleEspace = espace.libelleEspace;
+            }
+          );
+        });
       },
       (error) => {
         console.error('Error fetching user registrations:', error);
       }
     );
   }
+  
 
   deleteUserRegistration(registration: UserRegistration) {
     const confirmation = confirm('Voulez-vous vraiment supprimer cette inscription ?');

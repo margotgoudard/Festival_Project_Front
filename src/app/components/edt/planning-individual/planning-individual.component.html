@@ -18,6 +18,12 @@
       <td mat-cell *matCellDef="let userRegistrations">{{ userRegistrations.Espace.Poste.libellePoste }}</td>
     </ng-container>
 
+       <!-- Espace Column -->
+       <ng-container matColumnDef="espace">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Espace</th>
+        <td mat-cell *matCellDef="let userRegistrations">{{ userRegistrations.Espace.libelleEspace }}</td>
+      </ng-container>
+
     <!-- Jour Column -->
     <ng-container matColumnDef="jour">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Jour</th>
@@ -29,6 +35,17 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Créneau</th>
       <td mat-cell *matCellDef="let userRegistrations">
         {{ userRegistrations.Creneau.heureDebut }} - {{ userRegistrations.Creneau.heureFin }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="referent">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact Référent</th>
+      <td mat-cell *matCellDef="let userRegistration">
+        <ng-container *ngIf="referents && referents.length > 0">
+          <span *ngFor="let referent of referents">
+            {{ referent.email }}<br>
+          </span>
+        </ng-container>
       </td>
     </ng-container>
 
