@@ -10,8 +10,8 @@ import { Jeu } from '../model/jeu.model';
 export class JeuService {
 
 
-  //private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com';
-  private apiUrl = 'http://localhost:3000'; 
+  private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com';
+  //private apiUrl = 'http://localhost:3000'; 
 
     
   constructor(private http: HttpClient) {}
