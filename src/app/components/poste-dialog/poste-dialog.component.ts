@@ -19,8 +19,8 @@ export class PosteDialogComponent{
   selectedPoste: Poste = { idP: 0, libellePoste: '', espaces: [] };
   newPoste: Poste = { idP: 0, libellePoste: '', espaces:[] };
   isEditing: boolean = false; 
-  selectedEspace: Espace = { idEspace: 0, libelleEspace: '', posteId:0 };
-  newEspace: Espace = { idEspace: 0, libelleEspace: '', posteId:0 };
+  selectedEspace: Espace = { idEspace: 0, libelleEspace: '', posteId:0, isAnimation: false };
+  newEspace: Espace = { idEspace: 0, libelleEspace: '', posteId:0, isAnimation: false };
   isAddingEspace: boolean = false;
   newEspaceLibelle: string = '';
   updatedLibelle: string = '';
@@ -150,8 +150,8 @@ export class PosteDialogComponent{
   // Fonction pour réinitialiser les champs du formulaire
   private resetFormFields(): void {
     this.newPoste = { idP: 0, libellePoste: '', espaces: [] };
-    this.selectedEspace = { idEspace: 0, libelleEspace: '', posteId: 0 };
-    this.newEspace = { idEspace: 0, libelleEspace: '', posteId: 0 };
+    this.selectedEspace = { idEspace: 0, libelleEspace: '', posteId: 0, isAnimation: false };
+    this.newEspace = { idEspace: 0, libelleEspace: '', posteId: 0, isAnimation: false };
     this.isAddingEspace = false;
     this.newEspaceLibelle = '';
   }

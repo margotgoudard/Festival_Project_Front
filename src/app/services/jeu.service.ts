@@ -21,8 +21,8 @@ export class JeuService {
     return this.http.get<Jeu[]>(url);
   }
 
-  createJeux(jeux: Jeu[]): Observable<JeuCsv> {
-    const url = `${this.apiUrl}/jeux`;
+  createJeux(jeux: Jeu[], idF: number): Observable<JeuCsv> {
+    const url = `${this.apiUrl}/jeux/${idF}`;
 
     // Transformer le tableau de jeux en tableau de jeux pour l'api
     const arrayJeux = jeux.map(jeu => {

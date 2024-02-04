@@ -1,5 +1,13 @@
+<h2>Importer un CSV</h2>
+
+<mat-form-field class="search-field">
+  <mat-label>Sélectionner le festival</mat-label>
+  <mat-select [(ngModel)]="selectedFestival" (selectionChange)="onFestivalChange($event)">
+    <mat-option *ngFor="let festival of festivals" [value]="festival.idF">{{ festival.annee }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
 <div style="margin:20px">
     <input id="preview" type="file" accept=".csv" (change)="onImportCsv($event)" />
     <button (click)="onClickImport()">Envoyer</button>
 </div>
-<p>{{ jeux.length }} jeux chargés</p>
