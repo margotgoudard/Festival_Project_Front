@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Festival } from 'src/app/interfaces/festival.interface';
 import { FestivalService } from 'src/app/services/festival.service';
 import { MatSelectChange } from '@angular/material/select';
+import { Poste } from 'src/app/interfaces/poste.interface';
 
 @Component({
   selector: 'app-inscription-attente-benevole',
@@ -24,12 +25,14 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
     dataSource = new MatTableDataSource<any>([]);
     @ViewChild(MatSort) sort!: MatSort;
   
-    displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'espace', 'jour', 'creneau', 'action'];
+    displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'poste', 'espace', 'jour', 'creneau', 'action'];
     usersLoaded = false; 
     selectedSearchField: string = 'prenom';
     pseudo: string ='';
     selectedFestival: number = 0;
     festivals: Festival[] = []; 
+    poste: Poste = {idP: 0, libellePoste:'', espaces:[]};
+
   
     constructor(private festivalService: FestivalService, private dialog: MatDialog, private authService: AuthService, private planningService: InscriptionService, private userService: UserService, private router: Router) {}
 
@@ -43,10 +46,8 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
   
     loadData() {
       const userRegistrations$ = this.userService.getUserRegistrationWaiting(this.pseudo, this.selectedFestival);
-      console.log(this.pseudo)
-      console.log(this.userService.getUserRegistrationWaiting(this.pseudo, this.selectedFestival))
       const candidatureWaiting$ = this.userService.getCandidatureWaiting(this.pseudo, this.selectedFestival);
-  
+    
       forkJoin({
         userRegistrations: userRegistrations$,
         candidatureWaiting: candidatureWaiting$
@@ -60,7 +61,7 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
             isAccepted: registration.isAccepted,
             isRegistration: true,
           }));
-  
+    
           const mappedCandidatureWaiting = candidatureWaiting.map(candidature => ({
             benevolePseudo: candidature.benevolePseudo,
             espaceId: candidature.espaceId,
@@ -69,9 +70,9 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
             isAccepted: candidature.isAccepted,
             isRegistration: false,
           }));
-  
+    
           const combinedData = [...mappedUserRegistrations, ...mappedCandidatureWaiting];
-  
+    
           forkJoin(
             combinedData.map(data =>
               forkJoin({
@@ -83,21 +84,31 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
           ).subscribe(
             (results) => {
               this.dataSource.data = results.map((result, index) => {
-                const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
-  
-                return {
-                  benevoleInfo: result.benevoleInfo,
-                  creneauInfo: result.creneauInfo,
-                  espaceInfo: result.espaceInfo,
-                  posteInfo: posteInfo,
-                  inscriptionId: userRegistrations[index]?.id,
-                  inscriptionEspaceId: userRegistrations[index]?.espaceId,
-                  inscriptionCreneauId: userRegistrations[index]?.creneauId,
-                  ...mappedUserRegistrations[index],
-                };
+                this.planningService.getPosteById(result.espaceInfo.posteId).subscribe(
+                  (poste: Poste) => {
+                    this.poste = poste;
+    
+                    // Move the return statement inside the subscription callback
+                    this.dataSource.data = results.map((result, index) => {
+                      return {
+                        benevoleInfo: result.benevoleInfo,
+                        creneauInfo: result.creneauInfo,
+                        espaceInfo: result.espaceInfo,
+                        posteInfo: this.poste,
+                        inscriptionId: userRegistrations[index]?.id,
+                        inscriptionEspaceId: userRegistrations[index]?.espaceId,
+                        inscriptionCreneauId: userRegistrations[index]?.creneauId,
+                        ...mappedUserRegistrations[index],
+                      };
+                    });
+    
+                    this.usersLoaded = true;
+                  },
+                  (error) => {
+                    console.error('Error loading poste', error);
+                  }
+                );
               });
-  
-              this.usersLoaded = true;
             },
             (error) => {
               console.error('Error loading additional user info', error);
@@ -109,6 +120,7 @@ export class InscriptionAttenteBenevoleComponent implements OnInit {
         }
       );
     }
+    
 
     loadFestivals() {
       this.festivalService.getFestivals().subscribe(

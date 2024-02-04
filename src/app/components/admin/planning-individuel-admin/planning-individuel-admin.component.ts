@@ -27,7 +27,7 @@ export class PlanningIndividuelAdminComponent implements OnInit {
   selectedFestival: number = 0;
   festivals: Festival[] = []; 
 
-  displayedColumns: string[] = ['poste', 'jour', 'creneau', 'actions'];
+  displayedColumns: string[] = ['poste', 'espace', 'jour', 'creneau', 'actions'];
 
   constructor(private festivalService: FestivalService,private location: Location, private router: Router, private authService: AuthService, private userService: UserService, private route: ActivatedRoute) {}
 

@@ -2,6 +2,8 @@
 <div class="dialog-header">
     <span class="close-button" (click)="onNoClick()">&times;</span>
   </div>
+
+  <div class="dialog">
   <h2>Inscription</h2>
   <p>{{ data.creneau.jour }} - {{ data.creneau.heureDebut }} - {{ data.creneau.heureFin }}</p>
   <p>{{ data.espace.libelle }}</p>
@@ -15,9 +17,12 @@
     <li *ngFor="let volunteer of previousVolunteers">{{ volunteer.nom }} {{ volunteer.prenom }}</li>
   </ul>
 
+<div class="jeux">
   <p> Jeux </p>
   <ul>
-    <li *ngFor="let jeu of jeux">{{ jeu.nomJeu }} </li>
+    <li *ngFor="let jeu of jeux">{{ jeu.nomJeu }} - {{ jeu.Notice }} - {{ jeu.nbJoueurs }}</li>
   </ul>
+</div>
   
   <button (click)="onInscriptionClick()">S'inscrire</button>
+</div>

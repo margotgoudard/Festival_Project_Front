@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, map, of } from 'rxjs';
 import { UserRegistration } from 'src/app/interfaces/user-registration.interface';
 import { InscriptionService } from 'src/app/services/inscription.service';
 import { UserService } from 'src/app/services/user.service';
@@ -13,6 +13,7 @@ import { CandidaterService } from 'src/app/services/candidater.service';
 import { Festival } from 'src/app/interfaces/festival.interface';
 import { MatSelectChange } from '@angular/material/select';
 import { FestivalService } from 'src/app/services/festival.service';
+import { Poste } from 'src/app/interfaces/poste.interface';
 
 @Component({
   selector: 'app-inscription-attente',
@@ -24,7 +25,7 @@ export class InscriptionAttenteComponent implements OnInit {
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'espace', 'jour', 'creneau', 'action'];
+  displayedColumns: string[] = ['prenom', 'nom', 'email', 'tel', 'poste', 'espace', 'jour', 'creneau', 'action'];
   selectedSearchField: string = 'prenom';
   selectedFestival: number = 0;
   festivals: Festival[] = []; 
@@ -32,8 +33,10 @@ export class InscriptionAttenteComponent implements OnInit {
   selectedJour: string = '';
   selectedCreneau: number = 0;
   espaces: any[] = [];
+  postes: any[] = [];
   jours: any[] = []; 
   creneaux: any[] = [];
+  poste: Poste = {idP: 0, libellePoste:'', espaces:[]};
   recherche: any = {
     festival: 0,
     espace: 0,
@@ -65,7 +68,17 @@ export class InscriptionAttenteComponent implements OnInit {
           // Si aucun festival correspondant n'est trouvé, utilisez le premier festival de la liste (s'il y en a un)
           this.selectedFestival = this.festivals.length > 0 ? this.festivals[0].idF : 0;
         }
-  
+        this.planningService.getPostes(this.selectedFestival).subscribe(
+          (postes: any[]) => {
+            this.postes = postes;
+
+            // Charger les données pour le festival sélectionné par défaut
+            this.loadData();
+          },
+          (error) => {
+            console.error('Error loading espaces', error);
+          }
+        );  
         // Charger les données pour le festival sélectionné par défaut
         this.loadData();
       },
@@ -115,36 +128,49 @@ export class InscriptionAttenteComponent implements OnInit {
         ).subscribe(
           (results) => {
             this.creneaux = results.map(result => result.creneauInfo);
-
+  
             // Éliminer les doublons de créneaux
             this.creneaux = this.creneaux.filter((creneau, index, self) =>
               index === self.findIndex((c) => c.id === creneau.id)
-            );            this.jours = this.creneaux.map(creneau => creneau.jourCreneau);
+            );
+  
+            this.jours = this.creneaux.map(creneau => creneau.jourCreneau);
             this.jours = Array.from(new Set(this.jours)); // Pour obtenir des jours distincts
             this.espaces = results.map(result => result.espaceInfo);
   
-            const filteredUsers = results
-              .map((result, index) => {
-                const posteInfo = this.planningService.getPosteById(result.espaceInfo.posteId);
+            const filteredUsers$ = forkJoin(
+              results.map((result, index) =>
+                forkJoin({
+                  benevoleInfo: of(result.benevoleInfo),
+                  creneauInfo: of(result.creneauInfo),
+                  espaceInfo: of(result.espaceInfo),
+                  posteInfo: this.planningService.getPosteById(result.espaceInfo.posteId),
+                }).pipe(
+                  map(({ benevoleInfo, creneauInfo, espaceInfo, posteInfo }) => ({
+                    benevoleInfo,
+                    creneauInfo,
+                    espaceInfo,
+                    posteInfo,
+                    inscriptionId: candidatureWaiting[index]?.id,
+                    inscriptionEspaceId: candidatureWaiting[index]?.espaceId,
+                    inscriptionCreneauId: candidatureWaiting[index]?.creneauId,
+                    ...mappedCandidatureWaiting[index],
+                  }))
+                )
+              )
+            );
   
-                return {
-                  benevoleInfo: result.benevoleInfo,
-                  creneauInfo: result.creneauInfo,
-                  espaceInfo: result.espaceInfo,
-                  posteInfo: posteInfo,
-                  inscriptionId: candidatureWaiting[index]?.id,
-                  inscriptionEspaceId: candidatureWaiting[index]?.espaceId,
-                  inscriptionCreneauId: candidatureWaiting[index]?.creneauId,
-                  ...mappedCandidatureWaiting[index],
-                  // Add properties for candidatureWaiting as needed
-                };
-              })
-              .filter(registration => this.filterUser(registration));
-  
-            this.dataSource.data = filteredUsers;
+            filteredUsers$.subscribe(
+              (data) => {
+                this.dataSource.data = data.filter(registration => this.filterUser(registration));
+              },
+              (error) => {
+                console.error('Error loading additional user info', error);
+              }
+            );
           },
           (error) => {
-            console.error('Error loading additional user info', error);
+            console.error('Error loading data', error);
           }
         );
       },
@@ -153,6 +179,7 @@ export class InscriptionAttenteComponent implements OnInit {
       }
     );
   }
+  
   
   
   validerCandidature(benevolePseudo: string, creneauId: number, espaceId: number): void {
@@ -251,6 +278,9 @@ onEspaceChange(event: MatSelectChange) {
   this.loadData();
 }
 
-
+onPosteChange(event: MatSelectChange) {
+  this.recherche.poste = event.value;
+  this.loadData();
+}
 
 }

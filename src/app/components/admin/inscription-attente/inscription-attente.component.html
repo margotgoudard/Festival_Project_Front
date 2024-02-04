@@ -10,6 +10,13 @@
 <div class="container">
 <div class="search-fields-container">
   <mat-form-field class="search-field">
+    <mat-label>Rechercher par poste</mat-label>
+    <mat-select [(ngModel)]="selectedEspace" (selectionChange)="onPosteChange($event)">
+      <mat-option *ngFor="let poste of postes" [value]="poste.idP">{{ poste.libellePoste }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="search-field">
     <mat-label>Rechercher par espace</mat-label>
     <mat-select [(ngModel)]="selectedEspace" (selectionChange)="onEspaceChange($event)">
       <mat-option *ngFor="let espace of espaces" [value]="espace.idEspace">{{ espace.libelleEspace }}</mat-option>
@@ -58,6 +65,12 @@
 <ng-container matColumnDef="tel">
   <th mat-header-cell *matHeaderCellDef mat-sort-header>Tel</th>
   <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.benevoleInfo?.numTel }}</td>
+</ng-container>
+
+<!-- Poste Column -->
+<ng-container matColumnDef="poste">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>Poste</th>
+  <td mat-cell *matCellDef="let user" (click)="afficherPlanningIndividuel(user.benevoleInfo?.pseudo)">{{ user.posteInfo?.libellePoste }}</td>
 </ng-container>
 
 <!-- Espace Column -->
