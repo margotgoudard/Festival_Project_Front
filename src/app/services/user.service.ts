@@ -11,8 +11,8 @@ import { Festival } from '../interfaces/festival.interface';
   providedIn: 'root',
 })
 export class UserService {
-private apiUrl = 'https://festival-jeu-mtp-419077cc35e8.herokuapp.com'; 
-//private apiUrl = 'http://localhost:3000'; 
+//private apiUrl ='https://festival-jeu-mtp-419077cc35e8.herokuapp.com'; 
+private apiUrl = 'http://localhost:3000'; 
 
   public userPseudo : string ='';
   public userId : number = 0;
