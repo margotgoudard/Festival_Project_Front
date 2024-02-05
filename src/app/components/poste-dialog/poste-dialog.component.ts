@@ -140,7 +140,7 @@ export class PosteDialogComponent{
             return this.inscriptionService.addEspace(this.newEspace, this.data.idF);
           })
         ).subscribe((savedEspace) => {
-          savedPoste.espaces = [savedEspace];
+          this.data.espaces.push(savedEspace);
           this.data.postes.push(savedPoste);
           this.resetFormFields();
         });
