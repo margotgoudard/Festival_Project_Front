@@ -64,6 +64,7 @@ export class PosteDialogComponent{
 
   onAjouterPosteClick() {
     this.isAddingPoste = true;
+    this.isEditingPoste = true
   }
   
   onDeletePosteClick(selectedPoste: Poste) {

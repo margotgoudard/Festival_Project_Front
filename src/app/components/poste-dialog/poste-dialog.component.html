@@ -2,20 +2,22 @@
 <span class="close-button" (click)="onCancelClick()">&times;</span>
 
 <form>
-  <button (click)="onAjouterPosteClick()">Ajouter Poste</button>
-  <mat-form-field>
-      <mat-label>Sélectionner un poste</mat-label>
-      <mat-select [(ngModel)]="selectedPoste" (selectionChange)="onPosteChange($event)" ngModel [ngModelOptions]="{standalone: true}">
-        <mat-option *ngFor="let poste of data.postes" [value]="poste">{{ poste.libellePoste }}</mat-option>
-      </mat-select> 
+  <button *ngIf="selectedPoste.idP == 0" (click)="onAjouterPosteClick()">Ajouter Poste</button>
+  <div class="poste-select">
+  <mat-form-field *ngIf="!isAddingPoste" >
+    <mat-label>Sélectionner un poste</mat-label>
+    <mat-select [(ngModel)]="selectedPoste" (selectionChange)="onPosteChange($event)" ngModel [ngModelOptions]="{standalone: true}">
+      <mat-option *ngFor="let poste of data.postes" [value]="poste">{{ poste.libellePoste }}</mat-option>
+    </mat-select>
   </mat-form-field>
   <button *ngIf="selectedPoste.idP !== 0" (click)="onEditPosteClick(selectedPoste)">✏️</button>
-  <ng-container *ngIf="isEditingPoste">
+  <ng-container *ngIf="isEditingPoste && !isAddingPoste">
       <input [(ngModel)]="newPoste.libellePoste" placeholder="Nouveau libelle" name="libellePoste" />
       <button (click)="onSavePosteClick(newPoste)">Enregistrer</button>
       <button (click)="onCancelEditPosteClick()">Retour</button>
   </ng-container>
   <button  *ngIf="selectedPoste.idP !== 0" (click)="onDeletePosteClick(selectedPoste)">❌</button>
+</div>
     <ng-container *ngIf="selectedPoste.idP !== 0">
     <label>Liste des Espaces:</label>
     <ul>
@@ -28,11 +30,10 @@
         <ng-container *ngIf="isEditing">
           <input [(ngModel)]="espace.libelleEspace" placeholder="Nouveau libelle" name="libelleEspace" />
           <button (click)="onSaveEspaceClick(espace)">Enregistrer</button>
-          <button (click)="onCancelEditEspaceClick()">Retour</button>
       </ng-container>
       </li>
     </ul>
-    <button *ngIf="isEditingPoste" (click)="onAddEspaceClick()">Ajouter Nouvel Espace</button>
+    <button *ngIf="isEditingPoste || !isAddingEspace" (click)="onAddEspaceClick()">Ajouter Nouvel Espace</button>
     <ng-container *ngIf="isAddingEspace">
       <input [(ngModel)]="newEspace.libelleEspace" placeholder="Nouveau Espace Libellé" name="libelleEspace"/>
       <mat-form-field>
@@ -66,6 +67,6 @@
       </ng-container>
     <button (click)="onSaveNewPosteClick()">Enregistrer Nouveau Poste</button>
     </ng-container>
-    <button *ngIf="isEditingPoste" (click)="onSaveNewEspaceClick()">Enregistrer Nouveau Poste</button>
+    <button *ngIf="isEditingPoste && selectedPoste.idP !== 0" (click)="onSaveNewEspaceClick()">Enregistrer Nouveau Poste</button>
 
 </form>

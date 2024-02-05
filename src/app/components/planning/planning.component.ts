@@ -45,13 +45,21 @@ export class PlanningComponent implements OnInit {
   userRole: number = 0; 
   selectedFestival: number = 0;
   festivals: Festival[] = []; 
+  existingDay: { jour: string; creneaux: Creneau[] } | undefined = undefined;
 
 
   constructor(private festivalService: FestivalService, private candidaterService: CandidaterService, private userService: UserService, private authService: AuthService, private router: Router, private dialog: MatDialog, private planningService: InscriptionService, private placerService: PlacerService) { }
 
   ngOnInit(): void {
+    if (this.existingDay) {
+      this.existingDay.creneaux = [];
+    }
+    if (this.planning) {
+      this.planning.forEach(day => {
+        day.creneaux = [];
+      });
+    }
     this.loadFestivals();
-    this.loadData();
     this.estAdmin();
   }
 
@@ -166,15 +174,16 @@ private initPlacesDisponibles(): void {
   private loadCreneaux(): void {
     this.planningService.getCreneaux(this.selectedFestival).subscribe(creneaux => {
       this.organizeCreneauxByDay(creneaux);
+      this.creneaux = [];
       this.creneaux.push(...creneaux);
     });
   }
 
   private organizeCreneauxByDay(creneaux: Creneau[]): void {
     creneaux.forEach(creneau => {
-      const existingDay = this.planning.find(item => item.jour === creneau.jourCreneau);
-
-      if (!existingDay) {
+      this.existingDay = this.planning.find(item => item.jour === creneau.jourCreneau);
+  
+      if (!this.existingDay) {
         this.planning.push({ jour: creneau.jourCreneau, creneaux: [creneau] });
         this.jours.push(creneau.jourCreneau);
         this.jours.sort((a, b) => {
@@ -182,11 +191,12 @@ private initPlacesDisponibles(): void {
           return joursOrder.indexOf(a) - joursOrder.indexOf(b);
         });
       } else {
-        existingDay.creneaux.push(creneau);
+        // Réinitialiser existingDay.creneaux à un tableau vide
+        this.existingDay.creneaux.push(creneau);
       }
     });
   }
-
+  
   getCreneauxByJour(jour: string): Creneau[] {
   const day = this.planning.find(item => item.jour === jour);
 
@@ -377,8 +387,7 @@ openInscriptionDialogEspaces(totalPlaces: number, creneau: Creneau, espace: Espa
   
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.creneaux = result;
-        this.ngOnInit();
+        this.ngOnInit()
       }
     });
   }

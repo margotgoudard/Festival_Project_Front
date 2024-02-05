@@ -57,6 +57,12 @@ button.edit-mode {
     margin-left: 0;
 }
 
+.poste-select {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
 /* Style pour le libellé "Nouveau Poste" */
 h4 {
     margin: 10px 0; /* Ajout de marges autour du libellé "Nouveau Poste" */
